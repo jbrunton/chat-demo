@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v3
       - run: npm ci
         working-directory: pulumi
-      - uses: pulumi/actions@25289694c7c830eecac517eb113ce8efcaf11643 # TODO: update to v3 after next release
+      - uses: pulumi/actions@35f51396579b3b55f0741396cff6904ec35d3f09 # TODO: update to v3 after next release
         with:
           command: up
           stack-name: ${{ github.event.inputs.stack_name || github.head_ref }}
