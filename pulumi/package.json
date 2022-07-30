@@ -8,9 +8,9 @@
   "devDependencies": {
     "@pulumi/digitalocean": "4.14.0",
     "@types/jest": "28.1.6",
-    "@types/node": "16.11.45",
-    "@typescript-eslint/eslint-plugin": "5.30.7",
-    "@typescript-eslint/parser": "5.30.7",
+    "@types/node": "16.11.46",
+    "@typescript-eslint/eslint-plugin": "5.31.0",
+    "@typescript-eslint/parser": "5.31.0",
     "eslint": "8.20.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
@@ -21,9 +21,9 @@
     "tsconfig-paths": "4.0.0"
   },
   "dependencies": {
-    "@pulumi/pulumi": "3.36.0",
-    "@pulumi/random": "4.8.0",
-    "date-fns": "2.28.0",
+    "@pulumi/pulumi": "3.37.2",
+    "@pulumi/random": "4.8.1",
+    "date-fns": "2.29.1",
     "ts-node": "10.9.1"
   }
 }
