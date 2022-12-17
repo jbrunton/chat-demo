@@ -15,7 +15,7 @@ const getDomain = (stack: string): string => {
 
 const stack = pulumi.getStack();
 const domain = getDomain(stack);
-const namePrefix = `auth0-test-$${stack}`;
+const namePrefix = `auth0-test-${stack}`;
 const zone = aws.route53.getZoneOutput({ name: "jbrunton-aws.com" });
 
 const certificateArn = aws.acm.getCertificate({
