@@ -1,14 +1,11 @@
-name: deploy-client-dev
+name: deploy-dev
 
 on:
   pull_request:
-    paths:
-      - client/**
 
 jobs:
   
   deploy-client-dev:
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
