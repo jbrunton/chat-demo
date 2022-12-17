@@ -15,6 +15,7 @@ const getDomain = (stack: string): string => {
 
 const stack = pulumi.getStack();
 const domain = getDomain(stack);
+const namePrefix = `auth0-test-$${stack}`;
 const zone = aws.route53.getZoneOutput({ name: "jbrunton-aws.com" });
 
 const certificateArn = aws.acm.getCertificate({
@@ -22,37 +23,23 @@ const certificateArn = aws.acm.getCertificate({
   statuses: ["ISSUED"],
 }).then(certificate => certificate.arn);
 
-// pulumi.log.info(
-//   "info: " +
-//     JSON.stringify({
-//       domain,
-//       cer,
-//     })
-// );
-
-// Import the program's configuration settings.
-const path = "../app/dist";
-const indexDocument = "index.html";
-// const errorDocument = config.get("errorDocument") || "error.html";
-
 // Create an S3 bucket and configure it as a website.
-const bucket = new aws.s3.Bucket("bucket", {
+const bucket = new aws.s3.Bucket(`${namePrefix}-bucket`, {
   acl: "public-read",
   website: {
-    indexDocument: indexDocument,
-    //        errorDocument: errorDocument,
+    indexDocument: "index.html",
   },
 });
 
 // Use a synced folder to manage the files of the website.
-const bucketFolder = new synced_folder.S3BucketFolder("bucket-folder", {
-  path: path,
+new synced_folder.S3BucketFolder(`${namePrefix}-folder`, {
+  path: "../app/dist",
   bucketName: bucket.bucket,
   acl: "public-read",
 });
 
 // Create a CloudFront CDN to distribute and cache the website.
-const cdn = new aws.cloudfront.Distribution("cdn", {
+const cdn = new aws.cloudfront.Distribution(`${namePrefix}-cdn`, {
   enabled: true,
   origins: [
     {
@@ -82,11 +69,6 @@ const cdn = new aws.cloudfront.Distribution("cdn", {
     },
   },
   priceClass: "PriceClass_100",
-  // customErrorResponses: [{
-  //     errorCode: 404,
-  //     responseCode: 404,
-  //     responsePagePath: `/${errorDocument}`,
-  // }],
   restrictions: {
     geoRestriction: {
       restrictionType: "none",
@@ -100,7 +82,7 @@ const cdn = new aws.cloudfront.Distribution("cdn", {
   },
 });
 
-const record = new aws.route53.Record(domain, {
+new aws.route53.Record(domain, {
   name: domain,
   zoneId: zone.zoneId,
   type: "A",
