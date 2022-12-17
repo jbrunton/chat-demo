@@ -1,0 +1,63 @@
+name: deploy-client
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - client/**
+
+jobs:
+  
+  deploy-client-staging:
+    environment: Staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: build
+        run: |
+          npm ci
+          npm run build
+        working-directory: client/app
+      - run: npm ci
+        working-directory: client/pulumi
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: staging
+          upsert: true
+          work-dir: client/pulumi
+          comment-on-pr: true
+          github-token: ${{ secrets.CI_MINION_PAT }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+
+  deploy-client-production:
+    environment: Production
+    needs: [deploy-client-staging]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: build
+        run: |
+          npm ci
+          npm run build
+        working-directory: client/app
+      - run: npm ci
+        working-directory: client/pulumi
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: production
+          upsert: true
+          work-dir: client/pulumi
+          comment-on-pr: true
+          github-token: ${{ secrets.CI_MINION_PAT }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1

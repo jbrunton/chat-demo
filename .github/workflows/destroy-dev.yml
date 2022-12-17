@@ -1,12 +1,9 @@
-name: destroy-client-dev
+name: destroy-dev
 
 on:
-  
   pull_request:
     types:
       - closed
-    paths:
-      - client/**
 
 jobs:
   
