@@ -1,0 +1,106 @@
+name: build
+
+on:
+  push:
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ["services/api", "pulumi"]
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ["services/api", "pulumi"]
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run test
+  
+  build-api:
+    needs: [lint, test]
+    if: github.ref == 'refs/heads/develop'
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
+    with:
+      repo-name: jbrunton/auth0-test-api
+      working-directory: services/api
+      buildpack: paketo-buildpacks/nodejs
+      publish: true
+      docker-username: jbrunton
+      tag: latest
+    secrets:
+      docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+  deploy-staging:
+    environment: Staging
+    concurrency: staging
+    needs: [build-api]
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Client
+        run: |
+          npm ci
+          npm run build
+        working-directory: client
+      - run: npm ci
+        working-directory: pulumi
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: staging
+          upsert: true
+          work-dir: pulumi
+          comment-on-pr: true
+          github-token: ${{ secrets.CI_MINION_PAT }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+          TAG: latest
+
+  deploy-production:
+    environment: Production
+    concurrency: production
+    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: build
+        run: |
+          npm ci
+          npm run build
+        working-directory: client
+      - run: npm ci
+        working-directory: pulumi
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: production
+          upsert: true
+          work-dir: pulumi
+          comment-on-pr: true
+          github-token: ${{ secrets.CI_MINION_PAT }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+          TAG: latest
