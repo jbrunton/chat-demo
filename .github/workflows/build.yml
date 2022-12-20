@@ -46,7 +46,9 @@ jobs:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   deploy-staging:
-    environment: Staging
+    environment:
+      name: Staging
+      url: https://auth0-test.staging.jbrunton-aws.com
     concurrency: staging
     needs: [build-api]
     if: github.ref == 'refs/heads/develop'
@@ -78,7 +80,9 @@ jobs:
           TAG: latest
 
   deploy-production:
-    environment: Production
+    environment:
+      name: Production
+      url: https://auth0-test.jbrunton-aws.com
     concurrency: production
     needs: [deploy-staging]
     if: github.ref == 'refs/heads/develop'
