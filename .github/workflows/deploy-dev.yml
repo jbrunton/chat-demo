@@ -20,6 +20,9 @@ jobs:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   deploy-app:
+    environment:
+      name: Development
+      url: https://auth0-test-${{ github.head_ref }}.dev.jbrunton-aws.com
     needs: [build-api]
     runs-on: ubuntu-latest
     steps:
