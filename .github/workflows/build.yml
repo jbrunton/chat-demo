@@ -41,6 +41,7 @@ jobs:
       buildpack: paketo-buildpacks/nodejs
       publish: true
       docker-username: jbrunton
+      cache-image: jbrunton/auth0-test-api-cache-image:latest
       tag: latest
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
