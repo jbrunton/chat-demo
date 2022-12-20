@@ -3,25 +3,41 @@ name: deploy-dev
 on:
   pull_request:
 
+concurrency: ${{ github.head_ref }}
+
 jobs:
-  
-  deploy-client-dev:
+
+  build-api:
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
+    with:
+      repo-name: jbrunton/auth0-test-api
+      working-directory: services/api
+      buildpack: paketo-buildpacks/nodejs
+      publish: true
+      docker-username: jbrunton
+    secrets:
+      docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+  deploy-app:
+    needs: [build-api]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: build
+      - name: Build Client
+        env:
+          VITE_API_URL: https://auth0-test-api-${{ github.head_ref }}.dev.jbrunton-aws.com
         run: |
           npm ci
           npm run build
-        working-directory: client/app
+        working-directory: client
       - run: npm ci
-        working-directory: client/pulumi
+        working-directory: pulumi
       - uses: pulumi/actions@v3
         with:
           command: up
           stack-name: ${{ github.head_ref }}
           upsert: true
-          work-dir: client/pulumi
+          work-dir: pulumi
           comment-on-pr: true
           github-token: ${{ secrets.CI_MINION_PAT }}
         env:
@@ -29,3 +45,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
+          TAG: ${{ needs.build-api.outputs.tag }}
