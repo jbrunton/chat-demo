@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import { AuthWidget } from './components/auth/AuthWidget'
 
 const useApiResponse = () => {
   const url = import.meta.env.VITE_API_URL || "";
@@ -36,6 +37,9 @@ function App() {
       </div>
       <div className="card">
         <p>Api response: <span>{isLoading ? "loading" : apiResponse}</span></p>
+      </div>
+      <div>
+        <AuthWidget />
       </div>      
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
