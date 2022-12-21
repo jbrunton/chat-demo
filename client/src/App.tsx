@@ -1,20 +1,13 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import { AuthWidget } from './components/auth/AuthWidget'
+import { useGreeting } from './data/greetings'
 
-const useApiResponse = () => {
-  const url = import.meta.env.VITE_API_URL || "";
-  return useQuery({
-    queryKey: ['api'],
-    queryFn: () => fetch(url).then(res => res.text())
-  })
-}
 
 function App() {
   const [count, setCount] = useState(0)
-  const { isLoading, data: apiResponse } = useApiResponse();
+  const { isLoading, data: apiResponse } = useGreeting();
 
   return (
     <div className="App">
