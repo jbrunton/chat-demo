@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const apiUrl = import.meta.env.VITE_API_URL || "";
 
@@ -18,3 +18,19 @@ export const usePrivateGreeting = (accessToken: string) => useQuery({
       }).then((res) => res.text()),
   });
 
+export const useCustomGreeting = (accessToken: string, greeting: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => fetch(`${apiUrl}/custom-greeting`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ greeting }),
+    }).then((res) => res.text()),
+    onSuccess: (greeting) => {
+      queryClient.setQueryData(['private-greeting', accessToken], greeting);
+    }
+  });
+}

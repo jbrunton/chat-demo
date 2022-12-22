@@ -3,8 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 
-const auth0Audience = "https://auth0-test-api.jbrunton-aws.com";
-const auth0IssuerUrl = "https://jbrunton.eu.auth0.com/";
+const auth0Audience = 'https://auth0-test-api.jbrunton-aws.com';
+const auth0IssuerUrl = 'https://jbrunton.eu.auth0.com/';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
