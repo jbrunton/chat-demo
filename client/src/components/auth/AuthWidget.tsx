@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
-import { usePrivateGreeting } from "../../data/greetings";
+import { useCustomGreeting, usePrivateGreeting } from "../../data/greetings";
 import { LoginButton } from "./LoginButton";
 import { LogoutButton } from "./LogoutButton";
 import { Profile } from "./Profile";
@@ -18,7 +18,9 @@ export const AuthWidget = () => {
     }
     getAccessToken();
   }, []);
-  const { data } = usePrivateGreeting(accessToken);
+
+  const { data: privateGreeting } = usePrivateGreeting(accessToken);
+  const { mutate } = useCustomGreeting(accessToken, "Hey {0}, what's up?");
 
   if (isLoading) {
     return <div>Loading ...</div>;
@@ -31,8 +33,15 @@ export const AuthWidget = () => {
   return (
     <>
       {user && (<Profile user={user} />)}
-      { data && (<span>private greeting: {data}</span>) }
-      <LogoutButton />
+      { privateGreeting && (
+        <div>
+          private greeting: {privateGreeting}
+          <button onClick={() => mutate() }>Custom Greeting</button>
+        </div>
+      ) }
+      <div>
+        <LogoutButton />
+      </div>
     </>
   );
 
