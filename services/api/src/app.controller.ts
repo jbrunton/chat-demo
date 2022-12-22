@@ -8,6 +8,11 @@ import { FetchUserInfo } from './user-profile/feat-user-info.decorator';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get()
+  getHealthCheck(): string {
+    return 'OK';
+  }
+
   @Get('greeting')
   getGreeting(): string {
     return this.appService.getGreeting();
