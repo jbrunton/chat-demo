@@ -1,0 +1,13 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+},
+"portsAttributes": {
+	"3000": {
+		"label": "api"
+	},
+	"5173": {
+		"label": "client"
+	}
+}
+}
