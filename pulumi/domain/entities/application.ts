@@ -23,3 +23,12 @@ export interface GetApplicationConfig<
 export interface GetApplicationInputs {
   (serviceName: string): ApplicationInputs;
 }
+
+export interface DatabaseConfig {
+  name: string;
+  tables: [
+    {
+      name: string;
+    }
+  ];
+}
