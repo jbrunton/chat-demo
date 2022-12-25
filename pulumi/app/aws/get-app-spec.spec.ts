@@ -13,11 +13,13 @@ describe("getTaskDefinitionSpec", () => {
       publicUrl: "https://auth0-test-test.dev.jbrunton-aws.com",
       rootDomain: "jbrunton-aws.com",
     };
-    const spec = getTaskDefinitionSpec(
+    const spec = getTaskDefinitionSpec({
       config,
-      "executionRoleArn",
-      "/ecs/auth0-test-logs"
-    );
+      executionRoleArn: "executionRoleArn",
+      taskRoleArn: "taskRoleArn",
+      logGroupName: "/ecs/auth0-test-logs",
+      tableName: "MyTable",
+    });
     expect(spec).toEqual({
       family: "auth0-test-test",
       cpu: "256",
@@ -25,6 +27,7 @@ describe("getTaskDefinitionSpec", () => {
       networkMode: "awsvpc",
       requiresCompatibilities: ["FARGATE"],
       executionRoleArn: "executionRoleArn",
+      taskRoleArn: "taskRoleArn",
       containerDefinitions: JSON.stringify([
         {
           name: "auth0-test-api",
@@ -52,6 +55,10 @@ describe("getTaskDefinitionSpec", () => {
             {
               name: "TAG",
               value: "latest",
+            },
+            {
+              name: "DB_TABLE_NAME",
+              value: "MyTable",
             },
           ],
           secrets: [],

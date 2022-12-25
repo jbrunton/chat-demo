@@ -1,17 +1,28 @@
 import * as aws from "@pulumi/aws";
 import { StackConfig } from "./usecases/stack/get-stack-config";
 
-export const getTaskDefinitionSpec = (
-  config: StackConfig,
-  executionRoleArn: string,
-  logGroupName: string
-): aws.ecs.TaskDefinitionArgs => {
+export type GetTaskDefinitionSpecParams = {
+  config: StackConfig;
+  executionRoleArn: string;
+  taskRoleArn: string;
+  logGroupName: string;
+  tableName: string;
+};
+
+export const getTaskDefinitionSpec = ({
+  config,
+  executionRoleArn,
+  taskRoleArn,
+  logGroupName,
+  tableName,
+}: GetTaskDefinitionSpecParams): aws.ecs.TaskDefinitionArgs => {
   return {
     family: config.appName,
     cpu: "256",
     memory: "512",
     networkMode: "awsvpc",
     requiresCompatibilities: ["FARGATE"],
+    taskRoleArn,
     executionRoleArn,
     containerDefinitions: JSON.stringify([
       {
@@ -40,6 +51,10 @@ export const getTaskDefinitionSpec = (
           {
             name: "TAG",
             value: config.tag,
+          },
+          {
+            name: "DB_TABLE_NAME",
+            value: tableName,
           },
         ],
         secrets: [],
