@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import fetch from 'node-fetch';
 
-export const FetchUserInfo = createParamDecorator(
+export const Identify = createParamDecorator(
   async (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const authorization = request.headers['authorization'];
