@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
@@ -8,6 +8,8 @@ const auth0IssuerUrl = 'https://jbrunton.eu.auth0.com/';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor() {
     super({
       secretOrKeyProvider: passportJwtSecret({
@@ -25,6 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: unknown): unknown {
+    this.logger.log({ payload });
     return payload;
   }
 }
