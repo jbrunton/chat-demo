@@ -8,8 +8,9 @@ export const useGreeting = () =>
     queryFn: () => fetch(`${apiUrl}/greeting`).then((res) => res.text()),
   });
 
-export const usePrivateGreeting = (accessToken: string) => useQuery({
+export const usePrivateGreeting = (accessToken?: string) => useQuery({
     queryKey: ["private-greeting", accessToken],
+    enabled: !!accessToken,
     queryFn: () =>
       fetch(`${apiUrl}/private-greeting`, {
         headers: {
@@ -18,7 +19,7 @@ export const usePrivateGreeting = (accessToken: string) => useQuery({
       }).then((res) => res.text()),
   });
 
-export const useCustomGreeting = (accessToken: string, greeting: string) => {
+export const useCustomGreeting = (greeting: string, accessToken?: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => fetch(`${apiUrl}/custom-greeting`, {

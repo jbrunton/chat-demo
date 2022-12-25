@@ -7,20 +7,22 @@ import { Profile } from "./Profile";
 
 export const AuthWidget = () => {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
-  const [accessToken, setAccessToken] = useState<string>("");
+  const [accessToken, setAccessToken] = useState<string>();
   useEffect(() => {
-    const getAccessToken = async () => {
-      const accessToken = await getAccessTokenSilently({
-        audience: `https://auth0-test-api.jbrunton-aws.com`,
-        scope: "openid profile email",
-      });
-      setAccessToken(accessToken);
+    if (isAuthenticated) {
+      const getAccessToken = async () => {
+        const accessToken = await getAccessTokenSilently({
+          audience: `https://auth0-test-api.jbrunton-aws.com`,
+          scope: "openid profile email",
+        });
+        setAccessToken(accessToken);
+      }
+      getAccessToken();
     }
-    getAccessToken();
-  }, []);
+  }, [isAuthenticated]);
 
   const { data: privateGreeting } = usePrivateGreeting(accessToken);
-  const { mutate } = useCustomGreeting(accessToken, "Hey {0}, what's up?");
+  const { mutate } = useCustomGreeting("Hey {0}, what's up?", accessToken);
 
   if (isLoading) {
     return <div>Loading ...</div>;

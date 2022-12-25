@@ -23,7 +23,7 @@ export class PermissionsGuard implements CanActivate {
 
     const user = context.getArgs()[0].user;
 
-    if (!requiredPermissions) {
+    if (!requiredPermissions || !requiredPermissions.length) {
       return true;
     }
 
@@ -31,7 +31,7 @@ export class PermissionsGuard implements CanActivate {
       user.permissions.includes(requiredPermission),
     );
 
-    const permissionsDescription = `has: ${user.permissions}, required: ${requiredPermissions}`;
+    const permissionsDescription = `has: [${user.permissions}], required: [${requiredPermissions}]`;
     this.logger.log(
       `user ${user.sub} ${
         allow ? 'has' : 'lacks'
