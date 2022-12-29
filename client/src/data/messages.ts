@@ -8,11 +8,25 @@ export type Message = {
     time: number;
 }
 
-export const useMessages = (roomId: string) =>
-    useQuery({
+export const useMessages = (roomId: string, accessToken?: string) => {
+    const queryFn = async () => {
+        const response = await fetch(`${apiUrl}/messages/${roomId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
+        });
+        if (response.ok) {
+            const messages = await response.json();
+            return messages as Message[];
+        }
+        return [];
+    };
+    return useQuery({
         queryKey: [`messages/${roomId}`],
-        queryFn: () => fetch(`${apiUrl}/messages/${roomId}`).then((res) => res.json().then(msg => msg as Message[])),
+        enabled: !!accessToken,
+        queryFn,
     });
+}
 
 export const usePostMessage = (roomId: string, content?: string, accessToken?: string) => {
     const queryClient = useQueryClient();

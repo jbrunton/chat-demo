@@ -7,9 +7,9 @@ export type MessagesWidgetProps = {
 }
 
 export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
-    const { data: messages } = useMessages(roomId);
-    const [content, setContent] = useState<string>("");
     const accessToken = useAccessToken();
+    const [content, setContent] = useState<string>("");
+    const { data: messages, isError } = useMessages(roomId, accessToken);
     const { mutate } = usePostMessage(roomId, content, accessToken)
     const onKeyDown: KeyboardEventHandler = (e) => {
         if (e.key === 'Enter') {
@@ -19,7 +19,7 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
     };
     return (
         <div>
-            {messages && (
+            {messages && !isError && (
                 messages.map(msg => (
                     <div key={msg.id}>
                         <p>{msg.content}</p>
