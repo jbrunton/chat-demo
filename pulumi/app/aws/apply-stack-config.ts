@@ -58,14 +58,14 @@ function createResources(config: StackConfig, shared: SharedResources) {
     ],
   });
 
-  const role = new aws.iam.Role(config.appName, {
+  const taskExecutionRole = new aws.iam.Role(`${config.appName}-exec-role`, {
     assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({
       Service: "ecs-tasks.amazonaws.com",
     }),
   });
 
   new aws.iam.RolePolicy(`${config.appName}-get-params`, {
-    role: role.name,
+    role: taskExecutionRole.name,
     policy: {
       Version: "2012-10-17",
       Statement: [
@@ -80,10 +80,35 @@ function createResources(config: StackConfig, shared: SharedResources) {
     },
   });
 
-  new aws.iam.RolePolicyAttachment(config.appName, {
-    role: role.name,
+  new aws.iam.RolePolicyAttachment(`${config.appName}-exec-role-attachment`, {
+    role: taskExecutionRole.name,
     policyArn:
       "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+  });
+
+  const taskRole = new aws.iam.Role(`${config.appName}-role`, {
+    assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({
+      Service: "ecs-tasks.amazonaws.com",
+    }),
+  });
+
+  new aws.iam.RolePolicy(`${config.appName}-dynamo-db`, {
+    role: taskRole.name,
+    policy: {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Effect: "Allow",
+          Action: ["dynamodb:*"],
+          Resource: ["*"],
+        },
+      ],
+    },
+  });
+
+  new aws.iam.RolePolicyAttachment(`${config.appName}-role-attachment`, {
+    role: taskRole.name,
+    policyArn: aws.iam.ManagedPolicy.AmazonECSFullAccess,
   });
 
   const webLogGroup = new aws.cloudwatch.LogGroup(
@@ -119,36 +144,51 @@ function createResources(config: StackConfig, shared: SharedResources) {
     ],
   });
 
-  pulumi.all([webLogGroup.name, role.arn]).apply(([logGroupName, roleArn]) => {
-    const taskDefinitionSpec = getTaskDefinitionSpec(
-      config,
-      roleArn,
-      logGroupName
-    );
-    const taskDefinition = new aws.ecs.TaskDefinition(
-      config.appName,
-      taskDefinitionSpec
-    );
-
-    new aws.ecs.Service(config.appName, {
-      cluster: cluster.arn,
-      desiredCount: 1,
-      launchType: "FARGATE",
-      taskDefinition: taskDefinition.arn,
-      networkConfiguration: {
-        assignPublicIp: true,
-        subnets: subnets.ids,
-        securityGroups: [securityGroup.id],
-      },
-      loadBalancers: [
-        {
-          targetGroupArn: targetGroup.arn,
-          containerName: "auth0-test-api",
-          containerPort: 8080,
-        },
-      ],
-    });
+  const table = new aws.dynamodb.Table(config.appName, {
+    attributes: [
+      { name: "Id", type: "S" },
+      { name: "Sort", type: "S" },
+    ],
+    hashKey: "Id",
+    rangeKey: "Sort",
+    readCapacity: 1,
+    writeCapacity: 1,
   });
+
+  pulumi
+    .all([webLogGroup.name, taskExecutionRole.arn, taskRole.arn, table.name])
+    .apply(([logGroupName, executionRoleArn, taskRoleArn, tableName]) => {
+      const taskDefinitionSpec = getTaskDefinitionSpec({
+        config,
+        executionRoleArn,
+        taskRoleArn,
+        logGroupName,
+        tableName,
+      });
+      const taskDefinition = new aws.ecs.TaskDefinition(
+        config.appName,
+        taskDefinitionSpec
+      );
+
+      new aws.ecs.Service(config.appName, {
+        cluster: cluster.arn,
+        desiredCount: 1,
+        launchType: "FARGATE",
+        taskDefinition: taskDefinition.arn,
+        networkConfiguration: {
+          assignPublicIp: true,
+          subnets: subnets.ids,
+          securityGroups: [securityGroup.id],
+        },
+        loadBalancers: [
+          {
+            targetGroupArn: targetGroup.arn,
+            containerName: "auth0-test-api",
+            containerPort: 8080,
+          },
+        ],
+      });
+    });
 
   const lb = aws.lb.getLoadBalancerOutput({ arn: shared.loadBalancer.arn });
 

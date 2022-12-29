@@ -3,12 +3,13 @@ import reactLogo from './assets/react.svg'
 import './App.css'
 import { AuthWidget } from './components/auth/AuthWidget'
 import { useGreeting } from './data/greetings'
+import { MessagesWidget } from './components/messages/MessagesWidget'
+import { useMessages } from './data/messages'
 
 
 function App() {
-  const [count, setCount] = useState(0)
-  const { isLoading, data: apiResponse } = useGreeting();
-
+  const [roomId, setRoomId] = useState("101");
+  
   return (
     <div className="App">
       <div>
@@ -21,15 +22,8 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <div className="card">
-        <p>Api response: <span>{isLoading ? "loading" : apiResponse}</span></p>
+        <input placeholder='room ID' value={roomId} onChange={(e) => setRoomId(e.target.value)} />
+        <MessagesWidget roomId={roomId} />
       </div>
       <div>
         <AuthWidget />
