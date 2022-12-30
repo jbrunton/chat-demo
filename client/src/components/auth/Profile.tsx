@@ -1,5 +1,5 @@
-import React from "react";
-import { useAuth0, User } from "@auth0/auth0-react";
+import React from 'react'
+import { User } from '@auth0/auth0-react'
 
 export const Profile: React.FC<{ user: User }> = ({ user }) => {
   return (
@@ -8,5 +8,5 @@ export const Profile: React.FC<{ user: User }> = ({ user }) => {
       <h2>{user.name}</h2>
       <p>{user.email}</p>
     </div>
-  );
-};
+  )
+}
