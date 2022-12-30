@@ -67,6 +67,9 @@ export const applyClientConfig = (
       acmCertificateArn: shared.certificateArn,
       sslSupportMethod: "sni-only",
     },
+    customErrorResponses: [
+      { responsePagePath: "/index.html", responseCode: 200, errorCode: 404 },
+    ],
   });
 
   new aws.route53.Record(config.domain, {
