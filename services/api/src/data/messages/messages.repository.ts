@@ -1,24 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { pick } from 'rambda';
+import * as crypto from 'crypto';
+import { CreateMessageDto } from 'src/messages/dto/create-message.dto';
 import { Message } from 'src/messages/entities/message.entity';
 import { DbAdapter } from '../db.adapter';
+
+const newMessageId = (time: number) => {
+  const rand = crypto.randomBytes(4).toString('hex');
+  return `Msg#${time}#${rand}`;
+};
 
 @Injectable()
 export class MessagesRepository {
   constructor(private readonly db: DbAdapter) {}
 
-  async storeMessage(roomId: string, message: Message): Promise<Message> {
-    const Id = `Room#${roomId}`;
+  async storeMessage(
+    message: CreateMessageDto,
+    time: number,
+  ): Promise<Message> {
+    const Id = `Room#${message.roomId}`;
+    const messageId = newMessageId(time);
+    const data = {
+      ...message,
+      time,
+    };
     const params = {
       Item: {
         Id,
-        Sort: message.id,
-        Data: pick(['content', 'time'], message),
+        Sort: messageId,
+        Data: data,
         Type: 'Message',
       },
     };
     await this.db.putItem(params);
-    return message;
+    return {
+      id: messageId,
+      ...data,
+    };
   }
 
   async getMessages(roomId: string): Promise<Message[]> {

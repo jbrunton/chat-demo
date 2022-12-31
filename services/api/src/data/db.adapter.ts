@@ -1,5 +1,8 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
+  BatchGetCommand,
+  BatchGetCommandInput,
+  BatchGetCommandOutput,
   DynamoDBDocumentClient,
   PutCommand,
   PutCommandInput,
@@ -49,5 +52,16 @@ export class DbAdapter {
     return this.docClient.send(
       new QueryCommand({ ...params, TableName: this.tableName }),
     );
+  }
+
+  async batchGet(keys: Record<string, any>[]): Promise<BatchGetCommandOutput> {
+    const params = {
+      RequestItems: {
+        [this.tableName]: {
+          Keys: keys,
+        },
+      },
+    };
+    return this.docClient.send(new BatchGetCommand(params));
   }
 }

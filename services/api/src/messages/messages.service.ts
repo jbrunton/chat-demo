@@ -5,28 +5,33 @@ import { pick } from 'rambda';
 import { Message } from './entities/message.entity';
 import { DbAdapter } from 'src/data/db.adapter';
 import { MessagesRepository } from 'src/data/messages/messages.repository';
-
-const newMessageId = (time: number) => {
-  const rand = crypto.randomBytes(4).toString('hex');
-  return `Msg#${time}#${rand}`;
-};
+import { User } from './entities/user.entity';
+import { UsersRepository } from 'src/data/users/users.repository';
 
 @Injectable()
 export class MessagesService {
-  constructor(private readonly repo: MessagesRepository) {}
+  constructor(
+    private readonly messagesRepo: MessagesRepository,
+    private readonly usersRepo: UsersRepository,
+  ) {}
 
-  async create({ roomId, content }: CreateMessageDto): Promise<Message> {
+  async create(
+    { roomId, content }: CreateMessageDto,
+    user: User,
+  ): Promise<Message> {
     const time = new Date().getTime();
-    const id = newMessageId(time);
-    const message: Message = {
-      id,
-      content,
+    const author = await this.usersRepo.storeUser(user);
+    return await this.messagesRepo.storeMessage(
+      {
+        content,
+        roomId,
+        authorId: author.id,
+      },
       time,
-    };
-    return await this.repo.storeMessage(roomId, message);
+    );
   }
 
   async findForRoom(roomId: string): Promise<Message[]> {
-    return this.repo.getMessages(roomId);
+    return this.messagesRepo.getMessages(roomId);
   }
 }
