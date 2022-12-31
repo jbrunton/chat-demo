@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 import { pick } from 'rambda';
 import { Message } from './entities/message.entity';
 import { DbAdapter } from 'src/data/db.adapter';
+import { MessagesRepository } from 'src/data/messages/messages.repository';
 
 const newMessageId = (time: number) => {
   const rand = crypto.randomBytes(4).toString('hex');
@@ -12,7 +13,7 @@ const newMessageId = (time: number) => {
 
 @Injectable()
 export class MessagesService {
-  constructor(private readonly db: DbAdapter) {}
+  constructor(private readonly repo: MessagesRepository) {}
 
   async create({ roomId, content }: CreateMessageDto): Promise<Message> {
     const time = new Date().getTime();
@@ -22,34 +23,10 @@ export class MessagesService {
       content,
       time,
     };
-    const params = {
-      Item: {
-        Id: `Room#${roomId}`,
-        Sort: id,
-        Data: pick(['content', 'time'], message),
-        Type: 'Message',
-      },
-    };
-    await this.db.putItem(params);
-    return message;
+    return await this.repo.storeMessage(roomId, message);
   }
 
   async findForRoom(roomId: string): Promise<Message[]> {
-    const data = await this.db.query({
-      KeyConditionExpression: 'Id = :roomId and begins_with(Sort,:filter)',
-      ExpressionAttributeValues: {
-        ':roomId': `Room#${roomId}`,
-        ':filter': 'Msg#',
-      },
-    });
-    const messages = data.Items?.map((item) => {
-      const id = item.Sort;
-      const data = item.Data;
-      return {
-        id,
-        ...data,
-      };
-    });
-    return messages || [];
+    return this.repo.getMessages(roomId);
   }
 }
