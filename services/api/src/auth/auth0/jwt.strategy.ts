@@ -4,8 +4,6 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 import { config } from './auth0.config';
 
-
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
