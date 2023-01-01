@@ -1,72 +1,45 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import * as crypto from "crypto";
-import { pick } from "rambda";
 import { Message } from './entities/message.entity';
-
-const ddbClientConfig = process.env.NODE_ENV === "development"
-  ? { endpoint: "http://localhost:8000", region: "local" }
-  : { region: "us-east-1", endpoint: "https://dynamodb.us-east-1.amazonaws.com" };
-
-const ddbClient = new DynamoDBClient(ddbClientConfig);
-
-const docClient = DynamoDBDocumentClient.from(ddbClient);
-
-const tableName = process.env.DB_TABLE_NAME || "Auth0Test";
-
-const newMessageId = (time: number) => {
-  const rand = crypto.randomBytes(4).toString("hex");
-  return `Msg#${time}#${rand}`;
-};
+import { MessagesRepository } from '../data/messages/messages.repository';
+import { User } from './entities/user.entity';
+import { UsersRepository } from '../data/users/users.repository';
 
 @Injectable()
 export class MessagesService {
-  private readonly logger = new Logger(MessagesService.name);
+  constructor(
+    private readonly messagesRepo: MessagesRepository,
+    private readonly usersRepo: UsersRepository,
+  ) {}
 
-  constructor() {
-    this.logger.log(`Starting MessagesService with config: ${JSON.stringify({...ddbClientConfig, tableName})}`);
-  }
-
-  async create({ roomId, content }: CreateMessageDto): Promise<Message> {
+  async create(
+    { roomId, content }: CreateMessageDto,
+    user: User,
+  ): Promise<Message> {
     const time = new Date().getTime();
-    const id = newMessageId(time);
-    const message: Message = {
-      id,
-      content,
-      time,
-    };
-    const params = {
-      TableName: tableName,
-      Item: {
-        Id: `Room#${roomId}`,
-        Sort: id,
-        Data: pick(["content", "time"], message),
-        Type: "Message",
+    const author = await this.usersRepo.storeUser(user);
+    return await this.messagesRepo.storeMessage(
+      {
+        content,
+        roomId,
+        authorId: author.id,
       },
-    };
-    await docClient.send(new PutCommand(params));
-    return message;
+      time,
+    );
   }
 
-  async findForRoom(roomId: string): Promise<Message[]> {
-    const data = await docClient.send(new QueryCommand({
-      TableName: tableName,
-      KeyConditionExpression: "Id = :roomId and begins_with(Sort,:filter)",
-      ExpressionAttributeValues: {
-        ":roomId": `Room#${roomId}`,
-        ":filter": "Msg#"
-      }
-    }));
-    const messages = data.Items?.map(item => {
-      const id = item.Sort;
-      const data = item.Data;
-      return {
-        id,
-        ...data,
-      };
-    });
-    return messages || [];
+  async findForRoom(
+    roomId: string,
+  ): Promise<{ messages: Message[]; authors: object }> {
+    const messages = await this.messagesRepo.getMessages(roomId);
+    const authorIds = new Set(messages.map((msg) => msg.authorId));
+    const authors = await this.usersRepo.getUsers(Array.from(authorIds));
+    const authorsMap = Object.fromEntries(
+      Array.from(authors.map((author) => [author.id, author])),
+    );
+    return {
+      messages,
+      authors: authorsMap,
+    };
   }
 }

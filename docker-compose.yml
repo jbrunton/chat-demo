@@ -9,3 +9,13 @@ services:
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
+
+  dynamodb-test:
+    command: "-jar DynamoDBLocal.jar -inMemory -port 8001"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-test
+    ports:
+      - "8001:8001"
+    # volumes:
+    #   - "./docker/dynamodb:/home/dynamodblocal/data"
+    # working_dir: /home/dynamodblocal

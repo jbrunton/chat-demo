@@ -13,7 +13,7 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
   const accessToken = useAccessToken()
   const inputRef = useRef<HTMLInputElement>(null)
   const [content, setContent] = useState<string>('')
-  const { data: messages, isError } = useMessages(roomId, accessToken)
+  const { data, isError } = useMessages(roomId, accessToken)
   const { mutate, isLoading } = usePostMessage(roomId, content, accessToken)
   const [isSending, setIsSending] = useState<boolean>(false)
 
@@ -37,7 +37,7 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
   }
   return (
     <div>
-      {messages && !isError && <MessagesList messages={messages} />}
+      {data && !isError && <MessagesList data={data} />}
       <Flex>
         <Input
           ref={inputRef}

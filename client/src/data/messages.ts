@@ -6,6 +6,13 @@ export type Message = {
   id: string
   content: string
   time: number
+  authorId: string
+}
+
+export type User = {
+  id: string
+  name: string
+  picture: string
 }
 
 export const useMessages = (roomId: string, accessToken?: string) => {
@@ -16,10 +23,13 @@ export const useMessages = (roomId: string, accessToken?: string) => {
       },
     })
     if (response.ok) {
-      const messages = await response.json()
-      return messages as Message[]
+      const data = await response.json()
+      return data as { messages: Message[]; authors: Record<string, User> }
     }
-    return []
+    return {
+      messages: [],
+      authors: {},
+    }
   }
   return useQuery({
     queryKey: [`messages/${roomId}`],

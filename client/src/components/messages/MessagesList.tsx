@@ -1,21 +1,28 @@
 import { List, ListIcon, ListItem } from '@chakra-ui/react'
 import React from 'react'
-import { Message } from '../../data/messages'
+import { Message, User } from '../../data/messages'
 import { UserIcon } from '../icons/User'
 
 export type MessagesListProps = {
-  messages: Message[]
+  data: {
+    messages: Message[]
+    authors: Record<string, User>
+  }
 }
 
-export const MessagesList: React.FC<MessagesListProps> = ({ messages }) => {
+export const MessagesList: React.FC<MessagesListProps> = ({ data: { messages, authors } }) => {
   return (
     <List spacing={3}>
-      {messages.map((message) => (
-        <ListItem key={message.id}>
-          <ListIcon as={UserIcon} color='green.500' />
-          {message.content}
-        </ListItem>
-      ))}
+      {messages.map((message) => {
+        const author = authors[message.authorId]
+        return (
+          <ListItem key={message.id}>
+            <ListIcon as={UserIcon} color='green.500' />
+            <span>{author?.name ?? 'Anon'}: </span>
+            {message.content}
+          </ListItem>
+        )
+      })}
     </List>
   )
 }
