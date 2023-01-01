@@ -129,9 +129,9 @@ export class DbAdapter {
     );
   }
 
-  async waitForTable() {
+  async waitForTable(timeout: number) {
     await waitUntilTableExists(
-      { client: this.docClient, maxWaitTime: 20, minDelay: 1 },
+      { client: this.docClient, maxWaitTime: timeout, minDelay: 1 },
       { TableName: this.tableName },
     );
     // const { Table } = await this.docClient.send(new DescribeTableCommand({

@@ -1,6 +1,8 @@
 import { DbAdapter } from './db.adapter';
 
-jest.setTimeout(20_000);
+const timeout = 60;
+
+jest.setTimeout(timeout * 1000);
 
 describe('DbAdapter', () => {
   let db: DbAdapter;
@@ -8,7 +10,7 @@ describe('DbAdapter', () => {
   beforeAll(async () => {
     db = new DbAdapter();
     await db.create();
-    await db.waitForTable();
+    await db.waitForTable(timeout);
   });
 
   afterAll(async () => {
