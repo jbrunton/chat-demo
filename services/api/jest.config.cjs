@@ -14,5 +14,6 @@ module.exports = {
     '^@features/(.*)$': ['<rootDir>/src/features/$1'],
     '^@data/(.*)$': ['<rootDir>/src/data/$1'],
     '^@config/(.*)$': ['<rootDir>/src/config/$1'],
+    '^@fixtures/(.*)$': ['<rootDir>/src/fixtures/$1'],
   },
 };

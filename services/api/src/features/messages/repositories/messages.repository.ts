@@ -13,6 +13,7 @@ type MessageData = {
   content: string;
   time: number;
   authorId: string;
+  roomId: string;
 };
 
 type MessageItem = DBItem<MessageData>;
@@ -47,15 +48,17 @@ export class MessagesRepository {
   }
 
   async getMessages(roomId: string): Promise<Message[]> {
-    const messageItems = await this.db.query<MessageData>({
+    const params = {
       KeyConditionExpression: 'Id = :roomId and begins_with(Sort,:filter)',
       ExpressionAttributeValues: {
         ':roomId': `Room#${roomId}`,
         ':filter': 'Msg#',
       },
-    });
+    };
+    console.log({ params });
+    const messageItems = await this.db.query<MessageData>(params);
     return messageItems.map((item) => ({
-      id: item.Id,
+      id: item.Sort,
       ...item.Data,
     }));
   }

@@ -3,4 +3,5 @@ export class Message {
   content: string;
   time: number;
   authorId: string;
+  roomId: string;
 }

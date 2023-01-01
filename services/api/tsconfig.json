@@ -21,7 +21,8 @@
       "@lib/*": ["src/lib/*"],
       "@features/*": ["src/features/*"],
       "@data/*": ["src/data/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@fixtures/*": ["src/fixtures/*"]
     }
   }
 }
