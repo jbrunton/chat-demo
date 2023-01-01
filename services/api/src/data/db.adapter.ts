@@ -22,17 +22,16 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 import { Injectable, Logger } from '@nestjs/common';
 
-const config =
-  process.env.NODE_ENV === 'development'
-    ? {
-        endpoint: 'http://localhost:8000',
-        region: 'local',
-        credentials: { accessKeyId: 'dummyid', secretAccessKey: 'dummysecret' },
-      }
-    : {
-        region: 'us-east-1',
-        endpoint: 'https://dynamodb.us-east-1.amazonaws.com',
-      };
+const config = ['development', 'test'].includes(process.env.NODE_ENV || '')
+  ? {
+      endpoint: 'http://localhost:8000',
+      region: 'local',
+      credentials: { accessKeyId: 'dummyid', secretAccessKey: 'dummysecret' },
+    }
+  : {
+      region: 'us-east-1',
+      endpoint: 'https://dynamodb.us-east-1.amazonaws.com',
+    };
 
 const defaultTableName =
   process.env.NODE_ENV === 'test' ? 'Auth0Test-Test' : 'Auth0Test-Dev';
