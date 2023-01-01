@@ -4,9 +4,9 @@ import * as crypto from 'crypto';
 import { pick } from 'rambda';
 import { Message } from './entities/message.entity';
 import { DbAdapter } from 'src/data/db.adapter';
-import { MessagesRepository } from 'src/data/messages/messages.repository';
+import { MessagesRepository } from '../data/messages/messages.repository';
 import { User } from './entities/user.entity';
-import { UsersRepository } from 'src/data/users/users.repository';
+import { UsersRepository } from '../data/users/users.repository';
 
 @Injectable()
 export class MessagesService {

@@ -20,6 +20,7 @@
     "db:test:drop": "NODE_ENV=test ts-node ./scripts/dropdb.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
+    "test:int": "jest --config ./jest.int.config.js",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
