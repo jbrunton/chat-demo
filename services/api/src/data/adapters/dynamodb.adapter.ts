@@ -10,19 +10,17 @@ import {
   BatchGetCommand,
   DynamoDBDocumentClient,
   PutCommand,
-  PutCommandInput,
   PutCommandOutput,
   QueryCommand,
   QueryCommandInput,
-  QueryCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import databaseConfig from '../../config/database.config';
-import { NativeAttributeValue } from '@aws-sdk/util-dynamodb/dist-types/models';
 import * as assert from 'assert';
+import { DBAdapter, DBItem } from '../db.adapter';
 
-const tableParams = {
+const defaultTableParams = {
   AttributeDefinitions: [
     {
       AttributeName: 'Id',
@@ -54,7 +52,7 @@ const tableParams = {
 };
 
 @Injectable()
-export class DynamoDBAdapter {
+export class DynamoDBAdapter extends DBAdapter {
   private logger = new Logger(DynamoDBAdapter.name);
   private readonly tableName;
   private readonly docClient: DynamoDBDocumentClient;
@@ -62,6 +60,7 @@ export class DynamoDBAdapter {
   constructor(
     @Inject(databaseConfig.KEY) dbConfig: ConfigType<typeof databaseConfig>,
   ) {
+    super();
     this.logger.log(
       `Creating database adapter with config: ${JSON.stringify(dbConfig)}`,
     );
@@ -70,25 +69,23 @@ export class DynamoDBAdapter {
     this.docClient = DynamoDBDocumentClient.from(dbClient);
   }
 
-  async putItem(
-    params: Omit<PutCommandInput, 'TableName'>,
-  ): Promise<PutCommandOutput> {
+  async putItem<D>(item: DBItem<D>): Promise<PutCommandOutput> {
     return this.docClient.send(
-      new PutCommand({ ...params, TableName: this.tableName }),
+      new PutCommand({ Item: item, TableName: this.tableName }),
     );
   }
 
-  async query(
+  async query<D>(
     params: Omit<QueryCommandInput, 'TableName'>,
-  ): Promise<QueryCommandOutput> {
-    return this.docClient.send(
+  ): Promise<DBItem<D>[]> {
+    const output = await this.docClient.send(
       new QueryCommand({ ...params, TableName: this.tableName }),
     );
+
+    return output.Items as any;
   }
 
-  async batchGet<T = Record<string, NativeAttributeValue>>(
-    keys: Record<string, NativeAttributeValue>[],
-  ): Promise<T[]> {
+  async batchGet<D>(keys: Record<string, any>[]): Promise<DBItem<D>[]> {
     if (!keys.length) {
       return [];
     }
@@ -104,19 +101,18 @@ export class DynamoDBAdapter {
     const output = await this.docClient.send(new BatchGetCommand(params));
     assert(output.Responses);
 
-    const response = output.Responses[this.tableName];
-    assert(response);
-
-    return <T[]>response;
+    return output.Responses[this.tableName] as any;
   }
 
   async create(
-    params: Omit<CreateTableCommandInput, 'TableName'> = tableParams,
+    params?: Omit<CreateTableCommandInput, 'TableName'>,
   ): Promise<CreateTableCommandOutput> {
     this.validateSafeEnv();
-    return this.docClient.send(
-      new CreateTableCommand({ ...params, TableName: this.tableName }),
-    );
+    const createTableParams = {
+      ...(params ?? defaultTableParams),
+      TableName: this.tableName,
+    };
+    return this.docClient.send(new CreateTableCommand(createTableParams));
   }
 
   async destroy() {

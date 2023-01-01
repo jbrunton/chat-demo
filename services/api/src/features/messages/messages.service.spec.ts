@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MessagesRepository } from '../data/messages/messages.repository';
-import { UsersRepository } from '../data/users/users.repository';
+import { MessagesRepository } from './repositories/messages.repository';
+import { UsersRepository } from './repositories/users.repository';
 import { MessagesService } from './messages.service';
 import { mock } from 'jest-mock-extended';
 
