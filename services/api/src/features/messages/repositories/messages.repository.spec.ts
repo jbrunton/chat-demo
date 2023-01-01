@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mock } from 'jest-mock-extended';
-import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';
+import { DBAdapter } from '@data/db.adapter';
 import { MessagesRepository } from './messages.repository';
 
 describe('MessagesRepository', () => {
@@ -11,8 +11,8 @@ describe('MessagesRepository', () => {
       providers: [
         MessagesRepository,
         {
-          provide: DynamoDBAdapter,
-          useValue: mock<DynamoDBAdapter>(),
+          provide: DBAdapter,
+          useValue: mock<DBAdapter>(),
         },
       ],
     }).compile();
