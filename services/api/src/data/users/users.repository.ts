@@ -25,7 +25,7 @@ export class UsersRepository {
     };
   }
 
-  async getUsers(subs: string[]): Promise<Message[]> {
+  async getUsers(subs: string[]): Promise<User[]> {
     const params = {};
     const data = await this.db.batchGet(
       subs.map((sub) => ({

@@ -1,4 +1,13 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import {
+  CreateTableCommand,
+  CreateTableCommandInput,
+  CreateTableCommandOutput,
+  DeleteTableCommand,
+  DynamoDBClient,
+  DynamoDB,
+  DescribeTableCommand,
+  waitUntilTableExists,
+} from '@aws-sdk/client-dynamodb';
 import {
   BatchGetCommand,
   BatchGetCommandInput,
@@ -21,10 +30,45 @@ const config =
         endpoint: 'https://dynamodb.us-east-1.amazonaws.com',
       };
 
+const defaultTableName =
+  process.env.NODE_ENV === 'test' ? 'Auth0Test-Test' : 'Auth0Test-Dev';
+
+const tableParams = {
+  AttributeDefinitions: [
+    {
+      AttributeName: 'Id',
+      AttributeType: 'S',
+    },
+    {
+      AttributeName: 'Sort',
+      AttributeType: 'S',
+    },
+  ],
+  KeySchema: [
+    {
+      AttributeName: 'Id',
+      KeyType: 'HASH',
+    },
+    {
+      AttributeName: 'Sort',
+      KeyType: 'RANGE',
+    },
+  ],
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 1,
+    WriteCapacityUnits: 1,
+  },
+  TableName: 'Auth0Test',
+  StreamSpecification: {
+    StreamEnabled: false,
+  },
+};
+
 @Injectable()
 export class DbAdapter {
   private logger = new Logger(DbAdapter.name);
-  private readonly tableName = process.env.DB_TABLE_NAME || 'Auth0Test';
+  private readonly tableName = process.env.DB_TABLE_NAME || defaultTableName;
+  private readonly dbClient: DynamoDBClient;
   private readonly docClient: DynamoDBDocumentClient;
 
   constructor() {
@@ -63,5 +107,46 @@ export class DbAdapter {
       },
     };
     return this.docClient.send(new BatchGetCommand(params));
+  }
+
+  async create(
+    params: Omit<CreateTableCommandInput, 'TableName'> = tableParams,
+  ): Promise<CreateTableCommandOutput> {
+    this.validateSafeEnv();
+    return this.docClient.send(
+      new CreateTableCommand({ ...params, TableName: this.tableName }),
+    );
+  }
+
+  async destroy() {
+    this.validateSafeEnv();
+    return this.docClient.send(
+      new DeleteTableCommand({
+        TableName: this.tableName,
+      }),
+    );
+  }
+
+  async waitForTable() {
+    await waitUntilTableExists(
+      { client: this.docClient, maxWaitTime: 20, minDelay: 1 },
+      { TableName: this.tableName },
+    );
+    // const { Table } = await this.docClient.send(new DescribeTableCommand({
+    //   TableName: this.tableName
+    // }));
+    // if (Table?.TableStatus !== 'ACTIVE') {
+    //   await new Promise(resolve => setTimeout(resolve, 100));
+    //   await this.waitForTable();
+    // }
+  }
+
+  private validateSafeEnv() {
+    const safeEnvironments = ['development', 'test'];
+    if (!safeEnvironments.includes(process.env.NODE_ENV || '')) {
+      throw new Error(
+        `Expected safe NODE_ENV (${safeEnvironments}), was ${process.env.NODE_ENV}`,
+      );
+    }
   }
 }

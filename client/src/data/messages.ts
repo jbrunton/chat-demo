@@ -8,6 +8,12 @@ export type Message = {
   time: number
 }
 
+export type User = {
+  id: string
+  name: string
+  picture: string
+}
+
 export const useMessages = (roomId: string, accessToken?: string) => {
   const queryFn = async () => {
     const response = await fetch(`${apiUrl}/messages/${roomId}`, {
@@ -16,10 +22,13 @@ export const useMessages = (roomId: string, accessToken?: string) => {
       },
     })
     if (response.ok) {
-      const messages = await response.json()
-      return messages as Message[]
+      const data = await response.json()
+      return data as { messages: Message[]; users: User[] }
     }
-    return []
+    return {
+      messages: [],
+      users: [],
+    }
   }
   return useQuery({
     queryKey: [`messages/${roomId}`],

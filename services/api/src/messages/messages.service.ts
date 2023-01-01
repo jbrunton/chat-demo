@@ -31,7 +31,15 @@ export class MessagesService {
     );
   }
 
-  async findForRoom(roomId: string): Promise<Message[]> {
-    return this.messagesRepo.getMessages(roomId);
+  async findForRoom(
+    roomId: string,
+  ): Promise<{ messages: Message[]; authors: User[] }> {
+    const messages = await this.messagesRepo.getMessages(roomId);
+    const authorIds = new Set(messages.map((msg) => msg.authorId));
+    const authors = await this.usersRepo.getUsers(Array.from(authorIds));
+    return {
+      messages,
+      authors,
+    };
   }
 }
