@@ -46,7 +46,7 @@ jobs:
       - run: npm run test:e2e
 
   build-api:
-    needs: [lint, test]
+    needs: [lint, test, e2e-test]
     if: github.ref == 'refs/heads/develop'
     uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
     with:

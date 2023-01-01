@@ -24,7 +24,11 @@ import { Injectable, Logger } from '@nestjs/common';
 
 const config =
   process.env.NODE_ENV === 'development'
-    ? { endpoint: 'http://localhost:8000', region: 'local' }
+    ? {
+        endpoint: 'http://localhost:8000',
+        region: 'local',
+        credentials: { accessKeyId: 'dummyid', secretAccessKey: 'dummysecret' },
+      }
     : {
         region: 'us-east-1',
         endpoint: 'https://dynamodb.us-east-1.amazonaws.com',
@@ -68,7 +72,6 @@ const tableParams = {
 export class DbAdapter {
   private logger = new Logger(DbAdapter.name);
   private readonly tableName = process.env.DB_TABLE_NAME || defaultTableName;
-  private readonly dbClient: DynamoDBClient;
   private readonly docClient: DynamoDBDocumentClient;
 
   constructor() {
