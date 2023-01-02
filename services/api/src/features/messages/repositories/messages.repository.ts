@@ -55,7 +55,6 @@ export class MessagesRepository {
         ':filter': 'Msg#',
       },
     };
-    console.log({ params });
     const messageItems = await this.db.query<MessageData>(params);
     return messageItems.map((item) => ({
       id: item.Sort,
