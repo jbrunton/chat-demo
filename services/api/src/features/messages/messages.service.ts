@@ -3,8 +3,8 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { Message } from './entities/message.entity';
 import { MessagesRepository } from './repositories/messages.repository';
 import { UsersRepository } from './repositories/users.repository';
-import { UserInfo } from '@lib/auth/user-profile/user-info';
 import * as R from 'rambda';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class MessagesService {
@@ -15,11 +15,12 @@ export class MessagesService {
 
   async saveMessage(
     message: CreateMessageDto,
-    authorInfo: UserInfo,
+    roomId: string,
+    author: User,
   ): Promise<Message> {
     const time = new Date().getTime();
-    const author = await this.usersRepo.storeUser(authorInfo);
-    return this.messagesRepo.storeMessage(message, author.id, time);
+    await this.usersRepo.storeUser(author);
+    return this.messagesRepo.storeMessage(message, roomId, author.id, time);
   }
 
   async findForRoom(

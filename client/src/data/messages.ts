@@ -42,13 +42,13 @@ export const usePostMessage = (roomId: string, content?: string, accessToken?: s
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () =>
-      fetch(`${apiUrl}/messages`, {
+      fetch(`${apiUrl}/messages/${roomId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content, roomId }),
+        body: JSON.stringify({ content }),
       }).then((res) => res.json()),
     onSuccess: () => {
       queryClient.invalidateQueries([`messages/${roomId}`])

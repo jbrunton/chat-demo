@@ -1,9 +1,9 @@
 import { getFakeAuthUser } from '@fixtures/auth/FakeAuth';
-import { UserInfo } from '@lib/auth/user-profile/user-info';
+import { AuthInfo } from '@lib/auth/identity/auth-info';
 import { UnauthorizedException } from '@nestjs/common';
 
 export const client = {
-  async getProfile(token: string): Promise<UserInfo> {
+  async getProfile(token: string): Promise<AuthInfo> {
     const info = getFakeAuthUser(token);
 
     if (!info) {

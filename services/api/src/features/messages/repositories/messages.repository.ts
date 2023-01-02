@@ -24,18 +24,19 @@ export class MessagesRepository {
 
   async storeMessage(
     message: CreateMessageDto,
+    roomId: string,
     authorId: string,
     time: number,
   ): Promise<Message> {
-    const Id = `Room#${message.roomId}`;
     const messageId = newMessageId(time);
     const data = {
       ...message,
       time,
+      roomId,
       authorId,
     };
     const item: MessageItem = {
-      Id,
+      Id: roomId,
       Sort: messageId,
       Data: data,
       Type: 'Message',
@@ -51,7 +52,7 @@ export class MessagesRepository {
     const params = {
       KeyConditionExpression: 'Id = :roomId and begins_with(Sort,:filter)',
       ExpressionAttributeValues: {
-        ':roomId': `Room#${roomId}`,
+        ':roomId': roomId,
         ':filter': 'Msg#',
       },
     };

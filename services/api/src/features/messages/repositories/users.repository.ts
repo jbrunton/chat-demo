@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { DBAdapter, DBItem } from '@data/db.adapter';
-import { UserInfo } from '@lib/auth/user-profile/user-info';
+import { pick } from 'rambda';
 
 type UserData = {
   name: string;
@@ -14,23 +14,16 @@ type UserItem = DBItem<UserData>;
 export class UsersRepository {
   constructor(private readonly db: DBAdapter) {}
 
-  async storeUser(info: UserInfo): Promise<User> {
-    const Id = `User#${info.sub}`;
-    const data = {
-      name: info.name ?? 'Anon',
-      picture: info.picture,
-    };
+  async storeUser(user: User): Promise<User> {
+    const data = pick(['name', 'picture'], user);
     const item: UserItem = {
-      Id,
+      Id: user.id,
       Sort: 'User',
       Data: data,
       Type: 'User',
     };
     await this.db.putItem(item);
-    return {
-      id: Id,
-      ...data,
-    };
+    return user;
   }
 
   async getUsers(userIds: string[]): Promise<User[]> {

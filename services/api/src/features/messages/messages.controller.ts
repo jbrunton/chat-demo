@@ -2,25 +2,29 @@ import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Auth } from '@lib/auth/auth.decorator';
-import { Identify } from '@lib/auth/user-profile/identify.decorator';
-import { UserInfo } from '@lib/auth/user-profile/user-info';
+import { Identify } from '@lib/auth/identity/identify.decorator';
+import { User } from './entities/user.entity';
 
+@Auth()
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-  @Auth()
-  @Post()
+  @Post('/:roomId')
   saveMessage(
+    @Param('roomId') roomId: string,
     @Body() createMessageDto: CreateMessageDto,
-    @Identify() info: UserInfo,
+    @Identify() user: User,
   ) {
-    return this.messagesService.saveMessage(createMessageDto, info);
+    return this.messagesService.saveMessage(
+      createMessageDto,
+      `Room#${roomId}`,
+      user,
+    );
   }
 
-  @Auth()
   @Get('/:roomId')
   getMessages(@Param('roomId') roomId: string) {
-    return this.messagesService.findForRoom(roomId);
+    return this.messagesService.findForRoom(`Room#${roomId}`);
   }
 }
