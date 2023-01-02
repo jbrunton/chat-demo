@@ -5,9 +5,16 @@ import { getApplicationInputs } from "@app/get-application-inputs";
 import { getStackConfig } from "@app/aws/usecases/stack/get-stack-config";
 import { applyClientConfig } from "@app/aws/apply-client-config";
 import { getSharedResources } from "@app/aws/usecases/stack/get-shared-resources";
+import { registerAutoTags } from "@app/aws/auto-tags";
 
 const apiConfig = getStackConfig(getApplicationInputs("api"));
 pulumi.log.info(`api config: ${JSON.stringify(apiConfig, null, " ")}`);
+
+registerAutoTags({
+  "infra:managedBy": "pulumi",
+  "infra:stack": pulumi.getStack(),
+  "infra:project": pulumi.getProject(),
+});
 
 applyStackConfig(apiConfig);
 
