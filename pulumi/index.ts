@@ -1,5 +1,6 @@
 import "./load-paths";
 import * as pulumi from "@pulumi/pulumi";
+import * as pulumiservice from "@pulumi/pulumiservice";
 import { applyStackConfig } from "@app/aws/apply-stack-config";
 import { getApplicationInputs } from "@app/get-application-inputs";
 import { getStackConfig } from "@app/aws/usecases/stack/get-stack-config";
@@ -14,6 +15,14 @@ registerAutoTags({
   "infra:managedBy": "pulumi",
   "infra:stack": pulumi.getStack(),
   "infra:project": pulumi.getProject(),
+});
+
+new pulumiservice.StackTag("stack-tags", {
+  organization: pulumi.getOrganization(),
+  project: pulumi.getProject(),
+  stack: pulumi.getStack(),
+  name: "environment",
+  value: apiConfig.environment,
 });
 
 applyStackConfig(apiConfig);
