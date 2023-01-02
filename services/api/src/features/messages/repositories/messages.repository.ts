@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import * as crypto from 'crypto';
 import { CreateMessageDto } from '../dto/create-message.dto';
 import { Message } from '../entities/message.entity';
 import { DBAdapter, DBItem } from '@data/db.adapter';
+import { getRandomString } from '@lib/util';
 
 const newMessageId = (time: number) => {
-  const rand = crypto.randomBytes(4).toString('hex');
+  const rand = getRandomString();
   return `Msg#${time}#${rand}`;
 };
 
