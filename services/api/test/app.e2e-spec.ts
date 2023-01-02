@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
@@ -8,6 +8,7 @@ import {
   fakeAuthUser,
   FakeAuthGuard,
   resetFakeAuthUsers,
+  FakeAuth,
 } from '@fixtures/auth/FakeAuth';
 
 jest.mock('@lib/auth/auth0/auth0.client');
@@ -21,6 +22,8 @@ jest.mock('@lib/util', () => {
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let db: DBAdapter;
+  let fakeAuth1: FakeAuth;
+  let fakeAuth2: FakeAuth;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -46,17 +49,8 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     jest.useFakeTimers();
 
-    fakeAuthUser('user-1-token', {
-      sub: 'user-1',
-      name: 'User 1',
-      picture: 'https://example.com/user1.png',
-    });
-
-    fakeAuthUser('user-2-token', {
-      sub: 'user-2',
-      name: 'User 2',
-      picture: 'https://example.com/user2.png',
-    });
+    fakeAuth1 = fakeAuthUser();
+    fakeAuth2 = fakeAuthUser();
   });
 
   afterEach(() => {
@@ -70,56 +64,48 @@ describe('AppController (e2e)', () => {
   it('stores and retrieves messages', async () => {
     jest.setSystemTime(1001);
     await request(app.getHttpServer())
-      .post('/messages')
-      .set('Authorization', 'Bearer user-1-token')
+      .post('/messages/1')
+      .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 1!',
-        roomId: '1',
       })
       .expect(201);
 
     jest.setSystemTime(1002);
     await request(app.getHttpServer())
-      .post('/messages')
-      .set('Authorization', 'Bearer user-2-token')
+      .post('/messages/1')
+      .set('Authorization', `Bearer ${fakeAuth2.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 2!',
-        roomId: '1',
       })
       .expect(201);
 
-    await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .get('/messages/1')
-      .set('Authorization', 'Bearer user-1-token')
-      .expect(200, {
-        messages: [
-          {
-            id: 'Msg#1001#a1b2c3',
-            content: 'Hello Room 1, from User 1!',
-            roomId: '1',
-            time: 1001,
-            authorId: 'User#user-1',
-          },
-          {
-            id: 'Msg#1002#a1b2c3',
-            content: 'Hello Room 1, from User 2!',
-            roomId: '1',
-            time: 1002,
-            authorId: 'User#user-2',
-          },
-        ],
-        authors: {
-          'User#user-1': {
-            id: 'User#user-1',
-            name: 'User 1',
-            picture: 'https://example.com/user1.png',
-          },
-          'User#user-2': {
-            id: 'User#user-2',
-            name: 'User 2',
-            picture: 'https://example.com/user2.png',
-          },
+      .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
+      .expect(200);
+
+    expect(body).toEqual({
+      messages: [
+        {
+          id: 'Msg#1001#a1b2c3',
+          content: 'Hello Room 1, from User 1!',
+          roomId: 'Room#1',
+          time: 1001,
+          authorId: fakeAuth1.user.id,
         },
-      });
+        {
+          id: 'Msg#1002#a1b2c3',
+          content: 'Hello Room 1, from User 2!',
+          roomId: 'Room#1',
+          time: 1002,
+          authorId: fakeAuth2.user.id,
+        },
+      ],
+      authors: {
+        [fakeAuth1.user.id]: fakeAuth1.user,
+        [fakeAuth2.user.id]: fakeAuth2.user,
+      },
+    });
   });
 });

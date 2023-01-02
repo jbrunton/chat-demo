@@ -1,8 +1,6 @@
 import * as R from 'rambda';
-import { CreateMessageDto } from '@features/messages/dto/create-message.dto';
-import { Message } from '@features/messages/entities/message.entity';
-import { UserInfo } from '@lib/auth/user-profile/user-info';
 import { User } from '@features/messages/entities/user.entity';
+import { UsersRepository } from '@features/messages/repositories/users.repository';
 
 export class TestUsersRepository {
   private users: User[] = [];
@@ -15,13 +13,7 @@ export class TestUsersRepository {
     this.users = users;
   }
 
-  async storeUser(info: UserInfo): Promise<User> {
-    const id = `User#${info.sub}`;
-    const user: User = {
-      id,
-      name: info.name ?? 'Anon',
-      picture: info.picture,
-    };
+  async storeUser(user: User): Promise<User> {
     this.users.push(user);
     return user;
   }
@@ -29,4 +21,9 @@ export class TestUsersRepository {
   async getUsers(userIds: string[]): Promise<User[]> {
     return R.filter((user) => userIds.includes(user.id), this.users);
   }
+
+  static readonly Provider = {
+    provide: UsersRepository,
+    useClass: TestUsersRepository,
+  };
 }

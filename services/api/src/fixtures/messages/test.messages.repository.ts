@@ -1,6 +1,7 @@
 import * as R from 'rambda';
 import { CreateMessageDto } from '@features/messages/dto/create-message.dto';
 import { Message } from '@features/messages/entities/message.entity';
+import { MessagesRepository } from '@features/messages/repositories/messages.repository';
 
 export class TestMessagesRepository {
   private messages: Message[] = [];
@@ -15,6 +16,7 @@ export class TestMessagesRepository {
 
   async storeMessage(
     params: CreateMessageDto,
+    roomId: string,
     authorId: string,
     time: number,
   ): Promise<Message> {
@@ -24,13 +26,18 @@ export class TestMessagesRepository {
       content: params.content,
       time,
       authorId,
-      roomId: `Room#${params.roomId}`,
+      roomId,
     };
     this.messages.push(message);
     return message;
   }
 
   async getMessages(roomId: string): Promise<Message[]> {
-    return R.filter((msg) => msg.roomId === `Room#${roomId}`, this.messages);
+    return R.filter((msg) => msg.roomId === roomId, this.messages);
   }
+
+  static readonly Provider = {
+    provide: MessagesRepository,
+    useClass: TestMessagesRepository,
+  };
 }

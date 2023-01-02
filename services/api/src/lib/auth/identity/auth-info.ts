@@ -1,4 +1,4 @@
-export interface UserInfo {
+export interface AuthInfo {
   sub: string;
   name?: string;
   given_name?: string;
