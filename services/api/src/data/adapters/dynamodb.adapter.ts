@@ -16,7 +16,7 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import databaseConfig from '../../config/database.config';
+import databaseConfig from '@config/database.config';
 import * as assert from 'assert';
 import { DBAdapter, DBItem } from '../db.adapter';
 

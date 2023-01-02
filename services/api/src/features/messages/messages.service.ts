@@ -13,9 +13,12 @@ export class MessagesService {
     private readonly usersRepo: UsersRepository,
   ) {}
 
-  async create(message: CreateMessageDto, info: UserInfo): Promise<Message> {
+  async saveMessage(
+    message: CreateMessageDto,
+    authorInfo: UserInfo,
+  ): Promise<Message> {
     const time = new Date().getTime();
-    const author = await this.usersRepo.storeUser(info);
+    const author = await this.usersRepo.storeUser(authorInfo);
     return this.messagesRepo.storeMessage(message, author.id, time);
   }
 

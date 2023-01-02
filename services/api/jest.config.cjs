@@ -3,6 +3,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
   testRegex: '.*\\.spec\\.ts$',
+  testPathIgnorePatterns: ['<rootDir>/dist/*'],
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
@@ -14,5 +15,6 @@ module.exports = {
     '^@features/(.*)$': ['<rootDir>/src/features/$1'],
     '^@data/(.*)$': ['<rootDir>/src/data/$1'],
     '^@config/(.*)$': ['<rootDir>/src/config/$1'],
+    '^@fixtures/(.*)$': ['<rootDir>/src/fixtures/$1'],
   },
 };

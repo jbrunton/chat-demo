@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import * as crypto from 'crypto';
 import { CreateMessageDto } from '../dto/create-message.dto';
 import { Message } from '../entities/message.entity';
 import { DBAdapter, DBItem } from '@data/db.adapter';
+import { getRandomString } from '@lib/util';
 
 const newMessageId = (time: number) => {
-  const rand = crypto.randomBytes(4).toString('hex');
+  const rand = getRandomString();
   return `Msg#${time}#${rand}`;
 };
 
@@ -13,6 +13,7 @@ type MessageData = {
   content: string;
   time: number;
   authorId: string;
+  roomId: string;
 };
 
 type MessageItem = DBItem<MessageData>;
@@ -47,15 +48,16 @@ export class MessagesRepository {
   }
 
   async getMessages(roomId: string): Promise<Message[]> {
-    const messageItems = await this.db.query<MessageData>({
+    const params = {
       KeyConditionExpression: 'Id = :roomId and begins_with(Sort,:filter)',
       ExpressionAttributeValues: {
         ':roomId': `Room#${roomId}`,
         ':filter': 'Msg#',
       },
-    });
+    };
+    const messageItems = await this.db.query<MessageData>(params);
     return messageItems.map((item) => ({
-      id: item.Id,
+      id: item.Sort,
       ...item.Data,
     }));
   }

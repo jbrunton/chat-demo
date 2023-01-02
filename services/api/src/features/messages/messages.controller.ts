@@ -11,11 +11,11 @@ export class MessagesController {
 
   @Auth()
   @Post()
-  createMessage(
+  saveMessage(
     @Body() createMessageDto: CreateMessageDto,
     @Identify() info: UserInfo,
   ) {
-    return this.messagesService.create(createMessageDto, info);
+    return this.messagesService.saveMessage(createMessageDto, info);
   }
 
   @Auth()
