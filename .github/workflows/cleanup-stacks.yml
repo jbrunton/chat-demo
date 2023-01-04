@@ -15,7 +15,8 @@ jobs:
           working-directory: pulumi
           legacy-tags: 'environment: development, staging'
           timeout-hours: 6
-          preview: false
+          preview: true
+          verbose: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
