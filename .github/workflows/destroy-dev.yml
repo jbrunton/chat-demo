@@ -18,6 +18,7 @@ jobs:
           command: destroy
           stack-name: ${{ github.head_ref }}
           work-dir: pulumi
+          github-tokeb: ${{ secrets.GITHUB_TOKEN }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
