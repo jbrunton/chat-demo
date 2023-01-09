@@ -13,10 +13,16 @@ jobs:
       - uses: jbrunton/cleanup-pulumi-stacks@develop
         with:
           working-directory: pulumi
-          legacy-tags: 'environment: development, staging'
-          timeout-hours: 6
           preview: true
           verbose: true
+          config: |
+            policies:
+              dev:
+                match:
+                  tags:
+                    environment: development, staging
+                ttl:
+                  hours: 6
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
