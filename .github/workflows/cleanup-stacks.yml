@@ -13,7 +13,6 @@ jobs:
       - uses: jbrunton/cleanup-pulumi-stacks@develop
         with:
           working-directory: pulumi
-          preview: true
           verbose: true
           config: |
             policies:
