@@ -62,9 +62,11 @@ describe('AppController (e2e)', () => {
   });
 
   it('stores and retrieves messages', async () => {
+    const roomId = 'Room#1';
     jest.setSystemTime(1001);
+
     await request(app.getHttpServer())
-      .post('/messages/1')
+      .post(`/messages/${encodeURIComponent(roomId)}`)
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 1!',
@@ -73,7 +75,7 @@ describe('AppController (e2e)', () => {
 
     jest.setSystemTime(1002);
     await request(app.getHttpServer())
-      .post('/messages/1')
+      .post(`/messages/${encodeURIComponent(roomId)}`)
       .set('Authorization', `Bearer ${fakeAuth2.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 2!',
@@ -81,7 +83,7 @@ describe('AppController (e2e)', () => {
       .expect(201);
 
     const { body } = await request(app.getHttpServer())
-      .get('/messages/1')
+      .get(`/messages/${encodeURIComponent(roomId)}`)
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .expect(200);
 

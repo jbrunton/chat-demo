@@ -54,7 +54,7 @@ describe('MessagesController', () => {
 
   describe('GET /messages/:roomId', () => {
     it('requires auth', async () => {
-      await request(app.getHttpServer()).get('/messages/1').expect(403, {
+      await request(app.getHttpServer()).get('/messages/Room#1').expect(403, {
         statusCode: 403,
         message: 'Forbidden resource',
         error: 'Forbidden',
@@ -62,8 +62,7 @@ describe('MessagesController', () => {
     });
 
     it('returns messages for the room', async () => {
-      const roomSuffix = '101';
-      const roomId = `Room#${roomSuffix}`;
+      const roomId = `Room#1`;
 
       const { accessToken } = fakeAuthUser();
 
@@ -78,7 +77,7 @@ describe('MessagesController', () => {
       usersRepository.setData([author]);
 
       await request(app.getHttpServer())
-        .get(`/messages/${roomSuffix}`)
+        .get(`/messages/${encodeURIComponent(roomId)}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200, {
           messages: [message],
@@ -90,7 +89,7 @@ describe('MessagesController', () => {
   });
 
   describe('POST /messages', () => {
-    const roomId = '1';
+    const roomId = 'Room#1';
 
     const message = {
       content: 'Hello!',
@@ -98,7 +97,7 @@ describe('MessagesController', () => {
 
     it('requires auth', async () => {
       await request(app.getHttpServer())
-        .post(`/messages/${roomId}`)
+        .post(`/messages/${encodeURIComponent(roomId)}`)
         .send(message)
         .expect(403, {
           statusCode: 403,
@@ -119,7 +118,7 @@ describe('MessagesController', () => {
       };
 
       await request(app.getHttpServer())
-        .post(`/messages/${roomId}`)
+        .post(`/messages/${encodeURIComponent(roomId)}`)
         .send(message)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(201, expectedMessage);

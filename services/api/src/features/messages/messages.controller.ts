@@ -16,15 +16,11 @@ export class MessagesController {
     @Body() createMessageDto: CreateMessageDto,
     @Identify() user: User,
   ) {
-    return this.messagesService.saveMessage(
-      createMessageDto,
-      `Room#${roomId}`,
-      user,
-    );
+    return this.messagesService.saveMessage(createMessageDto, roomId, user);
   }
 
   @Get('/:roomId')
   getMessages(@Param('roomId') roomId: string) {
-    return this.messagesService.findForRoom(`Room#${roomId}`);
+    return this.messagesService.findForRoom(roomId);
   }
 }
