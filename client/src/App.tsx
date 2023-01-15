@@ -1,28 +1,9 @@
 import React from 'react'
 import { Box, Button, Flex, Heading, Spacer, Link, HStack } from '@chakra-ui/react'
 import { SignInButton } from './components/auth/SignInButton'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { HomePage } from './pages/Home'
-import { RoomPage } from './pages/room/Room'
-import { NotFoundPage } from './pages/NotFound'
+import { RouterProvider } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
-import { NewRoomPage } from './pages/room/New'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <HomePage />,
-    errorElement: <NotFoundPage />,
-  },
-  {
-    path: '/room/new',
-    element: <NewRoomPage />,
-  },
-  {
-    path: '/room/:roomId',
-    element: <RoomPage />,
-  },
-])
+import { router } from './router'
 
 function App() {
   const { isAuthenticated } = useAuth0()

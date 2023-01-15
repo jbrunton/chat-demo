@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom'
 import { MessagesWidget } from '../../components/messages/MessagesWidget'
 
 export const RoomPage = () => {
-  const { roomId } = useParams()
+  const { clientRoomId } = useParams()
 
-  if (!roomId) return <span>Loading</span>
+  if (!clientRoomId) return <span>Loading</span>
 
+  const roomId = `Room#${clientRoomId}`
   return <MessagesWidget roomId={roomId} />
 }
