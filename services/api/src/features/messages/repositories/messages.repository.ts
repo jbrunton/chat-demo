@@ -6,7 +6,7 @@ import { getRandomString } from '@lib/util';
 
 const newMessageId = (time: number) => {
   const rand = getRandomString();
-  return `Msg#${time}#${rand}`;
+  return `msg_${time}_${rand}`;
 };
 
 type MessageData = {
@@ -53,7 +53,7 @@ export class MessagesRepository {
       KeyConditionExpression: 'Id = :roomId and begins_with(Sort,:filter)',
       ExpressionAttributeValues: {
         ':roomId': roomId,
-        ':filter': 'Msg#',
+        ':filter': 'msg_',
       },
     };
     const messageItems = await this.db.query<MessageData>(params);

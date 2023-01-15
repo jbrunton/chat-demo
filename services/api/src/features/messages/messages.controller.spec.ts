@@ -62,7 +62,7 @@ describe('MessagesController', () => {
     });
 
     it('returns messages for the room', async () => {
-      const roomId = `Room#1`;
+      const roomId = `room_1`;
 
       const { accessToken } = fakeAuthUser();
 
@@ -77,7 +77,7 @@ describe('MessagesController', () => {
       usersRepository.setData([author]);
 
       await request(app.getHttpServer())
-        .get(`/messages/${encodeURIComponent(roomId)}`)
+        .get(`/messages/${roomId}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200, {
           messages: [message],
@@ -89,7 +89,7 @@ describe('MessagesController', () => {
   });
 
   describe('POST /messages', () => {
-    const roomId = 'Room#1';
+    const roomId = 'room_1';
 
     const message = {
       content: 'Hello!',
@@ -97,7 +97,7 @@ describe('MessagesController', () => {
 
     it('requires auth', async () => {
       await request(app.getHttpServer())
-        .post(`/messages/${encodeURIComponent(roomId)}`)
+        .post(`/messages/${roomId}`)
         .send(message)
         .expect(403, {
           statusCode: 403,
@@ -114,11 +114,11 @@ describe('MessagesController', () => {
         content: message.content,
         time: 1001,
         authorId: user.id,
-        roomId: 'Room#1',
+        roomId: 'room_1',
       };
 
       await request(app.getHttpServer())
-        .post(`/messages/${encodeURIComponent(roomId)}`)
+        .post(`/messages/${roomId}`)
         .send(message)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(201, expectedMessage);

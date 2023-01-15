@@ -2,6 +2,7 @@ import { Button, Flex, Icon, Input, Spinner } from '@chakra-ui/react'
 import React, { useState, KeyboardEventHandler, useRef, useEffect } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { useMessages, usePostMessage } from '../../data/messages'
+import { useRoom } from '../../data/rooms'
 import { useAccessToken } from '../../hooks/useAccessToken'
 import { MessagesList } from './MessagesList'
 
@@ -13,7 +14,8 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
   const accessToken = useAccessToken()
   const inputRef = useRef<HTMLInputElement>(null)
   const [content, setContent] = useState<string>('')
-  const { data, isError } = useMessages(roomId, accessToken)
+  const { data: messages, isError: messageError } = useMessages(roomId, accessToken)
+  const { data: room, isError: roomError } = useRoom(roomId, accessToken)
   const { mutate, isLoading } = usePostMessage(roomId, content, accessToken)
   const [isSending, setIsSending] = useState<boolean>(false)
 
@@ -37,7 +39,12 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
   }
   return (
     <div>
-      {data && !isError && <MessagesList data={data} />}
+      {room && !roomError && (
+        <div>
+          <span>Room: {room.id}</span> <span>Owner: {room.ownerId}</span>
+        </div>
+      )}
+      {messages && !messageError && <MessagesList data={messages} />}
       <Flex>
         <Input
           ref={inputRef}

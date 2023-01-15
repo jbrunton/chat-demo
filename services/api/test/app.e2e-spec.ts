@@ -62,11 +62,11 @@ describe('AppController (e2e)', () => {
   });
 
   it('stores and retrieves messages', async () => {
-    const roomId = 'Room#1';
+    const roomId = 'room_1';
     jest.setSystemTime(1001);
 
     await request(app.getHttpServer())
-      .post(`/messages/${encodeURIComponent(roomId)}`)
+      .post(`/messages/${roomId}`)
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 1!',
@@ -75,7 +75,7 @@ describe('AppController (e2e)', () => {
 
     jest.setSystemTime(1002);
     await request(app.getHttpServer())
-      .post(`/messages/${encodeURIComponent(roomId)}`)
+      .post(`/messages/${roomId}`)
       .set('Authorization', `Bearer ${fakeAuth2.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 2!',
@@ -83,23 +83,23 @@ describe('AppController (e2e)', () => {
       .expect(201);
 
     const { body } = await request(app.getHttpServer())
-      .get(`/messages/${encodeURIComponent(roomId)}`)
+      .get(`/messages/${roomId}`)
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .expect(200);
 
     expect(body).toEqual({
       messages: [
         {
-          id: 'Msg#1001#a1b2c3',
+          id: 'msg_1001_a1b2c3',
           content: 'Hello Room 1, from User 1!',
-          roomId: 'Room#1',
+          roomId: 'room_1',
           time: 1001,
           authorId: fakeAuth1.user.id,
         },
         {
-          id: 'Msg#1002#a1b2c3',
+          id: 'msg_1002_a1b2c3',
           content: 'Hello Room 1, from User 2!',
-          roomId: 'Room#1',
+          roomId: 'room_1',
           time: 1002,
           authorId: fakeAuth2.user.id,
         },
