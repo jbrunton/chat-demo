@@ -5,7 +5,7 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { TestUsersRepository } from '@fixtures/messages/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/messages/test.messages.repository';
-import { User } from './entities/user.entity';
+import { User } from '@entities/user.entity';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 

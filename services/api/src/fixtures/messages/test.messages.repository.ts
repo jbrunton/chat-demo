@@ -1,6 +1,6 @@
 import * as R from 'rambda';
 import { CreateMessageDto } from '@features/messages/dto/create-message.dto';
-import { Message } from '@features/messages/entities/message.entity';
+import { Message } from 'src/domain/entities/message.entity';
 import { MessagesRepository } from '@features/messages/repositories/messages.repository';
 
 export class TestMessagesRepository {

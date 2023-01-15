@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { Message } from './entities/message.entity';
+import { Message } from '../../domain/entities/message.entity';
 import { MessagesRepository } from './repositories/messages.repository';
 import { UsersRepository } from './repositories/users.repository';
 import * as R from 'rambda';
-import { User } from './entities/user.entity';
+import { User } from '@entities/user.entity';
 
 @Injectable()
 export class MessagesService {

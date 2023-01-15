@@ -1,5 +1,5 @@
 import * as R from 'rambda';
-import { User } from '@features/messages/entities/user.entity';
+import { User } from '@entities/user.entity';
 import { UsersRepository } from '@features/messages/repositories/users.repository';
 
 export class TestUsersRepository {
