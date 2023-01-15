@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { Message } from '@features/messages/entities/message.entity';
+import { Message } from 'src/domain/entities/message.entity';
 import { UserFactory } from './user.factory';
 
 export const MessageFactory = {

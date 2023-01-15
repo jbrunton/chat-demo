@@ -1,10 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 import { client } from '@lib/auth/auth0/auth0.client';
-import {
-  User,
-  userFromAuthInfo,
-} from '@features/messages/entities/user.entity';
+import { User, userFromAuthInfo } from '@entities/user.entity';
 
 const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
 

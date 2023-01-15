@@ -3,10 +3,7 @@ import { CanActivate } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 import { faker } from '@faker-js/faker';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
-import {
-  User,
-  userFromAuthInfo,
-} from '@features/messages/entities/user.entity';
+import { User, userFromAuthInfo } from '@entities/user.entity';
 
 export type FakeAuth = {
   accessToken: string;

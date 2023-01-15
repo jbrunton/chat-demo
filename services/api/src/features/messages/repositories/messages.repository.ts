@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMessageDto } from '../dto/create-message.dto';
-import { Message } from '../entities/message.entity';
+import { Message } from '../../../domain/entities/message.entity';
 import { DBAdapter, DBItem } from '@data/db.adapter';
 import { getRandomString } from '@lib/util';
 

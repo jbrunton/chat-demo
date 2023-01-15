@@ -22,7 +22,8 @@
       "@features/*": ["src/features/*"],
       "@data/*": ["src/data/*"],
       "@config/*": ["src/config/*"],
-      "@fixtures/*": ["src/fixtures/*"]
+      "@fixtures/*": ["src/fixtures/*"],
+      "@entities/*": ["src/domain/entities/*"]
     }
   }
 }

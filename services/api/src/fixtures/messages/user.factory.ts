@@ -1,4 +1,4 @@
-import { User } from '@features/messages/entities/user.entity';
+import { User } from '@entities/user.entity';
 import { faker } from '@faker-js/faker';
 
 export const UserFactory = {

@@ -3,7 +3,7 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Auth } from '@lib/auth/auth.decorator';
 import { Identify } from '@lib/auth/identity/identify.decorator';
-import { User } from './entities/user.entity';
+import { User } from '@entities/user.entity';
 
 @Auth()
 @Controller('messages')
