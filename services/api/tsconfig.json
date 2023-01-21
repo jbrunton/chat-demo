@@ -23,7 +23,8 @@
       "@data/*": ["src/data/*"],
       "@config/*": ["src/config/*"],
       "@fixtures/*": ["src/fixtures/*"],
-      "@entities/*": ["src/domain/entities/*"]
+      "@entities/*": ["src/domain/entities/*"],
+      "@usecases/*": ["src/domain/usecases/*"]
     }
   }
 }

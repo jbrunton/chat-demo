@@ -1,6 +1,5 @@
 import * as R from 'rambda';
-import { CreateMessageDto } from '@features/messages/dto/create-message.dto';
-import { Message } from 'src/domain/entities/message.entity';
+import { Draft, Message } from 'src/domain/entities/message.entity';
 import { MessagesRepository } from '@features/messages/repositories/messages.repository';
 
 export class TestMessagesRepository {
@@ -14,19 +13,14 @@ export class TestMessagesRepository {
     this.messages = messages;
   }
 
-  async storeMessage(
-    params: CreateMessageDto,
-    roomId: string,
-    authorId: string,
-    time: number,
-  ): Promise<Message> {
+  async storeMessage(draft: Draft<Message>, time: number): Promise<Message> {
     const id = `Msg#${time}`;
     const message = {
       id,
-      content: params.content,
+      content: draft.content,
       time,
-      authorId,
-      roomId,
+      authorId: draft.authorId,
+      roomId: draft.roomId,
     };
     this.messages.push(message);
     return message;

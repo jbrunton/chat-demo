@@ -94,11 +94,12 @@ describe('MessagesController', () => {
 
     const message = {
       content: 'Hello!',
+      roomId,
     };
 
     it('requires auth', async () => {
       await request(app.getHttpServer())
-        .post(`/messages/${roomId}`)
+        .post('/messages')
         .send(message)
         .expect(403, {
           statusCode: 403,
@@ -119,7 +120,7 @@ describe('MessagesController', () => {
       };
 
       await request(app.getHttpServer())
-        .post(`/messages/${roomId}`)
+        .post('/messages')
         .send(message)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(201, expectedMessage);
