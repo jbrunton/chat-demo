@@ -8,7 +8,7 @@ export class User {
 }
 
 export const userFromAuthInfo = (authInfo: AuthInfo): User => ({
-  id: `User#${authInfo.sub}`,
+  id: `user:${authInfo.sub}`,
   name: authInfo.name ?? `${faker.word.adverb()}-${faker.animal.bird()}`,
   picture: authInfo.picture,
 });

@@ -22,3 +22,4 @@ export const isPrivate = (message: Message): message is PrivateMessage => {
 };
 
 export type Draft<T = Message> = Omit<T, 'id' | 'time'>;
+export type DraftMessage = Draft<Message>;

@@ -1,6 +1,7 @@
-import * as R from 'rambda';
+import { filter } from 'rambda';
 import { User } from '@entities/user.entity';
 import { UsersRepository } from '@features/messages/repositories/users.repository';
+import { AuthInfo } from '@lib/auth/identity/auth-info';
 
 export class TestUsersRepository {
   private users: User[] = [];
@@ -13,13 +14,18 @@ export class TestUsersRepository {
     this.users = users;
   }
 
-  async storeUser(user: User): Promise<User> {
+  async storeUser(params: AuthInfo): Promise<User> {
+    const user = {
+      id: `user:${params.sub}`,
+      name: params.name ?? 'Anon',
+      picture: params.picture,
+    };
     this.users.push(user);
     return user;
   }
 
   async getUsers(userIds: string[]): Promise<User[]> {
-    return R.filter((user) => userIds.includes(user.id), this.users);
+    return filter((user) => userIds.includes(user.id), this.users);
   }
 
   static readonly Provider = {

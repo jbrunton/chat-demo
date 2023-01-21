@@ -1,5 +1,5 @@
 import * as R from 'rambda';
-import { Draft, Message } from 'src/domain/entities/message.entity';
+import { DraftMessage, Message } from 'src/domain/entities/message.entity';
 import { MessagesRepository } from '@features/messages/repositories/messages.repository';
 
 export class TestMessagesRepository {
@@ -13,14 +13,12 @@ export class TestMessagesRepository {
     this.messages = messages;
   }
 
-  async storeMessage(draft: Draft<Message>, time: number): Promise<Message> {
-    const id = `Msg#${time}`;
+  async storeMessage(params: DraftMessage, time: number): Promise<Message> {
+    const id = `message:${time}`;
     const message = {
       id,
-      content: draft.content,
       time,
-      authorId: draft.authorId,
-      roomId: draft.roomId,
+      ...R.pick(['content', 'authorId', 'roomId'], params),
     };
     this.messages.push(message);
     return message;

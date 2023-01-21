@@ -26,5 +26,8 @@
       "@entities/*": ["src/domain/entities/*"],
       "@usecases/*": ["src/domain/usecases/*"]
     }
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }

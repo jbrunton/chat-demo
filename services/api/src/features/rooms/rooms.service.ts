@@ -1,13 +1,18 @@
 import { Room } from '@entities/room.entitiy';
-import { User } from '@entities/user.entity';
+import { UsersRepository } from '@features/messages/repositories/users.repository';
+import { AuthInfo } from '@lib/auth/identity/auth-info';
 import { Injectable } from '@nestjs/common';
 import { RoomsRepository } from './repositories/rooms.repository';
 
 @Injectable()
 export class RoomsService {
-  constructor(private readonly roomsRepo: RoomsRepository) {}
+  constructor(
+    private readonly roomsRepo: RoomsRepository,
+    private readonly usersRepos: UsersRepository,
+  ) {}
 
-  async createRoom(owner: User): Promise<Room> {
+  async createRoom(ownerAuth: AuthInfo): Promise<Room> {
+    const owner = await this.usersRepos.storeUser(ownerAuth);
     return this.roomsRepo.createRoom(owner.id);
   }
 

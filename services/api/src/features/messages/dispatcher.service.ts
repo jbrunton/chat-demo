@@ -1,5 +1,6 @@
 import { isPrivate, Message } from '@entities/message.entity';
 import { User } from '@entities/user.entity';
+import { AuthInfo } from '@lib/auth/identity/auth-info';
 import { Injectable } from '@nestjs/common';
 import { fromEvent, merge } from 'rxjs';
 import { EventEmitter } from 'stream';
@@ -12,14 +13,14 @@ export class DispatcherService {
     this.emitter = new EventEmitter();
   }
 
-  subscribe(roomId: string, userId: string) {
+  subscribe(roomId: string, auth: AuthInfo) {
     const publicMessages = fromEvent(
       this.emitter,
       publicMessageChannel(roomId),
     );
     const privateMessages = fromEvent(
       this.emitter,
-      privateMessageChannel(roomId, userId),
+      privateMessageChannel(roomId, `user:${auth.sub}`),
     );
     return merge(publicMessages, privateMessages);
   }

@@ -8,6 +8,7 @@ import { TestMessagesRepository } from '@fixtures/messages/test.messages.reposit
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { DispatcherService } from './dispatcher.service';
+import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -33,25 +34,31 @@ describe('MessagesService', () => {
   });
 
   describe('handleMessage', () => {
-    it.only('stores public messages', async () => {
+    it('stores public messages', async () => {
       const roomId = 'Room#1';
       const message: CreateMessageDto = {
         content: 'Hello!',
         roomId,
       };
-      const author = UserFactory.build();
+      const author = AuthInfoFactory.build();
       const response = await service.handleMessage(message, author);
 
       const expectedMessage = {
-        id: 'Msg#1001',
+        id: 'message:1001',
         content: 'Hello!',
         roomId,
-        authorId: author.id,
+        authorId: `user:${author.sub}`,
         time: 1001,
       };
       expect(response).toEqual(expectedMessage);
       expect(messagesRepository.getData()).toEqual([expectedMessage]);
-      expect(usersRepository.getData()).toEqual([author]);
+      expect(usersRepository.getData()).toEqual([
+        {
+          id: `user:${author.sub}`,
+          name: author.name,
+          picture: author.picture,
+        },
+      ]);
     });
   });
 
