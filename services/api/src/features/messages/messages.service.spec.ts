@@ -5,7 +5,6 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { TestUsersRepository } from '@fixtures/messages/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/messages/test.messages.repository';
-import { User } from '@entities/user.entity';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { DispatcherService } from './dispatcher.service';
@@ -33,14 +32,15 @@ describe('MessagesService', () => {
     messagesRepository = module.get(MessagesRepository);
   });
 
-  describe('saveMessage', () => {
-    it('stores the message', async () => {
+  describe('handleMessage', () => {
+    it.only('stores public messages', async () => {
       const roomId = 'Room#1';
       const message: CreateMessageDto = {
         content: 'Hello!',
+        roomId,
       };
       const author = UserFactory.build();
-      const response = await service.saveMessage(message, roomId, author);
+      const response = await service.handleMessage(message, author);
 
       const expectedMessage = {
         id: 'Msg#1001',

@@ -14,12 +14,13 @@ export const MessagesList: React.FC<MessagesListProps> = ({ data: { messages, au
   return (
     <List spacing={3}>
       {messages.map((message) => {
+        const isSystem = message.authorId === 'system'
         const author = authors[message.authorId]
         return (
           <ListItem key={message.id}>
             <ListIcon as={UserIcon} color='green.500' />
-            <span>{author?.name ?? 'Anon'}: </span>
-            {message.content}
+            <span>{isSystem ? 'System' : author?.name ?? 'Anon'}: </span>
+            <div dangerouslySetInnerHTML={{ __html: message.content }} />
           </ListItem>
         )
       })}

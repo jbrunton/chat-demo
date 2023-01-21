@@ -39,6 +39,7 @@ export const useMessages = (roomId: string, accessToken?: string) => {
   return useQuery({
     queryKey: [`messages/${roomId}`],
     enabled: !!accessToken,
+    refetchOnWindowFocus: false,
     queryFn,
   })
 }
@@ -81,13 +82,13 @@ export const useMessagesSubscription = (roomId: string, accessToken?: string) =>
 export const usePostMessage = (roomId: string, content?: string, accessToken?: string) => {
   return useMutation({
     mutationFn: () =>
-      fetch(`${apiUrl}/messages/${roomId}`, {
+      fetch(`${apiUrl}/messages`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content, roomId }),
       }).then((res) => res.json()),
   })
 }

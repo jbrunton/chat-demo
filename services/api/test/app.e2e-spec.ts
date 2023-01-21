@@ -66,19 +66,21 @@ describe('AppController (e2e)', () => {
     jest.setSystemTime(1001);
 
     await request(app.getHttpServer())
-      .post(`/messages/${roomId}`)
+      .post('/messages')
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 1!',
+        roomId,
       })
       .expect(201);
 
     jest.setSystemTime(1002);
     await request(app.getHttpServer())
-      .post(`/messages/${roomId}`)
+      .post('/messages')
       .set('Authorization', `Bearer ${fakeAuth2.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 2!',
+        roomId,
       })
       .expect(201);
 

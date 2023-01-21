@@ -17,5 +17,6 @@ module.exports = {
     '^@config/(.*)$': ['<rootDir>/src/config/$1'],
     '^@fixtures/(.*)$': ['<rootDir>/src/fixtures/$1'],
     '^@entities/(.*)$': ['<rootDir>/src/domain/entities/$1'],
+    '^@usecases/(.*)$': ['<rootDir>/src/domain/usecases/$1'],
   },
 };

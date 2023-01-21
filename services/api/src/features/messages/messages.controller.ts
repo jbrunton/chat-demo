@@ -14,13 +14,12 @@ export class MessagesController {
     private readonly dispatcher: DispatcherService,
   ) {}
 
-  @Post('/:roomId')
+  @Post('/')
   saveMessage(
-    @Param('roomId') roomId: string,
     @Body() createMessageDto: CreateMessageDto,
     @Identify() user: User,
   ) {
-    return this.messagesService.saveMessage(createMessageDto, roomId, user);
+    return this.messagesService.handleMessage(createMessageDto, user);
   }
 
   @Get('/:roomId')
@@ -29,7 +28,7 @@ export class MessagesController {
   }
 
   @Sse('/:roomId/subscribe')
-  subscribeMessages(@Param('roomId') roomId: string) {
-    return this.dispatcher.subscribe(roomId);
+  subscribeMessages(@Param('roomId') roomId: string, @Identify() user: User) {
+    return this.dispatcher.subscribe(roomId, user.id);
   }
 }

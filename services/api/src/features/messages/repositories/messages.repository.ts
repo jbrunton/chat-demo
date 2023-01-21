@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMessageDto } from '../dto/create-message.dto';
-import { Message } from '../../../domain/entities/message.entity';
+import { Draft, Message } from '@entities/message.entity';
 import { DBAdapter, DBItem } from '@data/db.adapter';
 import { getRandomString } from '@lib/util';
 
@@ -22,21 +21,14 @@ type MessageItem = DBItem<MessageData>;
 export class MessagesRepository {
   constructor(private readonly db: DBAdapter) {}
 
-  async storeMessage(
-    message: CreateMessageDto,
-    roomId: string,
-    authorId: string,
-    time: number,
-  ): Promise<Message> {
+  async storeMessage(message: Draft<Message>, time: number): Promise<Message> {
     const messageId = newMessageId(time);
     const data = {
       ...message,
       time,
-      roomId,
-      authorId,
     };
     const item: MessageItem = {
-      Id: roomId,
+      Id: message.roomId,
       Sort: messageId,
       Data: data,
       Type: 'Message',
