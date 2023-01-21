@@ -8,6 +8,7 @@ import { TestMessagesRepository } from '@fixtures/messages/test.messages.reposit
 import { User } from '@entities/user.entity';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
+import { DispatcherService } from './dispatcher.service';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -21,6 +22,7 @@ describe('MessagesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MessagesService,
+        DispatcherService,
         TestUsersRepository.Provider,
         TestMessagesRepository.Provider,
       ],

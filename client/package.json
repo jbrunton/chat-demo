@@ -17,6 +17,7 @@
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@tanstack/react-query": "^4.20.4",
+    "event-source-polyfill": "1.0.31",
     "framer-motion": "8.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -24,6 +25,7 @@
     "react-router-dom": "6.6.1"
   },
   "devDependencies": {
+    "@types/event-source-polyfill": "1.0.0",
     "@types/node": "^18.11.17",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
