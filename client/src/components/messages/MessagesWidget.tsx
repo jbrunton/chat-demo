@@ -1,7 +1,7 @@
 import { Button, Flex, Icon, Input, Spinner } from '@chakra-ui/react'
 import React, { useState, KeyboardEventHandler, useRef, useEffect } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
-import { useMessages, usePostMessage } from '../../data/messages'
+import { useMessages, useMessagesSubscription, usePostMessage } from '../../data/messages'
 import { useRoom } from '../../data/rooms'
 import { useAccessToken } from '../../hooks/useAccessToken'
 import { MessagesList } from './MessagesList'
@@ -26,6 +26,8 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
       inputRef.current?.focus()
     }
   }, [isLoading, isSending])
+
+  useMessagesSubscription(roomId, accessToken)
 
   const sendMessage = () => {
     setIsSending(true)

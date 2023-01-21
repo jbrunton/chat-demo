@@ -15,6 +15,7 @@ import {
 import { MessagesService } from './messages.service';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
+import { DispatcherService } from './dispatcher.service';
 
 jest.mock('@lib/auth/auth0/auth0.client');
 
@@ -31,7 +32,7 @@ describe('MessagesController', () => {
       imports: [],
       controllers: [MessagesController],
       providers: [
-        MessagesController,
+        DispatcherService,
         MessagesService,
         TestUsersRepository.Provider,
         TestMessagesRepository.Provider,

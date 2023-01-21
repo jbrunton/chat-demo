@@ -1,16 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Message } from '../../domain/entities/message.entity';
 import { MessagesRepository } from './repositories/messages.repository';
 import { UsersRepository } from './repositories/users.repository';
 import * as R from 'rambda';
 import { User } from '@entities/user.entity';
+import { DispatcherService } from './dispatcher.service';
 
 @Injectable()
 export class MessagesService {
+  private readonly logger = new Logger(MessagesService.name);
+
   constructor(
     private readonly messagesRepo: MessagesRepository,
     private readonly usersRepo: UsersRepository,
+    private readonly dispatcher: DispatcherService,
   ) {}
 
   async saveMessage(
@@ -20,7 +24,17 @@ export class MessagesService {
   ): Promise<Message> {
     const time = new Date().getTime();
     await this.usersRepo.storeUser(author);
-    return this.messagesRepo.storeMessage(message, roomId, author.id, time);
+    const storedMessage = await this.messagesRepo.storeMessage(
+      message,
+      roomId,
+      author.id,
+      time,
+    );
+    this.logger.log(
+      `emitting event: ${roomId}, ${JSON.stringify(storedMessage)}`,
+    );
+    this.dispatcher.emit(storedMessage, author);
+    return storedMessage;
   }
 
   async findForRoom(
