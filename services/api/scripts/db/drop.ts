@@ -6,9 +6,7 @@ runWithContext({
   rootModule: DataModule,
   run: async (app, logger) => {
     const db = app.get(DBAdapter);
-    const { TableDescription } = await db.destroy();
-    logger.log(
-      `Dropped table ${TableDescription?.TableName} (${TableDescription?.TableArn})`,
-    );
+    await db.destroy();
+    logger.log(`Dropped table ${db.tableName}`);
   },
 });

@@ -8,10 +8,10 @@ import {
 import { MessagesRepository } from './repositories/messages.repository';
 import { UsersRepository } from './repositories/users.repository';
 import * as R from 'rambda';
-import { User } from '@entities/user.entity';
 import { DispatcherService } from './dispatcher.service';
 import { isCommand, ParsedMessage, parseMessage } from './parse-message';
 import { processCommand } from '@usecases/process-command/process';
+import { AuthInfo } from '@lib/auth/identity/auth-info';
 
 @Injectable()
 export class MessagesService {
@@ -25,8 +25,10 @@ export class MessagesService {
 
   async handleMessage(
     incoming: CreateMessageDto,
-    author: User,
+    authorInfo: AuthInfo,
   ): Promise<Message> {
+    const author = await this.usersRepo.storeUser(authorInfo);
+
     const processCommands = (message: ParsedMessage): Draft<Message> => {
       if (isCommand(message)) {
         return processCommand(message, author);
@@ -38,7 +40,6 @@ export class MessagesService {
     const message = R.pipe(parseMessage, processCommands)(incoming, author);
 
     const time = new Date().getTime();
-    await this.usersRepo.storeUser(author);
     const storedMessage = await this.messagesRepo.storeMessage(message, time);
 
     this.logger.log(`emitting event: ${JSON.stringify(storedMessage)}`);

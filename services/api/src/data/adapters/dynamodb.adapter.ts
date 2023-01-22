@@ -1,61 +1,34 @@
-import {
-  CreateTableCommand,
-  CreateTableCommandInput,
-  CreateTableCommandOutput,
-  DeleteTableCommand,
-  DynamoDBClient,
-  waitUntilTableExists,
-} from '@aws-sdk/client-dynamodb';
-import {
-  BatchGetCommand,
-  DynamoDBDocumentClient,
-  PutCommand,
-  PutCommandOutput,
-  QueryCommand,
-  QueryCommandInput,
-} from '@aws-sdk/lib-dynamodb';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import databaseConfig from '@config/database.config';
-import * as assert from 'assert';
-import { DBAdapter, DBItem } from '../db.adapter';
-
-const defaultTableParams = {
-  AttributeDefinitions: [
-    {
-      AttributeName: 'Id',
-      AttributeType: 'S',
-    },
-    {
-      AttributeName: 'Sort',
-      AttributeType: 'S',
-    },
-  ],
-  KeySchema: [
-    {
-      AttributeName: 'Id',
-      KeyType: 'HASH',
-    },
-    {
-      AttributeName: 'Sort',
-      KeyType: 'RANGE',
-    },
-  ],
-  ProvisionedThroughput: {
-    ReadCapacityUnits: 1,
-    WriteCapacityUnits: 1,
-  },
-  TableName: 'Auth0Test',
-  StreamSpecification: {
-    StreamEnabled: false,
-  },
-};
+import { Dynamo } from 'dynamodb-onetable/Dynamo';
+import { Model, Table } from 'dynamodb-onetable';
+import { DbMessage, DbRoom, DbSchema, DbUser } from '@data/adapters/schema';
+import { User } from '@entities/user.entity';
+import {
+  CreateRoomParams,
+  DBAdapter,
+  SaveMessageParams,
+  SaveUserParams,
+} from '@data/db.adapter';
+import { Message } from '@entities/message.entity';
+import { Room } from '@entities/room.entitiy';
+import { pick } from 'rambda';
 
 @Injectable()
 export class DynamoDBAdapter extends DBAdapter {
   private logger = new Logger(DynamoDBAdapter.name);
-  private readonly tableName;
   private readonly docClient: DynamoDBDocumentClient;
+  private readonly client: Dynamo;
+
+  readonly tableName: string;
+  private readonly table: Table;
+
+  private readonly User: Model<DbUser>;
+  private readonly Message: Model<DbMessage>;
+  private readonly Room: Model<DbRoom>;
 
   constructor(
     @Inject(databaseConfig.KEY) dbConfig: ConfigType<typeof databaseConfig>,
@@ -65,70 +38,70 @@ export class DynamoDBAdapter extends DBAdapter {
       `Creating database adapter with config: ${JSON.stringify(dbConfig)}`,
     );
     const dbClient = new DynamoDBClient(dbConfig.clientConfig);
+    this.client = new Dynamo({ client: DynamoDBDocumentClient.from(dbClient) });
+
     this.tableName = dbConfig.tableName;
-    this.docClient = DynamoDBDocumentClient.from(dbClient);
+    this.table = new Table({
+      client: this.client,
+      name: dbConfig.tableName,
+      schema: DbSchema,
+      partial: false,
+    });
+    this.User = this.table.getModel<DbUser>('User');
+    this.Message = this.table.getModel<DbMessage>('Message');
+    this.Room = this.table.getModel<DbRoom>('Room');
   }
 
-  async putItem<D>(item: DBItem<D>): Promise<PutCommandOutput> {
-    return this.docClient.send(
-      new PutCommand({ Item: item, TableName: this.tableName }),
-    );
-  }
-
-  async query<D>(
-    params: Omit<QueryCommandInput, 'TableName'>,
-  ): Promise<DBItem<D>[]> {
-    const output = await this.docClient.send(
-      new QueryCommand({ ...params, TableName: this.tableName }),
-    );
-
-    return output.Items as any;
-  }
-
-  async batchGet<D>(keys: Record<string, any>[]): Promise<DBItem<D>[]> {
-    if (!keys.length) {
-      return [];
-    }
-
-    const params = {
-      RequestItems: {
-        [this.tableName]: {
-          Keys: keys,
-        },
-      },
-    };
-
-    const output = await this.docClient.send(new BatchGetCommand(params));
-    assert(output.Responses);
-
-    return output.Responses[this.tableName] as any;
-  }
-
-  async create(
-    params?: Omit<CreateTableCommandInput, 'TableName'>,
-  ): Promise<CreateTableCommandOutput> {
+  override async create(): Promise<void> {
     this.validateSafeEnv();
-    const createTableParams = {
-      ...(params ?? defaultTableParams),
-      TableName: this.tableName,
-    };
-    return this.docClient.send(new CreateTableCommand(createTableParams));
+    await this.table.createTable();
   }
 
   async destroy() {
     this.validateSafeEnv();
-    return this.docClient.send(
-      new DeleteTableCommand({
-        TableName: this.tableName,
-      }),
-    );
+    await this.table.deleteTable('DeleteTableForever');
   }
 
-  async waitForTable(timeout: number) {
-    await waitUntilTableExists(
-      { client: this.docClient, maxWaitTime: timeout, minDelay: 1 },
-      { TableName: this.tableName },
+  override async saveUser(params: SaveUserParams): Promise<User> {
+    const user = await this.User.create(params, { exists: null, hidden: true });
+    return userFromRecord(user);
+  }
+
+  override async getUser(id: string): Promise<User> {
+    const user = await this.User.get(
+      { Id: id, Sort: 'user' },
+      { hidden: true },
     );
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    return userFromRecord(user);
+  }
+
+  override async saveMessage(params: SaveMessageParams): Promise<Message> {
+    const message = await this.Message.create(params);
+    return messageFromRecord(message);
+  }
+
+  override async getMessagesForRoom(roomId: string): Promise<Message[]> {
+    const messages = await this.Message.find({ Id: roomId });
+    return messages.map(messageFromRecord);
+  }
+
+  override async createRoom(params: CreateRoomParams): Promise<Room> {
+    const room = await this.Room.create(params, { hidden: true });
+    return roomFromRecord(room);
+  }
+
+  override async getRoom(id: string): Promise<Room> {
+    const room = await this.Room.get(
+      { Id: id, Sort: 'room' },
+      { hidden: true },
+    );
+    if (!room) {
+      throw new NotFoundException(`Room ${id} not found`);
+    }
+    return roomFromRecord(room);
   }
 
   private validateSafeEnv() {
@@ -140,3 +113,18 @@ export class DynamoDBAdapter extends DBAdapter {
     }
   }
 }
+
+const userFromRecord = (record: DbUser): User => ({
+  id: record.Id,
+  ...pick(['sub', 'name', 'picture'], record),
+});
+
+const messageFromRecord = (record: DbMessage): Message => ({
+  id: record.Id,
+  ...pick(['roomId', 'content', 'authorId', 'recipientId', 'time'], record),
+});
+
+const roomFromRecord = (record: DbRoom): Room => ({
+  id: record.Id,
+  ...pick(['name', 'ownerId'], record),
+});

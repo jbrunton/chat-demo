@@ -112,9 +112,9 @@ describe('MessagesController', () => {
       const { accessToken, user } = fakeAuthUser();
 
       const expectedMessage = {
-        id: 'Msg#1001',
-        content: message.content,
+        id: 'message:1001',
         time: 1001,
+        content: message.content,
         authorId: user.id,
         roomId: 'room_1',
       };

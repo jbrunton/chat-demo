@@ -1,37 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
-import { DBItem } from '../db.adapter';
+import {
+  CreateRoomParams,
+  SaveMessageParams,
+  SaveUserParams,
+} from '../db.adapter';
 import { DynamoDBAdapter } from './dynamodb.adapter';
 
 const timeout = 60;
 jest.setTimeout(timeout * 1000);
 
-type UserItem = DBItem<{ name: string }>;
-type RoomParticipantItem = DBItem<unknown>;
-
 describe('DynamoDBAdapter', () => {
   let db: DynamoDBAdapter;
-
-  const user1: UserItem = {
-    Id: 'User#1',
-    Sort: 'User',
-    Type: 'User',
-    Data: { name: 'User 1' },
-  };
-  const user1Room: RoomParticipantItem = {
-    Id: 'User#1',
-    Sort: 'Room#1',
-    Type: 'User',
-    Data: {},
-  };
-  const user2: UserItem = {
-    Id: 'User#2',
-    Sort: 'User',
-    Type: 'User',
-    Data: { name: 'User 2' },
-  };
-
-  const items: DBItem<unknown>[] = [user1, user1Room, user2];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -41,36 +21,56 @@ describe('DynamoDBAdapter', () => {
 
     db = moduleFixture.get(DynamoDBAdapter);
     await db.create();
-    await db.waitForTable(timeout);
-
-    for (const item of items) {
-      await db.putItem(item);
-    }
   });
 
   afterAll(async () => {
-    await db.waitForTable(timeout);
     await db.destroy();
   });
 
-  it('queries items', async () => {
-    const result = await db.query({
-      KeyConditionExpression: 'Id = :id and begins_with(Sort,:filter)',
-      ExpressionAttributeValues: {
-        ':id': 'User#1',
-        ':filter': 'Room#',
-      },
-    });
+  it('stores and finds users', async () => {
+    const params: SaveUserParams = {
+      sub: 'google_123',
+      name: 'Some User',
+    };
 
-    expect(result).toEqual([user1Room]);
+    const user = await db.saveUser(params);
+    const found = await db.getUser('user:google_123');
+
+    expect(user).toMatchObject({
+      id: 'user:google_123',
+      name: 'Some User',
+    });
+    expect(found).toMatchObject({
+      id: 'user:google_123',
+      name: 'Some User',
+    });
   });
 
-  it('batch gets items', async () => {
-    const result = await db.batchGet([
-      { Id: 'User#1', Sort: 'User' },
-      { Id: 'User#2', Sort: 'User' },
-    ]);
+  it('stores and finds rooms', async () => {
+    const params: CreateRoomParams = {
+      name: 'Some Room',
+      ownerId: 'user:google_123',
+    };
 
-    expect(result).toEqual([user1, user2]);
+    const room = await db.createRoom(params);
+    const found = await db.getRoom(room.id);
+
+    expect(room).toMatchObject(params);
+    expect(found).toMatchObject(params);
+  });
+
+  it('stores and finds messages', async () => {
+    const params: SaveMessageParams = {
+      content: 'Hello, World!',
+      authorId: 'user:google_123',
+      time: 1001,
+      roomId: 'room:123',
+    };
+
+    const msg1 = await db.saveMessage(params);
+    const found = await db.getMessagesForRoom('room:123');
+
+    expect(msg1).toMatchObject(params);
+    expect(found).toMatchObject([params]);
   });
 });

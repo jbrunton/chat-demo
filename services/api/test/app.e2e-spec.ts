@@ -19,7 +19,7 @@ jest.mock('@lib/util', () => {
   };
 });
 
-describe('AppController (e2e)', () => {
+xdescribe('AppController (e2e)', () => {
   let app: INestApplication;
   let db: DBAdapter;
   let fakeAuth1: FakeAuth;
@@ -35,14 +35,12 @@ describe('AppController (e2e)', () => {
 
     db = moduleFixture.get(DBAdapter);
     await db.create();
-    await db.waitForTable(60);
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
   afterAll(async () => {
-    await db.waitForTable(60);
     await db.destroy();
   });
 

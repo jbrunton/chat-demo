@@ -3,8 +3,8 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Auth } from '@lib/auth/auth.decorator';
 import { Identify } from '@lib/auth/identity/identify.decorator';
-import { User } from '@entities/user.entity';
 import { DispatcherService } from './dispatcher.service';
+import { AuthInfo } from '@lib/auth/identity/auth-info';
 
 @Auth()
 @Controller('messages')
@@ -17,9 +17,9 @@ export class MessagesController {
   @Post('/')
   saveMessage(
     @Body() createMessageDto: CreateMessageDto,
-    @Identify() user: User,
+    @Identify() auth: AuthInfo,
   ) {
-    return this.messagesService.handleMessage(createMessageDto, user);
+    return this.messagesService.handleMessage(createMessageDto, auth);
   }
 
   @Get('/:roomId')
@@ -28,7 +28,10 @@ export class MessagesController {
   }
 
   @Sse('/:roomId/subscribe')
-  subscribeMessages(@Param('roomId') roomId: string, @Identify() user: User) {
-    return this.dispatcher.subscribe(roomId, user.id);
+  subscribeMessages(
+    @Param('roomId') roomId: string,
+    @Identify() auth: AuthInfo,
+  ) {
+    return this.dispatcher.subscribe(roomId, auth);
   }
 }

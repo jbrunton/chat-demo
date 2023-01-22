@@ -6,9 +6,7 @@ runWithContext({
   rootModule: DataModule,
   run: async (app, logger) => {
     const db = app.get(DBAdapter);
-    const { TableDescription } = await db.create();
-    logger.log(
-      `Created table ${TableDescription?.TableName} (${TableDescription?.TableArn})`,
-    );
+    await db.create();
+    logger.log(`Created table ${db.tableName}`);
   },
 });

@@ -1,34 +1,28 @@
-import {
-  CreateTableCommandInput,
-  CreateTableCommandOutput,
-  DeleteTableCommandOutput,
-} from '@aws-sdk/client-dynamodb';
-import { PutCommandOutput, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
-import { NativeAttributeValue } from '@aws-sdk/util-dynamodb/dist-types/models';
+import { DraftMessage, Message } from '@entities/message.entity';
+import { Room } from '@entities/room.entitiy';
+import { User } from '@entities/user.entity';
+import { AuthInfo } from '@lib/auth/identity/auth-info';
 
-export interface DBItem<D> {
-  Id: string;
-  Sort: string;
-  Type: string;
-  Data: D;
-}
+export type SaveUserParams = AuthInfo & {
+  name: string;
+};
+
+export type SaveMessageParams = DraftMessage & { time: number };
+
+export type CreateRoomParams = Omit<Room, 'id'>;
 
 export abstract class DBAdapter {
-  abstract putItem<D>(item: DBItem<D>): Promise<PutCommandOutput>;
+  abstract tableName: string;
 
-  abstract query<D>(
-    params: Omit<QueryCommandInput, 'TableName'>,
-  ): Promise<DBItem<D>[]>;
+  abstract create(): Promise<void>;
+  abstract destroy(): Promise<void>;
 
-  abstract batchGet<D>(
-    keys: Record<string, NativeAttributeValue>[],
-  ): Promise<DBItem<D>[]>;
+  abstract saveUser(params: SaveUserParams): Promise<User>;
+  abstract getUser(id: string): Promise<User>;
 
-  abstract create(
-    params?: Omit<CreateTableCommandInput, 'TableName'>,
-  ): Promise<CreateTableCommandOutput>;
+  abstract saveMessage(params: SaveMessageParams): Promise<Message>;
+  abstract getMessagesForRoom(roomId: string): Promise<Message[]>;
 
-  abstract destroy(): Promise<DeleteTableCommandOutput>;
-
-  abstract waitForTable(timeout: number): Promise<void>;
+  abstract createRoom(params: CreateRoomParams): Promise<Room>;
+  abstract getRoom(id: string): Promise<Room>;
 }
