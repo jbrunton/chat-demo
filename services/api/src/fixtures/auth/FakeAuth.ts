@@ -1,4 +1,4 @@
-import { AuthInfo } from '@lib/auth/identity/auth-info';
+import { AuthInfo } from '@entities/auth-info';
 import { CanActivate } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 import { faker } from '@faker-js/faker';

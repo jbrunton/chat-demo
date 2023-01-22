@@ -1,5 +1,5 @@
 import { getFakeAuthUser } from '@fixtures/auth/FakeAuth';
-import { AuthInfo } from '@lib/auth/identity/auth-info';
+import { AuthInfo } from '@entities/auth-info';
 import { UnauthorizedException } from '@nestjs/common';
 
 export const client = {

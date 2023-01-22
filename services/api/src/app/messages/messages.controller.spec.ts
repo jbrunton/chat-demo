@@ -17,7 +17,7 @@ import { DispatcherService } from './dispatcher.service';
 import { UsersRepository } from '@entities/users.repository';
 import { MessagesRepository } from '@entities/messages.repository';
 
-jest.mock('@lib/auth/auth0/auth0.client');
+jest.mock('@app/auth/auth0/auth0.client');
 
 describe('MessagesController', () => {
   let usersRepository: TestUsersRepository;

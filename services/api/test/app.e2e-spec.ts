@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { AppModule } from '@app/app.module';
 import { AuthGuard } from '@nestjs/passport';
 import {
   fakeAuthUser,
@@ -12,13 +12,7 @@ import {
 import { map, omit } from 'rambda';
 import { Message } from '@entities/message.entity';
 
-jest.mock('@lib/auth/auth0/auth0.client');
-
-jest.mock('@lib/util', () => {
-  return {
-    getRandomString: () => 'a1b2c3',
-  };
-});
+jest.mock('@app/auth/auth0/auth0.client');
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;

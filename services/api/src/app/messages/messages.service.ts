@@ -9,7 +9,7 @@ import * as R from 'rambda';
 import { DispatcherService } from './dispatcher.service';
 import { isCommand, ParsedMessage, parseMessage } from './parse-message';
 import { processCommand } from '@usecases/process-command/process';
-import { AuthInfo } from '@lib/auth/identity/auth-info';
+import { AuthInfo } from '@entities/auth-info';
 import { MessagesRepository } from '@entities/messages.repository';
 import {
   userParamsFromAuth,
