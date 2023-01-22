@@ -18,8 +18,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@lib/*": ["src/lib/*"],
-      "@features/*": ["src/features/*"],
+      "@app/*": ["src/app/*"],
       "@data/*": ["src/data/*"],
       "@config/*": ["src/config/*"],
       "@fixtures/*": ["src/fixtures/*"],

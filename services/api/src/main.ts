@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '@app/app.module';
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 

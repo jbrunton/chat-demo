@@ -1,7 +1,7 @@
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { UsersRepository } from '@entities/users.repository';
-import { AuthInfo } from '@lib/auth/identity/auth-info';
+import { AuthInfo } from '@entities/auth-info';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

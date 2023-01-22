@@ -1,7 +1,7 @@
 import { Command } from '@entities/command.entity';
 import { Draft, PublicMessage } from '@entities/message.entity';
 import { User } from '@entities/user.entity';
-import { CreateMessageDto } from '@features/messages/dto/create-message.dto';
+import { CreateMessageDto } from 'src/app/messages/dto/create-message.dto';
 
 export type ParsedMessage = Draft<PublicMessage> | Command;
 

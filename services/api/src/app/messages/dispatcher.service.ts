@@ -1,6 +1,6 @@
 import { isPrivate, Message } from '@entities/message.entity';
 import { User } from '@entities/user.entity';
-import { AuthInfo } from '@lib/auth/identity/auth-info';
+import { AuthInfo } from '@entities/auth-info';
 import { Injectable } from '@nestjs/common';
 import { fromEvent, merge } from 'rxjs';
 import { EventEmitter } from 'stream';

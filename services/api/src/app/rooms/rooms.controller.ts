@@ -1,6 +1,6 @@
-import { Auth } from '@lib/auth/auth.decorator';
-import { AuthInfo } from '@lib/auth/identity/auth-info';
-import { Identify } from '@lib/auth/identity/identify.decorator';
+import { Auth } from '@app/auth/auth.decorator';
+import { AuthInfo } from '@entities/auth-info';
+import { Identify } from '@app/auth/identity/identify.decorator';
 import { Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 
