@@ -1,8 +1,8 @@
-import { Room } from '@entities/room.entitiy';
-import { UsersRepository } from '@features/messages/repositories/users.repository';
+import { Room } from '@entities/room.entity';
+import { RoomsRepository } from '@entities/rooms.repository';
+import { UsersRepository } from '@entities/users.repository';
 import { AuthInfo } from '@lib/auth/identity/auth-info';
 import { Injectable } from '@nestjs/common';
-import { RoomsRepository } from './repositories/rooms.repository';
 
 @Injectable()
 export class RoomsService {
@@ -12,8 +12,14 @@ export class RoomsService {
   ) {}
 
   async createRoom(ownerAuth: AuthInfo): Promise<Room> {
-    const owner = await this.usersRepos.storeUser(ownerAuth);
-    return this.roomsRepo.createRoom(owner.id);
+    const owner = await this.usersRepos.saveUser({
+      name: ownerAuth.name ?? 'Anon',
+      ...ownerAuth,
+    });
+    return this.roomsRepo.createRoom({
+      ownerId: owner.id,
+      name: 'Test Room',
+    });
   }
 
   async getRoom(roomId: string): Promise<Room> {

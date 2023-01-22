@@ -3,7 +3,8 @@ import { CanActivate } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 import { faker } from '@faker-js/faker';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
-import { User, userFromAuthInfo } from '@entities/user.entity';
+import { User } from '@entities/user.entity';
+import { userParamsFromAuth } from '@entities/users.repository';
 
 export type FakeAuth = {
   accessToken: string;
@@ -20,10 +21,15 @@ export const fakeAuthUser = (
   authInfoOverrides?: Partial<AuthInfo>,
 ): FakeAuth => {
   const authInfo = AuthInfoFactory.build(authInfoOverrides);
-  const user = userFromAuthInfo(authInfo);
+  const userParams = userParamsFromAuth(authInfo);
+  const user: User = {
+    id: `user:${userParams.sub}`,
+    name: userParams.name,
+    picture: userParams.picture,
+  };
   const fakeAuth = {
     accessToken: accessToken ?? faker.datatype.hexadecimal({ length: 12 }),
-    authInfo: authInfo,
+    authInfo,
     user,
   };
   fakeAuthUsers.set(fakeAuth.accessToken, fakeAuth.authInfo);

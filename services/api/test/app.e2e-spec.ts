@@ -3,13 +3,14 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { AuthGuard } from '@nestjs/passport';
-import { DBAdapter } from '@data/db.adapter';
 import {
   fakeAuthUser,
   FakeAuthGuard,
   resetFakeAuthUsers,
   FakeAuth,
 } from '@fixtures/auth/FakeAuth';
+import { map, omit } from 'rambda';
+import { Message } from '@entities/message.entity';
 
 jest.mock('@lib/auth/auth0/auth0.client');
 
@@ -19,9 +20,8 @@ jest.mock('@lib/util', () => {
   };
 });
 
-xdescribe('AppController (e2e)', () => {
+describe('AppController (e2e)', () => {
   let app: INestApplication;
-  let db: DBAdapter;
   let fakeAuth1: FakeAuth;
   let fakeAuth2: FakeAuth;
 
@@ -33,15 +33,8 @@ xdescribe('AppController (e2e)', () => {
       .useValue(FakeAuthGuard)
       .compile();
 
-    db = moduleFixture.get(DBAdapter);
-    await db.create();
-
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
-
-  afterAll(async () => {
-    await db.destroy();
   });
 
   beforeEach(async () => {
@@ -87,27 +80,26 @@ xdescribe('AppController (e2e)', () => {
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .expect(200);
 
-    expect(body).toEqual({
-      messages: [
-        {
-          id: 'msg_1001_a1b2c3',
-          content: 'Hello Room 1, from User 1!',
-          roomId: 'room_1',
-          time: 1001,
-          authorId: fakeAuth1.user.id,
-        },
-        {
-          id: 'msg_1002_a1b2c3',
-          content: 'Hello Room 1, from User 2!',
-          roomId: 'room_1',
-          time: 1002,
-          authorId: fakeAuth2.user.id,
-        },
-      ],
-      authors: {
-        [fakeAuth1.user.id]: fakeAuth1.user,
-        [fakeAuth2.user.id]: fakeAuth2.user,
+    const removeIds = (messages: Message[]) =>
+      map((msg) => omit(['id'], msg), messages);
+
+    expect(removeIds(body.messages)).toEqual([
+      {
+        content: 'Hello Room 1, from User 1!',
+        roomId: 'room_1',
+        time: 1001,
+        authorId: fakeAuth1.user.id,
       },
+      {
+        content: 'Hello Room 1, from User 2!',
+        roomId: 'room_1',
+        time: 1002,
+        authorId: fakeAuth2.user.id,
+      },
+    ]);
+    expect(body.authors).toEqual({
+      [fakeAuth1.user.id]: fakeAuth1.user,
+      [fakeAuth2.user.id]: fakeAuth2.user,
     });
   });
 });
