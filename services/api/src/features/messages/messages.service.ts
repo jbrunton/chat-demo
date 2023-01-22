@@ -5,13 +5,16 @@ import {
   isPrivate,
   Message,
 } from '../../domain/entities/message.entity';
-import { MessagesRepository } from './repositories/messages.repository';
-import { UsersRepository } from './repositories/users.repository';
 import * as R from 'rambda';
 import { DispatcherService } from './dispatcher.service';
 import { isCommand, ParsedMessage, parseMessage } from './parse-message';
 import { processCommand } from '@usecases/process-command/process';
 import { AuthInfo } from '@lib/auth/identity/auth-info';
+import { MessagesRepository } from '@entities/messages.repository';
+import {
+  userParamsFromAuth,
+  UsersRepository,
+} from '@entities/users.repository';
 
 @Injectable()
 export class MessagesService {
@@ -27,7 +30,9 @@ export class MessagesService {
     incoming: CreateMessageDto,
     authorInfo: AuthInfo,
   ): Promise<Message> {
-    const author = await this.usersRepo.storeUser(authorInfo);
+    const author = await this.usersRepo.saveUser(
+      userParamsFromAuth(authorInfo),
+    );
 
     const processCommands = (message: ParsedMessage): Draft<Message> => {
       if (isCommand(message)) {
@@ -40,7 +45,10 @@ export class MessagesService {
     const message = R.pipe(parseMessage, processCommands)(incoming, author);
 
     const time = new Date().getTime();
-    const storedMessage = await this.messagesRepo.storeMessage(message, time);
+    const storedMessage = await this.messagesRepo.saveMessage({
+      ...message,
+      time,
+    });
 
     this.logger.log(`emitting event: ${JSON.stringify(storedMessage)}`);
     this.dispatcher.emit(storedMessage, author);
@@ -50,7 +58,7 @@ export class MessagesService {
   async findForRoom(
     roomId: string,
   ): Promise<{ messages: Message[]; authors: object }> {
-    const allMessages = await this.messagesRepo.getMessages(roomId);
+    const allMessages = await this.messagesRepo.getMessagesForRoom(roomId);
 
     const publicMessages = R.pipe(R.reject(isPrivate))(allMessages);
 
@@ -60,7 +68,9 @@ export class MessagesService {
       R.uniq,
     )(publicMessages);
 
-    const authors = await this.usersRepo.getUsers(authorIds);
+    const authors = await Promise.all(
+      authorIds.map((authorId) => this.usersRepo.getUser(authorId)),
+    );
 
     return {
       messages: publicMessages,

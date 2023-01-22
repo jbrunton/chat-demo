@@ -1,6 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MessagesRepository } from './repositories/messages.repository';
-import { UsersRepository } from './repositories/users.repository';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { TestUsersRepository } from '@fixtures/messages/test.users.repository';
@@ -9,6 +7,8 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { DispatcherService } from './dispatcher.service';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
+import { UsersRepository } from '@entities/users.repository';
+import { MessagesRepository } from '@entities/messages.repository';
 
 describe('MessagesService', () => {
   let service: MessagesService;

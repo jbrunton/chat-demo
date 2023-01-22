@@ -1,8 +1,11 @@
+import {
+  MessagesRepository,
+  SaveMessageParams,
+} from '@entities/messages.repository';
 import * as R from 'rambda';
-import { DraftMessage, Message } from 'src/domain/entities/message.entity';
-import { MessagesRepository } from '@features/messages/repositories/messages.repository';
+import { Message } from 'src/domain/entities/message.entity';
 
-export class TestMessagesRepository {
+export class TestMessagesRepository extends MessagesRepository {
   private messages: Message[] = [];
 
   getData() {
@@ -13,18 +16,17 @@ export class TestMessagesRepository {
     this.messages = messages;
   }
 
-  async storeMessage(params: DraftMessage, time: number): Promise<Message> {
-    const id = `message:${time}`;
+  override async saveMessage(params: SaveMessageParams): Promise<Message> {
+    const id = `message:${params.time}`;
     const message = {
       id,
-      time,
-      ...R.pick(['content', 'authorId', 'roomId'], params),
+      ...R.pick(['content', 'time', 'authorId', 'roomId'], params),
     };
     this.messages.push(message);
     return message;
   }
 
-  async getMessages(roomId: string): Promise<Message[]> {
+  override async getMessagesForRoom(roomId: string): Promise<Message[]> {
     return R.filter((msg) => msg.roomId === roomId, this.messages);
   }
 

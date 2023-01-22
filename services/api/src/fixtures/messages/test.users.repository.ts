@@ -1,9 +1,10 @@
-import { filter } from 'rambda';
+import { find } from 'rambda';
 import { User } from '@entities/user.entity';
-import { UsersRepository } from '@features/messages/repositories/users.repository';
 import { AuthInfo } from '@lib/auth/identity/auth-info';
+import { UsersRepository } from '@entities/users.repository';
+import { NotFoundException } from '@nestjs/common';
 
-export class TestUsersRepository {
+export class TestUsersRepository extends UsersRepository {
   private users: User[] = [];
 
   getData() {
@@ -14,7 +15,7 @@ export class TestUsersRepository {
     this.users = users;
   }
 
-  async storeUser(params: AuthInfo): Promise<User> {
+  override async saveUser(params: AuthInfo): Promise<User> {
     const user = {
       id: `user:${params.sub}`,
       name: params.name ?? 'Anon',
@@ -24,8 +25,12 @@ export class TestUsersRepository {
     return user;
   }
 
-  async getUsers(userIds: string[]): Promise<User[]> {
-    return filter((user) => userIds.includes(user.id), this.users);
+  override async getUser(userId: string): Promise<User> {
+    const user = find((user) => userId === user.id, this.users);
+    if (!user) {
+      throw new NotFoundException(`User ${userId} does not exist`);
+    }
+    return user;
   }
 
   static readonly Provider = {

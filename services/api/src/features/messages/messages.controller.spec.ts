@@ -3,8 +3,6 @@ import { TestUsersRepository } from '@fixtures/messages/test.users.repository';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessagesController } from './messages.controller';
-import { MessagesRepository } from './repositories/messages.repository';
-import { UsersRepository } from './repositories/users.repository';
 import * as request from 'supertest';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -16,6 +14,8 @@ import { MessagesService } from './messages.service';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { DispatcherService } from './dispatcher.service';
+import { UsersRepository } from '@entities/users.repository';
+import { MessagesRepository } from '@entities/messages.repository';
 
 jest.mock('@lib/auth/auth0/auth0.client');
 

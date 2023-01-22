@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DynamoDBAdapter } from './adapters/dynamodb.adapter';
+import { MessagesRepository } from '@entities/messages.repository';
 import databaseConfig from '@config/database.config';
-import { DBAdapter } from './db.adapter';
+import { DynamoDBMessagesRepository } from './repositories/dynamodb.messages.repository';
+import { RoomsRepository } from '@entities/rooms.repository';
+import { UsersRepository } from '@entities/users.repository';
+import { DynamoDBUsersRepository } from './repositories/dynamodb.users.repository';
+import { DynamoDBAdapter } from './adapters/dynamodb.adapter';
+import { DynamoDBRoomsRepository } from './repositories/dynamodb.rooms.repository';
 
 const DatabaseConfigModule = ConfigModule.forFeature(databaseConfig);
 
@@ -10,10 +15,25 @@ const DatabaseConfigModule = ConfigModule.forFeature(databaseConfig);
   imports: [DatabaseConfigModule],
   providers: [
     {
-      provide: DBAdapter,
-      useClass: DynamoDBAdapter,
+      provide: UsersRepository,
+      useClass: DynamoDBUsersRepository,
     },
+    {
+      provide: MessagesRepository,
+      useClass: DynamoDBMessagesRepository,
+    },
+    {
+      provide: RoomsRepository,
+      useClass: DynamoDBRoomsRepository,
+    },
+    DynamoDBAdapter,
   ],
-  exports: [DBAdapter, DatabaseConfigModule],
+  exports: [
+    UsersRepository,
+    MessagesRepository,
+    RoomsRepository,
+    DynamoDBAdapter,
+    DatabaseConfigModule,
+  ],
 })
 export class DataModule {}
