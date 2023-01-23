@@ -1,14 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { TestUsersRepository } from '@fixtures/messages/test.users.repository';
-import { TestMessagesRepository } from '@fixtures/messages/test.messages.repository';
+import { TestUsersRepository } from '@fixtures/data/test.users.repository';
+import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { DispatcherService } from './dispatcher.service';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
 import { UsersRepository } from '@entities/users.repository';
 import { MessagesRepository } from '@entities/messages.repository';
+import { TestDataModule } from '@fixtures/data/test.data.module';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -20,12 +21,8 @@ describe('MessagesService', () => {
     jest.setSystemTime(1001);
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        MessagesService,
-        DispatcherService,
-        TestUsersRepository.Provider,
-        TestMessagesRepository.Provider,
-      ],
+      imports: [TestDataModule],
+      providers: [MessagesService, DispatcherService],
     }).compile();
 
     service = module.get(MessagesService);

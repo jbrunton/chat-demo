@@ -32,9 +32,4 @@ export class TestUsersRepository extends UsersRepository {
     }
     return user;
   }
-
-  static readonly Provider = {
-    provide: UsersRepository,
-    useClass: TestUsersRepository,
-  };
 }

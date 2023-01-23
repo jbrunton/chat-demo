@@ -1,5 +1,3 @@
-import { TestMessagesRepository } from '@fixtures/messages/test.messages.repository';
-import { TestUsersRepository } from '@fixtures/messages/test.users.repository';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessagesController } from './messages.controller';
@@ -16,6 +14,9 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 import { DispatcherService } from './dispatcher.service';
 import { UsersRepository } from '@entities/users.repository';
 import { MessagesRepository } from '@entities/messages.repository';
+import { TestDataModule } from '@fixtures/data/test.data.module';
+import { TestUsersRepository } from '@fixtures/data/test.users.repository';
+import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -29,14 +30,9 @@ describe('MessagesController', () => {
     jest.setSystemTime(1001);
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
+      imports: [TestDataModule],
       controllers: [MessagesController],
-      providers: [
-        DispatcherService,
-        MessagesService,
-        TestUsersRepository.Provider,
-        TestMessagesRepository.Provider,
-      ],
+      providers: [DispatcherService, MessagesService],
     })
       .overrideGuard(AuthGuard('jwt'))
       .useValue(FakeAuthGuard)
