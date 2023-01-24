@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '@app/app.module';
 import { AuthGuard } from '@nestjs/passport';
 import {
   fakeAuthUser,
@@ -11,6 +10,7 @@ import {
 } from '@fixtures/auth/FakeAuth';
 import { map, omit } from 'rambda';
 import { Message } from '@entities/message.entity';
+import { MainModule } from '../src/main.module';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -21,7 +21,7 @@ describe('AppController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [MainModule],
     })
       .overrideGuard(AuthGuard('jwt'))
       .useClass(FakeAuthGuard)
