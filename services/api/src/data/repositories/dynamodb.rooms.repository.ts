@@ -1,5 +1,9 @@
 import { Room } from '@entities/room.entity';
-import { CreateRoomParams, RoomsRepository } from '@entities/rooms.repository';
+import {
+  CreateRoomParams,
+  RoomsRepository,
+  UpdateRoomParams,
+} from '@entities/rooms.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { pick } from 'rambda';
 import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';
@@ -25,6 +29,26 @@ export class DynamoDBRoomsRepository extends RoomsRepository {
       throw new NotFoundException(`Room ${id} not found`);
     }
     return roomFromRecord(room);
+  }
+
+  override async updateRoom(params: UpdateRoomParams): Promise<Room> {
+    const { id, ...rest } = params;
+    const room = await this.adapter.Room.get(
+      { Id: id, Sort: 'room' },
+      { hidden: true },
+    );
+    if (!room) {
+      throw new NotFoundException(`Room ${id} not found`);
+    }
+    const result = await this.adapter.Room.update(
+      {
+        Id: id,
+        Sort: 'room',
+        ...rest,
+      },
+      { hidden: true },
+    );
+    return roomFromRecord(result);
   }
 }
 

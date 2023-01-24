@@ -27,4 +27,26 @@ describe('DynamoDBRoomsRepository', () => {
     expect(room).toMatchObject(params);
     expect(found).toMatchObject(params);
   });
+
+  it('updates rooms', async () => {
+    const params: CreateRoomParams = {
+      name: 'Some Room',
+      ownerId: 'user:google_123',
+    };
+    const room = await roomsRepo.createRoom(params);
+
+    const updated = await roomsRepo.updateRoom({
+      id: room.id,
+      name: 'Renamed Room',
+    });
+    const found = await roomsRepo.getRoom(room.id);
+
+    const expected = {
+      id: room.id,
+      name: 'Renamed Room',
+      ownerId: params.ownerId,
+    };
+    expect(updated).toMatchObject(expected);
+    expect(found).toMatchObject(expected);
+  });
 });

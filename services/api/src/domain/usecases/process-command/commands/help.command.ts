@@ -8,14 +8,12 @@ const helpContent = `
 <b>/rename room &lt;name&gt;</b>: change the room name<br />
 `;
 
-export type HelpResponseParams = {
+export type HelpParams = {
   authenticatedUser: User;
   roomId: string;
 };
 
-export const helpResponse = (
-  params: HelpResponseParams,
-): Draft<PrivateMessage> => {
+export const helpResponse = (params: HelpParams): Draft<PrivateMessage> => {
   const { roomId, authenticatedUser } = params;
   return {
     content: helpContent,
