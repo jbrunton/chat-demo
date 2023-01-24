@@ -1,10 +1,13 @@
 import { AuthInfo } from '@entities/auth-info';
-import { CanActivate } from '@nestjs/common';
-import { ExtractJwt } from 'passport-jwt';
+import { CanActivate, Injectable } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
 import { User } from '@entities/user.entity';
 import { userParamsFromAuth } from '@entities/users.repository';
+import { ExecutionContext } from '@nestjs/common';
+import { IdentifyService } from '@app/auth/identity/identify.service';
+import { ModuleRef } from '@nestjs/core';
+import { ExtractJwt } from 'passport-jwt';
 
 export type FakeAuth = {
   accessToken: string;
@@ -12,9 +15,7 @@ export type FakeAuth = {
   user: User;
 };
 
-const fakeAuthUsers = new Map<string, AuthInfo>();
-
-const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
+const fakeAuthUsers = new Map<string, FakeAuth>();
 
 export const fakeAuthUser = (
   accessToken?: string,
@@ -32,20 +33,35 @@ export const fakeAuthUser = (
     authInfo,
     user,
   };
-  fakeAuthUsers.set(fakeAuth.accessToken, fakeAuth.authInfo);
+  fakeAuthUsers.set(fakeAuth.accessToken, fakeAuth);
   return fakeAuth;
 };
 
-export const getFakeAuthUser = (accessToken: string): AuthInfo | undefined => {
-  return fakeAuthUsers.get(accessToken);
+export const getFakeAuthInfo = (accessToken: string): AuthInfo | undefined => {
+  return fakeAuthUsers.get(accessToken)?.authInfo;
 };
 
 export const resetFakeAuthUsers = () => fakeAuthUsers.clear();
 
-export const FakeAuthGuard: CanActivate = {
-  canActivate(ctx) {
+@Injectable()
+export class FakeAuthGuard implements CanActivate {
+  private identifyService: IdentifyService;
+
+  constructor(moduleRef: ModuleRef) {
+    this.identifyService = moduleRef.get(IdentifyService, {
+      strict: false,
+    });
+  }
+
+  async canActivate(ctx: ExecutionContext) {
     const request = ctx.switchToHttp().getRequest();
-    const accessToken = extractAccessToken(request);
-    return !!accessToken && !!fakeAuthUsers.get(accessToken);
-  },
-};
+    const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
+
+    if (accessToken) {
+      request.user = await this.identifyService.identifyUser(request);
+      return true;
+    }
+
+    return false;
+  }
+}

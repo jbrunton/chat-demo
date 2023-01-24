@@ -4,7 +4,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/identity/identify.decorator';
 import { DispatcherService } from './dispatcher.service';
-import { AuthInfo } from '@entities/auth-info';
+import { User } from '@entities/user.entity';
 
 @Auth()
 @Controller('messages')
@@ -17,9 +17,9 @@ export class MessagesController {
   @Post('/')
   saveMessage(
     @Body() createMessageDto: CreateMessageDto,
-    @Identify() auth: AuthInfo,
+    @Identify() user: User,
   ) {
-    return this.messagesService.handleMessage(createMessageDto, auth);
+    return this.messagesService.handleMessage(createMessageDto, user);
   }
 
   @Get('/:roomId')
@@ -28,10 +28,7 @@ export class MessagesController {
   }
 
   @Sse('/:roomId/subscribe')
-  subscribeMessages(
-    @Param('roomId') roomId: string,
-    @Identify() auth: AuthInfo,
-  ) {
-    return this.dispatcher.subscribe(roomId, auth);
+  subscribeMessages(@Param('roomId') roomId: string, @Identify() user: User) {
+    return this.dispatcher.subscribe(roomId, user);
   }
 }

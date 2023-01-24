@@ -6,7 +6,6 @@ import { TestMessagesRepository } from '@fixtures/data/test.messages.repository'
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { DispatcherService } from './dispatcher.service';
-import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
 import { UsersRepository } from '@entities/users.repository';
 import { MessagesRepository } from '@entities/messages.repository';
 import { TestDataModule } from '@fixtures/data/test.data.module';
@@ -37,25 +36,18 @@ describe('MessagesService', () => {
         content: 'Hello!',
         roomId,
       };
-      const author = AuthInfoFactory.build();
-      const response = await service.handleMessage(message, author);
+      const user = UserFactory.build();
+      const response = await service.handleMessage(message, user);
 
       const expectedMessage = {
         id: 'message:1001',
         content: 'Hello!',
         roomId,
-        authorId: `user:${author.sub}`,
+        authorId: user.id,
         time: 1001,
       };
       expect(response).toEqual(expectedMessage);
       expect(messagesRepository.getData()).toEqual([expectedMessage]);
-      expect(usersRepository.getData()).toEqual([
-        {
-          id: `user:${author.sub}`,
-          name: author.name,
-          picture: author.picture,
-        },
-      ]);
     });
   });
 
