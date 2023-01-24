@@ -23,6 +23,7 @@ export const DbSchema = {
       authorId: { type: String, required: true },
       time: { type: Number, required: true },
       recipientId: { type: String },
+      updatedEntities: { type: Array },
     },
     Room: {
       Id: { type: String, value: 'room:${uuid}', required: true },

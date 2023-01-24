@@ -12,6 +12,7 @@ import { processCommand } from '@usecases/process-command/process';
 import { MessagesRepository } from '@entities/messages.repository';
 import { UsersRepository } from '@entities/users.repository';
 import { User } from '@entities/user.entity';
+import { RoomsRepository } from '@entities/rooms.repository';
 
 @Injectable()
 export class MessagesService {
@@ -20,6 +21,7 @@ export class MessagesService {
   constructor(
     private readonly messagesRepo: MessagesRepository,
     private readonly usersRepo: UsersRepository,
+    private readonly roomsRepo: RoomsRepository,
     private readonly dispatcher: DispatcherService,
   ) {}
 
@@ -27,15 +29,20 @@ export class MessagesService {
     incoming: CreateMessageDto,
     author: User,
   ): Promise<Message> {
-    const processCommands = (message: ParsedMessage): Draft<Message> => {
+    const processCommands = async (
+      message: ParsedMessage,
+    ): Promise<Draft<Message>> => {
       if (isCommand(message)) {
-        return processCommand(message, author);
+        return await processCommand(message, author, this.roomsRepo);
       }
 
       return message;
     };
 
-    const message = R.pipe(parseMessage, processCommands)(incoming, author);
+    const message = await R.pipe(parseMessage, processCommands)(
+      incoming,
+      author,
+    );
 
     const time = new Date().getTime();
     const storedMessage = await this.messagesRepo.saveMessage({
@@ -58,6 +65,7 @@ export class MessagesService {
     const authorIds = R.pipe(
       R.pluck('authorId'),
       R.reject(R.isNil),
+      R.reject((id) => id === 'system'),
       R.uniq,
     )(publicMessages);
 

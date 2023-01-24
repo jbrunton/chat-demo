@@ -1,17 +1,20 @@
 import { Command } from '@entities/command.entity';
-import { Draft, PrivateMessage } from '@entities/message.entity';
+import { DraftMessage } from '@entities/message.entity';
+import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { helpResponse } from './commands/help.command';
+import { renameRoomResponse } from './commands/rename.room.command';
 import { ParsedCommand, parsers } from './parsers';
 
-export const processCommand = (
+export const processCommand = async (
   command: Command,
   user: User,
-): Draft<PrivateMessage> => {
+  roomsRepo: RoomsRepository,
+): Promise<DraftMessage> => {
   for (const parser of parsers) {
     const parsedCommand = parser(command, user);
     if (parsedCommand) {
-      return executeCommand(parsedCommand);
+      return executeCommand(parsedCommand, roomsRepo);
     }
   }
 
@@ -23,13 +26,15 @@ export const processCommand = (
   };
 };
 
-export const executeCommand = ({
-  tag,
-  params,
-}: ParsedCommand): Draft<PrivateMessage> => {
+export const executeCommand = async (
+  { tag, params }: ParsedCommand,
+  roomsRepo: RoomsRepository,
+): Promise<DraftMessage> => {
   switch (tag) {
     case 'help':
       return helpResponse(params);
+    case 'renameRoom':
+      return renameRoomResponse(params, roomsRepo);
   }
 };
 

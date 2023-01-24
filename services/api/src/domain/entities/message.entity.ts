@@ -5,6 +5,7 @@ export class Message {
   authorId: string;
   roomId: string;
   recipientId?: string;
+  updatedEntities?: string[];
 }
 
 export type PublicMessage<T = Message> = Omit<T, 'recipientId'>;

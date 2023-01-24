@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MessagesRepository } from '@entities/messages.repository';
 import databaseConfig from '@config/database.config';
@@ -11,6 +11,7 @@ import { DynamoDBRoomsRepository } from './repositories/dynamodb.rooms.repositor
 
 export const DatabaseConfigModule = ConfigModule.forFeature(databaseConfig);
 
+@Global()
 @Module({
   imports: [DatabaseConfigModule],
   providers: [

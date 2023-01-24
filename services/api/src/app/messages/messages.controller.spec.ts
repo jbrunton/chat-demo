@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { CacheModule, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessagesController } from './messages.controller';
 import * as request from 'supertest';
@@ -31,7 +31,7 @@ describe('MessagesController', () => {
     jest.setSystemTime(1001);
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TestDataModule],
+      imports: [TestDataModule, CacheModule.register()],
       controllers: [MessagesController],
       providers: [DispatcherService, MessagesService, IdentifyService],
     })

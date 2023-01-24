@@ -10,6 +10,7 @@ export type Message = {
   time: number
   authorId: string
   roomId: string
+  updatedEntities?: string[]
 }
 
 export type User = {
@@ -37,7 +38,7 @@ export const useMessages = (roomId: string, accessToken?: string) => {
     }
   }
   return useQuery({
-    queryKey: [`messages/${roomId}`],
+    queryKey: ['messages', roomId],
     enabled: !!accessToken,
     refetchOnWindowFocus: false,
     queryFn,
@@ -57,7 +58,10 @@ export const useMessagesSubscription = (roomId: string, accessToken?: string) =>
 
     eventSource.onmessage = (e) => {
       const { message, author }: { message: Message; author: User } = JSON.parse(e.data)
-      queryClient.setQueryData([`messages/${message.roomId}`], (response: RoomResponse | undefined) => {
+      if (message.updatedEntities?.includes('room')) {
+        queryClient.invalidateQueries({ queryKey: ['rooms'] })
+      }
+      queryClient.setQueryData(['messages', message.roomId], (response: RoomResponse | undefined) => {
         if (!response) return
         const messages = [...response.messages, message]
         const authors = response.authors[author.id]

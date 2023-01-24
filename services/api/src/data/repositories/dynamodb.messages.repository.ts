@@ -15,7 +15,7 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
   }
 
   override async saveMessage(params: SaveMessageParams): Promise<Message> {
-    const message = await this.adapter.Message.create(params);
+    const message = await this.adapter.Message.create(params, { hidden: true });
     return messageFromRecord(message);
   }
 
@@ -30,5 +30,8 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
 
 const messageFromRecord = (record: DbMessage): Message => ({
   id: record.Sort,
-  ...pick(['roomId', 'content', 'authorId', 'recipientId', 'time'], record),
+  ...pick(
+    ['roomId', 'content', 'authorId', 'recipientId', 'time', 'updatedEntities'],
+    record,
+  ),
 });

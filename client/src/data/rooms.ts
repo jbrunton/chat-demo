@@ -5,6 +5,7 @@ const apiUrl = import.meta.env.VITE_API_URL || ''
 export type Room = {
   id: string
   ownerId: string
+  name: string
 }
 
 export const useRoom = (roomId: string, accessToken?: string): UseQueryResult<Room> => {
@@ -22,7 +23,7 @@ export const useRoom = (roomId: string, accessToken?: string): UseQueryResult<Ro
     }
   }
   return useQuery({
-    queryKey: [`rooms/${roomId}`],
+    queryKey: ['rooms', roomId],
     enabled: !!accessToken,
     queryFn,
   })
