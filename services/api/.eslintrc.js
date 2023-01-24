@@ -41,11 +41,11 @@ module.exports = {
           },
           {
             from: 'app',
-            allow: ['entities', 'usecases', 'data', 'config', 'app'],
+            allow: ['entities', 'usecases', 'config', 'app'],
           },
           {
             from: 'main',
-            allow: ['app'],
+            allow: ['app', 'data', 'main'],
           },
         ],
       },
@@ -111,7 +111,7 @@ module.exports = {
       },
       {
         type: 'main',
-        pattern: ['src/main.ts'],
+        pattern: ['src/main.ts', 'src/main.module.ts'],
         mode: 'file',
       },
     ],
