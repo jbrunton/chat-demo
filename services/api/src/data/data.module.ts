@@ -9,7 +9,7 @@ import { DynamoDBUsersRepository } from './repositories/dynamodb.users.repositor
 import { DynamoDBAdapter } from './adapters/dynamodb.adapter';
 import { DynamoDBRoomsRepository } from './repositories/dynamodb.rooms.repository';
 
-const DatabaseConfigModule = ConfigModule.forFeature(databaseConfig);
+export const DatabaseConfigModule = ConfigModule.forFeature(databaseConfig);
 
 @Module({
   imports: [DatabaseConfigModule],

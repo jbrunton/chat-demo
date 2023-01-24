@@ -9,12 +9,9 @@ import * as R from 'rambda';
 import { DispatcherService } from './dispatcher.service';
 import { isCommand, ParsedMessage, parseMessage } from './parse-message';
 import { processCommand } from '@usecases/process-command/process';
-import { AuthInfo } from '@entities/auth-info';
 import { MessagesRepository } from '@entities/messages.repository';
-import {
-  userParamsFromAuth,
-  UsersRepository,
-} from '@entities/users.repository';
+import { UsersRepository } from '@entities/users.repository';
+import { User } from '@entities/user.entity';
 
 @Injectable()
 export class MessagesService {
@@ -28,12 +25,8 @@ export class MessagesService {
 
   async handleMessage(
     incoming: CreateMessageDto,
-    authorInfo: AuthInfo,
+    author: User,
   ): Promise<Message> {
-    const author = await this.usersRepo.saveUser(
-      userParamsFromAuth(authorInfo),
-    );
-
     const processCommands = (message: ParsedMessage): Draft<Message> => {
       if (isCommand(message)) {
         return processCommand(message, author);

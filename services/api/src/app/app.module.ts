@@ -7,6 +7,5 @@ import { RoomsModule } from '@app/rooms/rooms.module';
 @Module({
   imports: [AuthModule, MessagesModule, RoomsModule],
   controllers: [AppController],
-  providers: [],
 })
 export class AppModule {}

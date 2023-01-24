@@ -1,8 +1,8 @@
 import { Auth } from '@app/auth/auth.decorator';
-import { AuthInfo } from '@entities/auth-info';
 import { Identify } from '@app/auth/identity/identify.decorator';
 import { Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
+import { User } from '@entities/user.entity';
 
 @Auth()
 @Controller('rooms')
@@ -12,8 +12,8 @@ export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @Post('/')
-  async createRoom(@Identify() auth: AuthInfo) {
-    const room = await this.roomsService.createRoom(auth);
+  async createRoom(@Identify() user: User) {
+    const room = await this.roomsService.createRoom(user);
     this.logger.log('created room:' + JSON.stringify(room));
     return { room };
   }

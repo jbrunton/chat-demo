@@ -17,6 +17,7 @@ import { MessagesRepository } from '@entities/messages.repository';
 import { TestDataModule } from '@fixtures/data/test.data.module';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
+import { IdentifyService } from '@app/auth/identity/identify.service';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -32,10 +33,10 @@ describe('MessagesController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [TestDataModule],
       controllers: [MessagesController],
-      providers: [DispatcherService, MessagesService],
+      providers: [DispatcherService, MessagesService, IdentifyService],
     })
       .overrideGuard(AuthGuard('jwt'))
-      .useValue(FakeAuthGuard)
+      .useClass(FakeAuthGuard)
       .compile();
 
     usersRepository = module.get(UsersRepository);

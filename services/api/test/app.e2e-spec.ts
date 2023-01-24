@@ -24,7 +24,7 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     })
       .overrideGuard(AuthGuard('jwt'))
-      .useValue(FakeAuthGuard)
+      .useClass(FakeAuthGuard)
       .compile();
 
     app = moduleFixture.createNestApplication();
