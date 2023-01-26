@@ -33,4 +33,25 @@ describe('DynamoDBUsersRepository', () => {
       name: 'Some User',
     });
   });
+
+  it('updates users', async () => {
+    const params: SaveUserParams = {
+      name: 'Some User',
+      sub: 'user:google_123',
+    };
+    const user = await usersRepo.saveUser(params);
+
+    const updated = await usersRepo.updateUser({
+      id: user.id,
+      name: 'Renamed User',
+    });
+    const found = await usersRepo.getUser(user.id);
+
+    const expected = {
+      id: user.id,
+      name: 'Renamed User',
+    };
+    expect(updated).toMatchObject(expected);
+    expect(found).toMatchObject(expected);
+  });
 });

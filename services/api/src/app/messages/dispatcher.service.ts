@@ -24,8 +24,8 @@ export class DispatcherService {
     return merge(publicMessages, privateMessages);
   }
 
-  emit(message: Message, author: User) {
-    const data = { message, author };
+  emit(message: Message) {
+    const data = { message };
     const { roomId } = message;
     if (isPrivate(message)) {
       this.emitter.emit(privateMessageChannel(roomId, message.recipientId), {

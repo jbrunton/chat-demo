@@ -1,21 +1,17 @@
-import { AuthInfo } from '@entities/auth-info';
 import { User } from '@entities/user.entity';
 import {
   userParamsFromAuth,
   UsersRepository,
 } from '@entities/users.repository';
 import {
-  CACHE_MANAGER,
-  Inject,
   Injectable,
   Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Cache } from 'cache-manager';
 import { Request } from 'express';
 import { ExtractJwt } from 'passport-jwt';
-import { client } from '../auth0/auth0.client';
+import { clientCache } from '../auth0/auth0.client';
 
 const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
 
@@ -23,10 +19,7 @@ const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
 export class IdentifyService {
   private readonly logger = new Logger(IdentifyService.name);
 
-  constructor(
-    private readonly usersRepo: UsersRepository,
-    @Inject(CACHE_MANAGER) private cache: Cache,
-  ) {}
+  constructor(private readonly usersRepo: UsersRepository) {}
 
   async identifyUser(request: Request): Promise<User> {
     const accessToken = extractAccessToken(request);
@@ -35,14 +28,7 @@ export class IdentifyService {
     }
 
     try {
-      let authInfo: AuthInfo | undefined = await this.cache.get(
-        `profile:${accessToken}`,
-      );
-      if (!authInfo) {
-        authInfo = (await client.getProfile(accessToken)) as AuthInfo;
-        this.cache.set(`profile:${accessToken}`, authInfo);
-      }
-
+      const authInfo = await clientCache.getProfile(accessToken);
       try {
         const existingUser = await this.usersRepo.getUser(
           `user:${authInfo.sub}`,
