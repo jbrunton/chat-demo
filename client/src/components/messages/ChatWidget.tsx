@@ -1,21 +1,19 @@
-import { Button, Flex, Icon, Input, Spinner } from '@chakra-ui/react'
+import { Button, Center, Flex, Icon, Input, Spinner } from '@chakra-ui/react'
 import React, { useState, KeyboardEventHandler, useRef, useEffect } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { useMessages, useMessagesSubscription, usePostMessage } from '../../data/messages'
-import { useRoom } from '../../data/rooms'
 import { useAccessToken } from '../../hooks/useAccessToken'
 import { MessagesList } from './MessagesList'
 
-export type MessagesWidgetProps = {
+export type ChatWidgetProps = {
   roomId: string
 }
 
-export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
+export const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId }) => {
   const accessToken = useAccessToken()
   const inputRef = useRef<HTMLInputElement>(null)
   const [content, setContent] = useState<string>('')
-  const { data: messages, isError: messageError } = useMessages(roomId, accessToken)
-  const { data: room, isError: roomError } = useRoom(roomId, accessToken)
+  const { data: messages } = useMessages(roomId, accessToken)
   const { mutate, isLoading } = usePostMessage(roomId, content, accessToken)
   const [isSending, setIsSending] = useState<boolean>(false)
 
@@ -39,14 +37,17 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
       sendMessage()
     }
   }
+
+  if (!messages)
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    )
+
   return (
     <div>
-      {room && !roomError && (
-        <div>
-          <span>{room.name}</span>
-        </div>
-      )}
-      {messages && !messageError && <MessagesList messages={messages} />}
+      {<MessagesList messages={messages} />}
       <Flex>
         <Input
           ref={inputRef}
