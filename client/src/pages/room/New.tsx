@@ -1,3 +1,4 @@
+import { Center, Spinner } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCreateRoom } from '../../data/rooms'
@@ -16,5 +17,9 @@ export const NewRoomPage = () => {
       mutate()
     }
   }, [accessToken])
-  return <></>
+  return (
+    <Center>
+      <Spinner />
+    </Center>
+  )
 }

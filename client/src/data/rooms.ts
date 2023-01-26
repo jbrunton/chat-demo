@@ -8,7 +8,7 @@ export type Room = {
   name: string
 }
 
-export const useRoom = (roomId: string, accessToken?: string): UseQueryResult<Room> => {
+export const useRoom = (roomId?: string, accessToken?: string): UseQueryResult<Room> => {
   const queryFn = async (): Promise<Room> => {
     const response = await fetch(`${apiUrl}/rooms/${roomId}`, {
       headers: {
@@ -24,7 +24,7 @@ export const useRoom = (roomId: string, accessToken?: string): UseQueryResult<Ro
   }
   return useQuery({
     queryKey: ['rooms', roomId],
-    enabled: !!accessToken,
+    enabled: !!accessToken && !!roomId,
     queryFn,
   })
 }

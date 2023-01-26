@@ -1,11 +1,16 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { MessagesWidget } from '../../components/messages/MessagesWidget'
+import { ChatWidget } from '../../components/messages/ChatWidget'
+
+type Params = {
+  roomId: string
+}
 
 export const RoomPage = () => {
-  const { roomId } = useParams()
-
-  if (!roomId) return <span>Loading</span>
-
-  return <MessagesWidget roomId={roomId} />
+  const { roomId } = useParams() as Params
+  return (
+    <>
+      <ChatWidget roomId={roomId} />
+    </>
+  )
 }
