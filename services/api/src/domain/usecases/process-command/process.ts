@@ -3,7 +3,7 @@ import { DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { helpResponse } from './commands/help.command';
-import { renameRoomResponse } from './commands/rename.room.command';
+import { renameRoom } from './commands/rename-room.command';
 import { ParsedCommand, parsers } from './parsers';
 
 export const processCommand = async (
@@ -34,7 +34,7 @@ export const executeCommand = async (
     case 'help':
       return helpResponse(params);
     case 'renameRoom':
-      return renameRoomResponse(params, roomsRepo);
+      return renameRoom(params, roomsRepo);
   }
 };
 
