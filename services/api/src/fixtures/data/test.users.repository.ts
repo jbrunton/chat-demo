@@ -1,7 +1,7 @@
-import { find } from 'rambda';
+import { find, reject } from 'rambda';
 import { User } from '@entities/user.entity';
 import { AuthInfo } from '@entities/auth-info';
-import { UsersRepository } from '@entities/users.repository';
+import { UpdateUserParams, UsersRepository } from '@entities/users.repository';
 import { NotFoundException } from '@nestjs/common';
 
 export class TestUsersRepository extends UsersRepository {
@@ -30,6 +30,22 @@ export class TestUsersRepository extends UsersRepository {
     if (!user) {
       throw new NotFoundException(`User ${userId} does not exist`);
     }
+    return user;
+  }
+
+  override async updateUser(params: UpdateUserParams): Promise<User> {
+    const user = find((user) => params.id === user.id, this.users);
+    if (!user) {
+      throw new NotFoundException(`User ${params.id} does not exist`);
+    }
+    const updatedUser = {
+      ...user,
+      ...params,
+    };
+    this.users = [
+      ...reject((user) => params.id === user.id, this.users),
+      updatedUser,
+    ];
     return user;
   }
 }

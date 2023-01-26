@@ -46,7 +46,7 @@ export const MessagesWidget: React.FC<MessagesWidgetProps> = ({ roomId }) => {
           <span>{room.name}</span>
         </div>
       )}
-      {messages && !messageError && <MessagesList data={messages} />}
+      {messages && !messageError && <MessagesList messages={messages} />}
       <Flex>
         <Input
           ref={inputRef}

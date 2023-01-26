@@ -33,7 +33,12 @@ export class MessagesService {
       message: ParsedMessage,
     ): Promise<Draft<Message>> => {
       if (isCommand(message)) {
-        return await processCommand(message, author, this.roomsRepo);
+        return await processCommand(
+          message,
+          author,
+          this.roomsRepo,
+          this.usersRepo,
+        );
       }
 
       return message;
@@ -51,31 +56,13 @@ export class MessagesService {
     });
 
     this.logger.log(`emitting event: ${JSON.stringify(storedMessage)}`);
-    this.dispatcher.emit(storedMessage, author);
+    this.dispatcher.emit(storedMessage);
     return storedMessage;
   }
 
-  async findForRoom(
-    roomId: string,
-  ): Promise<{ messages: Message[]; authors: object }> {
+  async findForRoom(roomId: string): Promise<Message[]> {
     const allMessages = await this.messagesRepo.getMessagesForRoom(roomId);
-
     const publicMessages = R.pipe(R.reject(isPrivate))(allMessages);
-
-    const authorIds = R.pipe(
-      R.pluck('authorId'),
-      R.reject(R.isNil),
-      R.reject((id) => id === 'system'),
-      R.uniq,
-    )(publicMessages);
-
-    const authors = await Promise.all(
-      authorIds.map((authorId) => this.usersRepo.getUser(authorId)),
-    );
-
-    return {
-      messages: publicMessages,
-      authors: R.fromPairs(R.map((author) => [author.id, author], authors)),
-    };
+    return publicMessages;
   }
 }

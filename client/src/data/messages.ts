@@ -19,8 +19,6 @@ export type User = {
   picture: string
 }
 
-type RoomResponse = { messages: Message[]; authors: Record<string, User> }
-
 export const useMessages = (roomId: string, accessToken?: string) => {
   const queryFn = async () => {
     const response = await fetch(`${apiUrl}/messages/${roomId}`, {
@@ -30,12 +28,9 @@ export const useMessages = (roomId: string, accessToken?: string) => {
     })
     if (response.ok) {
       const data = await response.json()
-      return data as RoomResponse
+      return data as Message[]
     }
-    return {
-      messages: [],
-      authors: {},
-    }
+    return []
   }
   return useQuery({
     queryKey: ['messages', roomId],
@@ -57,23 +52,16 @@ export const useMessagesSubscription = (roomId: string, accessToken?: string) =>
     })
 
     eventSource.onmessage = (e) => {
-      const { message, author }: { message: Message; author: User } = JSON.parse(e.data)
+      const { message }: { message: Message } = JSON.parse(e.data)
       if (message.updatedEntities?.includes('room')) {
         queryClient.invalidateQueries({ queryKey: ['rooms'] })
       }
-      queryClient.setQueryData(['messages', message.roomId], (response: RoomResponse | undefined) => {
-        if (!response) return
-        const messages = [...response.messages, message]
-        const authors = response.authors[author.id]
-          ? response.authors
-          : {
-              ...response.authors,
-              [author.id]: author,
-            }
-        return {
-          messages,
-          authors,
-        }
+      if (message.updatedEntities?.includes('users')) {
+        queryClient.invalidateQueries({ queryKey: ['users'] })
+      }
+      queryClient.setQueryData(['messages', message.roomId], (messages: Message[] | undefined) => {
+        if (!messages) return
+        return [...messages, message]
       })
     }
 

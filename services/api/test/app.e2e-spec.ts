@@ -77,7 +77,7 @@ describe('AppController (e2e)', () => {
     const removeIds = (messages: Message[]) =>
       map((msg) => omit(['id'], msg), messages);
 
-    expect(removeIds(body.messages)).toEqual([
+    expect(removeIds(body)).toEqual([
       {
         content: 'Hello Room 1, from User 1!',
         roomId: 'room_1',
@@ -91,9 +91,5 @@ describe('AppController (e2e)', () => {
         authorId: fakeAuth2.user.id,
       },
     ]);
-    expect(body.authors).toEqual({
-      [fakeAuth1.user.id]: fakeAuth1.user,
-      [fakeAuth2.user.id]: fakeAuth2.user,
-    });
   });
 });

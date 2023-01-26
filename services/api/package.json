@@ -37,6 +37,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "async-cache-dedupe": "1.8.0",
     "auth0": "3.0.1",
     "cache-manager": "5.1.4",
     "dynamodb-onetable": "2.5.1",

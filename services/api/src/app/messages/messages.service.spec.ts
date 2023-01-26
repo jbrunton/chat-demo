@@ -1,18 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { DispatcherService } from './dispatcher.service';
-import { UsersRepository } from '@entities/users.repository';
 import { MessagesRepository } from '@entities/messages.repository';
 import { TestDataModule } from '@fixtures/data/test.data.module';
 
 describe('MessagesService', () => {
   let service: MessagesService;
-  let usersRepository: TestUsersRepository;
   let messagesRepository: TestMessagesRepository;
 
   beforeEach(async () => {
@@ -25,7 +22,6 @@ describe('MessagesService', () => {
     }).compile();
 
     service = module.get(MessagesService);
-    usersRepository = module.get(UsersRepository);
     messagesRepository = module.get(MessagesRepository);
   });
 
@@ -54,29 +50,13 @@ describe('MessagesService', () => {
   describe('findForRoom', () => {
     it('returns the messages and their authors for the room', async () => {
       const roomId = 'Room#1';
-      const author1 = UserFactory.build();
-      const author2 = UserFactory.build();
-      const msg1 = MessageFactory.build({
-        authorId: author1.id,
-        roomId,
-      });
-      const msg2 = MessageFactory.build({
-        authorId: author2.id,
-        roomId,
-      });
-
-      usersRepository.setData([author1, author2]);
+      const msg1 = MessageFactory.build({ roomId });
+      const msg2 = MessageFactory.build({ roomId });
       messagesRepository.setData([msg1, msg2]);
 
       const response = await service.findForRoom(roomId);
 
-      expect(response).toEqual({
-        messages: [msg1, msg2],
-        authors: {
-          [author1.id]: author1,
-          [author2.id]: author2,
-        },
-      });
+      expect(response).toEqual([msg1, msg2]);
     });
   });
 });

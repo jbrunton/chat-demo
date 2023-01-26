@@ -10,7 +10,6 @@ import {
 } from '@fixtures/auth/FakeAuth';
 import { MessagesService } from './messages.service';
 import { MessageFactory } from '@fixtures/messages/message.factory';
-import { UserFactory } from '@fixtures/messages/user.factory';
 import { DispatcherService } from './dispatcher.service';
 import { UsersRepository } from '@entities/users.repository';
 import { MessagesRepository } from '@entities/messages.repository';
@@ -64,25 +63,14 @@ describe('MessagesController', () => {
 
       const { accessToken } = fakeAuthUser();
 
-      const author = UserFactory.build();
-      const message = MessageFactory.build({
-        authorId: author.id,
-        roomId,
-        time: 1001,
-      });
+      const message = MessageFactory.build({ roomId });
 
       messagesRepository.setData([message]);
-      usersRepository.setData([author]);
 
       await request(app.getHttpServer())
         .get(`/messages/${roomId}`)
         .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200, {
-          messages: [message],
-          authors: {
-            [author.id]: author,
-          },
-        });
+        .expect(200, [message]);
     });
   });
 
