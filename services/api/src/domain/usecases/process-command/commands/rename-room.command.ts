@@ -1,4 +1,4 @@
-import { Draft, PublicMessage } from '@entities/message.entity';
+import { DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 
@@ -8,11 +8,22 @@ export type RenameRoomParams = {
   newName: string;
 };
 
-export const renameRoomResponse = async (
+export const renameRoom = async (
   params: RenameRoomParams,
   roomsRepo: RoomsRepository,
-): Promise<Draft<PublicMessage>> => {
-  const { roomId, newName } = params;
+): Promise<DraftMessage> => {
+  const { roomId, newName, authenticatedUser } = params;
+
+  const room = await roomsRepo.getRoom(roomId);
+
+  if (authenticatedUser.id !== room.ownerId) {
+    return {
+      content: 'You cannot rename this room. Only the owner can do this.',
+      roomId,
+      authorId: 'system',
+      recipientId: authenticatedUser.id,
+    };
+  }
 
   await roomsRepo.updateRoom({
     id: roomId,
