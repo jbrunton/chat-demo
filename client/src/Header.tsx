@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link as ReactLink } from 'react-router-dom'
 import { Button, Flex, Heading, Spacer, Link, HStack } from '@chakra-ui/react'
 import { SignInButton } from './components/auth/SignInButton'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -18,7 +19,7 @@ export const Header = () => {
       <HStack>
         {room && <Heading size={'md'}>Chat Demo</Heading>}
         {isAuthenticated && (
-          <Link href='/room/new'>
+          <Link as={ReactLink} to='/room/new'>
             <Button>New Room</Button>
           </Link>
         )}
