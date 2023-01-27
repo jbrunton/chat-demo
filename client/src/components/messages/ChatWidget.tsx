@@ -44,7 +44,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId }) => {
   return (
     <div>
       {<MessagesList messages={messages} />}
-      <Flex>
+      <Flex mt='6px'>
         <Input
           ref={inputRef}
           disabled={isLoading}
