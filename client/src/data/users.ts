@@ -5,6 +5,7 @@ const apiUrl = import.meta.env.VITE_API_URL || ''
 export type User = {
   id: string
   name: string
+  picture: string
 }
 
 export const userQueryKey = (userId: string) => ['users', userId]

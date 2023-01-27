@@ -13,12 +13,6 @@ export type Message = {
   updatedEntities?: string[]
 }
 
-export type User = {
-  id: string
-  name: string
-  picture: string
-}
-
 export const useMessages = (roomId: string, accessToken?: string) => {
   const queryFn = async () => {
     const response = await fetch(`${apiUrl}/messages/${roomId}`, {
