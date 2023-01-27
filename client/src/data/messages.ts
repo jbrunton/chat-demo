@@ -10,6 +10,7 @@ export type Message = {
   time: number
   authorId: string
   roomId: string
+  recipientId?: string
   updatedEntities?: string[]
 }
 
@@ -47,6 +48,7 @@ export const useMessagesSubscription = (roomId: string, accessToken?: string) =>
 
     eventSource.onmessage = (e) => {
       const { message }: { message: Message } = JSON.parse(e.data)
+      console.log('message received:', message)
       if (message.updatedEntities?.includes('room')) {
         queryClient.invalidateQueries({ queryKey: ['rooms'] })
       }

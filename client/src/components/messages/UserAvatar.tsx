@@ -5,7 +5,9 @@ import { UserIcon } from '../icons/User'
 
 type UserAvatarProps = Pick<AvatarProps, 'icon' | 'backgroundColor' | 'referrerPolicy' | 'src'>
 
-export const UserAvatar = (params: UserAvatarProps) => <Avatar size='sm' mt='6px' borderRadius='6px' {...params} />
+export const UserAvatar = (params: UserAvatarProps) => {
+  return <Avatar size='sm' mt='6px' ml='6px' borderRadius='6px' {...params} />
+}
 
 export const SystemAvatar = () => <UserAvatar icon={<SystemIcon />} backgroundColor={'primary'} />
 
