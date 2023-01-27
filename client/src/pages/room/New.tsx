@@ -1,6 +1,6 @@
-import { Center, Spinner } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { LoadingIndicator } from '../../components/LoadingIndicator'
 import { useCreateRoom } from '../../data/rooms'
 import { useAccessToken } from '../../hooks/useAccessToken'
 
@@ -17,9 +17,6 @@ export const NewRoomPage = () => {
       mutate()
     }
   }, [accessToken])
-  return (
-    <Center>
-      <Spinner />
-    </Center>
-  )
+
+  return <LoadingIndicator />
 }

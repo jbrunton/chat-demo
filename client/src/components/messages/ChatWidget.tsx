@@ -1,8 +1,9 @@
-import { Button, Center, Flex, Icon, Input, Spinner } from '@chakra-ui/react'
+import { Button, Flex, Icon, Input, Spinner } from '@chakra-ui/react'
 import React, { useState, KeyboardEventHandler, useRef, useEffect } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { useMessages, useMessagesSubscription, usePostMessage } from '../../data/messages'
 import { useAccessToken } from '../../hooks/useAccessToken'
+import { LoadingIndicator } from '../LoadingIndicator'
 import { MessagesList } from './MessagesList'
 
 export type ChatWidgetProps = {
@@ -38,12 +39,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId }) => {
     }
   }
 
-  if (!messages)
-    return (
-      <Center>
-        <Spinner />
-      </Center>
-    )
+  if (!messages) return <LoadingIndicator />
 
   return (
     <div>
