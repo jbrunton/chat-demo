@@ -1,4 +1,4 @@
-import { Button, Flex, Icon, Input, Spinner } from '@chakra-ui/react'
+import { Button, Icon, Textarea, Spinner, VStack } from '@chakra-ui/react'
 import React, { useState, KeyboardEventHandler, useRef, useEffect } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { useMessages, useMessagesSubscription, usePostMessage } from '../../data/messages'
@@ -12,10 +12,10 @@ export type ChatWidgetProps = {
 
 export const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId }) => {
   const accessToken = useAccessToken()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const [content, setContent] = useState<string>('')
   const { data: messages } = useMessages(roomId, accessToken)
-  const { mutate, isLoading } = usePostMessage(roomId, content, accessToken)
+  const { mutate: postMessage, isLoading } = usePostMessage(roomId, content, accessToken)
   const [isSending, setIsSending] = useState<boolean>(false)
 
   useEffect(() => {
@@ -29,12 +29,14 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId }) => {
   useMessagesSubscription(roomId, accessToken)
 
   const sendMessage = () => {
-    setIsSending(true)
-    mutate()
+    if (content.length > 0) {
+      setIsSending(true)
+      postMessage()
+    }
   }
 
   const onKeyDown: KeyboardEventHandler = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       sendMessage()
     }
   }
@@ -44,25 +46,32 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ roomId }) => {
   return (
     <div>
       {<MessagesList messages={messages} />}
-      <Flex mt='6px'>
-        <Input
+      <VStack mt='6px' align='end'>
+        <Textarea
           ref={inputRef}
           disabled={isLoading}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={onKeyDown}
+          resize='none'
           placeholder='Type a message'
         />
         {isLoading ? (
-          <Button colorScheme='blue' disabled={true}>
-            <Spinner />
+          <Button variant='ghost' colorScheme='blue' disabled={true} rightIcon={<Spinner />}>
+            Send
           </Button>
         ) : (
-          <Button colorScheme='blue' onClick={() => sendMessage()} rightIcon={<Icon as={AiOutlineArrowRight} />}>
+          <Button
+            variant='ghost'
+            colorScheme='blue'
+            disabled={!content.length}
+            onClick={() => sendMessage()}
+            rightIcon={<Icon as={AiOutlineArrowRight} />}
+          >
             Send
           </Button>
         )}
-      </Flex>
+      </VStack>
     </div>
   )
 }

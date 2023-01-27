@@ -1,4 +1,4 @@
-import { List } from '@chakra-ui/react'
+import { Box, List, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Message } from '../../data/messages'
 import { MessagesGroup, MessagesGroupProps } from './MessageGroup'
@@ -9,6 +9,15 @@ export type MessagesListProps = {
 
 export const MessagesList: React.FC<MessagesListProps> = ({ messages }) => {
   const messageGroups = groupMessages(messages)
+  if (messageGroups.length === 0) {
+    return (
+      <Box padding='6px'>
+        <Text as='em' fontSize='sm'>
+          Be the first person to say something
+        </Text>
+      </Box>
+    )
+  }
   return (
     <List spacing={3}>
       {messageGroups.map((params, index) => (

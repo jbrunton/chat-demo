@@ -1,9 +1,10 @@
-import { HStack, ListItem, Text, VStack } from '@chakra-ui/react'
 import React from 'react'
+import { HStack, ListItem, Text, VStack } from '@chakra-ui/react'
 import { Message } from '../../data/messages'
 import { useUser } from '../../data/users'
 import { useAccessToken } from '../../hooks/useAccessToken'
 import { DefaultUserAvatar, SystemAvatar, UserAvatar } from './UserAvatar'
+import { FormattedMessage } from './FormattedMessage'
 
 export type MessagesGroupProps = {
   authorId: string
@@ -25,7 +26,7 @@ export const MessagesGroup: React.FC<MessagesGroupProps> = ({ messages, authorId
         ) : (
           <DefaultUserAvatar />
         )}
-        <VStack spacing={0} align={'left'}>
+        <VStack spacing={0} align={'left'} w='full'>
           <HStack>
             <Text as='b' fontSize='md'>
               {isSystem ? 'System' : author?.name}
@@ -36,9 +37,11 @@ export const MessagesGroup: React.FC<MessagesGroupProps> = ({ messages, authorId
               </Text>
             )}
           </HStack>
-          {messages.map((message) => (
-            <Text key={message.id} dangerouslySetInnerHTML={{ __html: message.content }} />
-          ))}
+          <VStack align={'left'}>
+            {messages.map((message) => (
+              <FormattedMessage key={message.id} content={message.content} />
+            ))}
+          </VStack>
         </VStack>
       </HStack>
     </ListItem>
