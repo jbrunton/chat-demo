@@ -1,0 +1,35 @@
+body,
+html,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  flex-flow: column;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--chakra-colors-gray-50);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--chakra-colors-gray-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--chakra-colors-gray-400);
+  border-radius: 4px;
+}
