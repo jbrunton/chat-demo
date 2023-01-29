@@ -1,4 +1,4 @@
-import { Box, List, Text } from '@chakra-ui/react'
+import { List, ListItem, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Message } from '../../data/messages'
 import { MessagesGroup, MessagesGroupProps } from './MessageGroup'
@@ -8,21 +8,14 @@ export type MessagesListProps = {
 }
 
 export const MessagesList: React.FC<MessagesListProps> = ({ messages }) => {
-  const messageGroups = groupMessages(messages)
-  if (messageGroups.length === 0) {
-    return (
-      <Box padding='6px'>
-        <Text as='em' fontSize='sm'>
-          Be the first person to say something
-        </Text>
-      </Box>
-    )
-  }
+  const messageGroups = groupMessages(messages).reverse()
   return (
-    <List spacing={3}>
-      {messageGroups.map((params, index) => (
-        <MessagesGroup key={`group-${index}`} {...params} />
-      ))}
+    <List spacing={3} flex='1' overflowY='auto' display='flex' flexDirection='column-reverse' m='6px'>
+      {messageGroups.length === 0 ? (
+        <EmptyRow />
+      ) : (
+        messageGroups.map((params, index) => <MessagesGroup key={`group-${index}`} {...params} />)
+      )}
     </List>
   )
 }
@@ -45,3 +38,11 @@ const groupMessages = (messages: Message[]): MessagesGroupProps[] => {
     return groups
   }, [])
 }
+
+const EmptyRow = () => (
+  <ListItem>
+    <Text as='em' fontSize='sm'>
+      Be the first person to say something
+    </Text>
+  </ListItem>
+)

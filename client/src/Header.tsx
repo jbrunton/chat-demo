@@ -13,7 +13,7 @@ export const Header = () => {
   const accessToken = useAccessToken()
   const { data: room } = useRoom(roomId, accessToken)
   return (
-    <Flex mb='2'>
+    <Flex className='header' p='6px'>
       <Heading>{room ? room.name : 'Chat Demo'}</Heading>
       <Spacer />
       <HStack>
