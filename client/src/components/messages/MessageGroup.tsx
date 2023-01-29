@@ -1,4 +1,5 @@
 import React from 'react'
+import { format } from 'date-fns'
 import { HStack, ListItem, Text, VStack } from '@chakra-ui/react'
 import { Message } from '../../data/messages'
 import { useUser } from '../../data/users'
@@ -27,12 +28,15 @@ export const MessagesGroup: React.FC<MessagesGroupProps> = ({ messages, authorId
           <DefaultUserAvatar />
         )}
         <VStack spacing={0} align={'left'} w='full'>
-          <HStack>
+          <HStack alignItems='baseline'>
             <Text as='b' fontSize='md'>
               {isSystem ? 'System' : author?.name}
             </Text>
+            <Text fontSize='xs' color='gray'>
+              {format(messages[0].time, 'hh:mm b')}
+            </Text>
             {isPrivate && (
-              <Text as='em' color='gray' fontSize='sm'>
+              <Text as='em' color='gray' fontSize='xs'>
                 Only visible to you
               </Text>
             )}
