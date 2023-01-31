@@ -2,12 +2,18 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Auth0Provider } from '@auth0/auth0-react'
-import { ChakraProvider } from '@chakra-ui/react'
+import { baseTheme, ChakraProvider, extendTheme } from '@chakra-ui/react'
 import 'highlight.js/styles/default.css'
 import './main.css'
 import App from './App'
 
 const queryClient = new QueryClient()
+
+const theme = extendTheme({
+  colors: {
+    primary: baseTheme.colors.blue,
+  },
+})
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -19,7 +25,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       redirectUri={window.location.origin}
     >
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <App />
         </ChakraProvider>
       </QueryClientProvider>

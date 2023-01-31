@@ -1,8 +1,8 @@
 import { Button, Icon, Textarea, Spinner, VStack } from '@chakra-ui/react'
 import React, { useState, KeyboardEventHandler, useRef, useEffect } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
-import { usePostMessage } from '../../data/messages'
-import { useAccessToken } from '../../hooks/useAccessToken'
+import { usePostMessage } from '../../../data/messages'
+import { useAccessToken } from '../../../hooks/useAccessToken'
 
 export type ChatBoxProps = {
   roomId: string
@@ -45,13 +45,13 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ roomId }: ChatBoxProps) => {
         placeholder='Type a message'
       />
       {isSending ? (
-        <Button variant='ghost' colorScheme='blue' disabled={true} rightIcon={<Spinner />}>
+        <Button variant='ghost' colorScheme='primary' disabled={true} rightIcon={<Spinner />}>
           Send
         </Button>
       ) : (
         <Button
           variant='ghost'
-          colorScheme='blue'
+          colorScheme='primary'
           disabled={!content.length}
           onClick={onSendClicked}
           rightIcon={<Icon as={AiOutlineArrowRight} />}

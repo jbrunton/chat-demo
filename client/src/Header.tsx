@@ -6,7 +6,6 @@ import {
   Flex,
   Heading,
   Spacer,
-  Link,
   HStack,
   useDisclosure,
   IconButton,
@@ -19,7 +18,7 @@ import {
   DrawerCloseButton,
   UseDisclosureProps,
 } from '@chakra-ui/react'
-import { SignInButton } from './components/auth/SignInButton'
+import { SignInButton } from './components/organisms/auth/SignInButton'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useParams } from 'react-router-dom'
 import { useAccessToken } from './hooks/useAccessToken'
@@ -85,9 +84,9 @@ const DrawerMenu: React.FC<DrawerMenuProps> = ({ onClose, isOpen }) => (
       <DrawerCloseButton alignSelf='start' />
       <DrawerHeader borderBottomWidth='1px'>Chat Demo</DrawerHeader>
       <DrawerBody>
-        <Link as={ReactLink} to='/room/new'>
-          <Button variant='ghost'>New Room</Button>
-        </Link>
+        <Button as={ReactLink} to='/room/new' variant='ghost'>
+          New Room
+        </Button>
       </DrawerBody>
     </DrawerContent>
   </Drawer>
@@ -106,9 +105,9 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ room, isAuthenticated }) => (
       </Heading>
     )}
     {isAuthenticated && (
-      <Link as={ReactLink} to='/room/new'>
-        <Button>New Room</Button>
-      </Link>
+      <Button as={ReactLink} to='/room/new'>
+        New Room
+      </Button>
     )}
   </>
 )
