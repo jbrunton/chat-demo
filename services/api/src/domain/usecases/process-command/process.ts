@@ -4,6 +4,7 @@ import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { UsersRepository } from '@entities/users.repository';
 import { helpResponse } from './commands/help.command';
+import { loremResponse } from './commands/lorem.command';
 import { renameRoom } from './commands/rename-room.command';
 import { renameUser } from './commands/rename-user.command';
 import { ParsedCommand, parsers } from './parsers';
@@ -41,6 +42,8 @@ export const executeCommand = async (
       return renameRoom(params, roomsRepo);
     case 'renameUser':
       return renameUser(params, usersRepo);
+    case 'lorem':
+      return loremResponse(params);
   }
 };
 
