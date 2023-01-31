@@ -2,10 +2,12 @@ import { Draft, PrivateMessage } from '@entities/message.entity';
 import { User } from '@entities/user.entity';
 
 const helpContent = `
-<p>Type to chat, or enter one of the following commands:</p>
-<b>/help</b>: list commands<br />
-<b>/rename user &lt;name&gt;</b>: change your display name<br />
-<b>/rename room &lt;name&gt;</b>: change the room name<br />
+Type to chat, or enter one of the following commands:
+
+\`/help\`: list commands
+\`/rename user {name}\`: change your display name
+\`/rename room {name}\`: change the room name
+\`/lorem {count} {'words' | 'paragraphs'}\`: generate lorem text
 `;
 
 export type HelpParams = {

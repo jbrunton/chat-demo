@@ -15,6 +15,14 @@ html,
   overflow: auto;
 }
 
+code {
+  background-color: #f3f3f3;
+  border-radius: 4px;
+  border: 1px solid var(--chakra-colors-gray-300);
+  padding: 2px;
+  font-size: 0.9em;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }

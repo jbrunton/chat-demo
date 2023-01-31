@@ -42,8 +42,8 @@ export const MessagesList: React.FC<MessagesListProps> = ({ messages }) => {
       {isScrolled && (
         <Center position='fixed' width='100%'>
           <Button
-            variant='ghost'
-            size='sm'
+            variant='solid'
+            size='xs'
             colorScheme='blue'
             onClick={scrollToRecent}
             rightIcon={<Icon as={AiOutlineArrowDown} />}

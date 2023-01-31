@@ -68,7 +68,7 @@ module.exports = {
             allow: ['@aws-sdk/client-dynamodb', '@nestjs/config', 'assert'],
           },
           {
-            from: ['entities'],
+            from: ['entities', 'usecases'],
             allow: ['@faker-js/faker'],
           },
           {

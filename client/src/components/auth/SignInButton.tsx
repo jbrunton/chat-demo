@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { Icon, Button, Menu, MenuButton, MenuItem, MenuList, Spinner } from '@chakra-ui/react'
+import { Icon, Button, Menu, MenuButton, MenuItem, MenuList, Spinner, Text, Show } from '@chakra-ui/react'
 import { AiOutlineDown } from 'react-icons/ai'
 import { UserIcon } from '../icons/User'
 
@@ -25,10 +25,15 @@ export const SignInButton = () => {
   return (
     <Menu>
       <MenuButton as={Button} leftIcon={<UserIcon />} rightIcon={<Icon as={AiOutlineDown} />}>
-        {user?.name}
+        <Text display={{ base: 'none', md: 'inline-flex' }}>{user?.name}</Text>
       </MenuButton>
       <MenuList>
-        <MenuItem onClick={signOut}>Sign Out</MenuItem>
+        <MenuItem onClick={signOut}>
+          Sign Out
+          <Show below='md'>
+            <Text>&nbsp;({user?.name})</Text>
+          </Show>
+        </MenuItem>
       </MenuList>
     </Menu>
   )
