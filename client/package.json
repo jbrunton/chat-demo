@@ -11,7 +11,8 @@
     "lint:fix": "eslint --max-warnings 0 --fix 'src/**/*.{ts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,tsx,css,md}' --config ./.prettierrc",
     "storybook:dev": "storybook dev -p 6006",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "chromatic": "npx chromatic --build-script-name storybook:build --exit-once-uploaded"
   },
   "dependencies": {
     "@auth0/auth0-react": "1.12.0",
@@ -47,6 +48,7 @@
     "@typescript-eslint/eslint-plugin": "5.47.1",
     "@typescript-eslint/parser": "5.47.1",
     "@vitejs/plugin-react": "^3.0.0",
+    "chromatic": "6.15.0",
     "eslint": "8.30.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
@@ -58,5 +60,7 @@
     "storybook": "^7.0.0-beta.38",
     "typescript": "^4.9.3",
     "vite": "^4.0.0"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "client@0.0.0"
 }
