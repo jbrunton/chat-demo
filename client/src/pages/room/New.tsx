@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LoadingIndicator } from '../../components/LoadingIndicator'
+import { LoadingIndicator } from '../../components/molecules/LoadingIndicator'
 import { useCreateRoom } from '../../data/rooms'
 import { useAccessToken } from '../../hooks/useAccessToken'
 
