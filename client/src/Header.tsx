@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react'
-import { Link as ReactLink, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import {
   Icon,
-  Button,
   Flex,
   Heading,
   Spacer,
   HStack,
   useDisclosure,
   IconButton,
-  Show,
   DrawerOverlay,
   Drawer,
   DrawerContent,
@@ -17,13 +15,15 @@ import {
   DrawerBody,
   DrawerCloseButton,
   UseDisclosureProps,
+  Divider,
 } from '@chakra-ui/react'
 import { SignInButton } from './components/organisms/auth/SignInButton'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useParams } from 'react-router-dom'
 import { useAccessToken } from './hooks/useAccessToken'
-import { Room, useRoom } from './data/rooms'
+import { useRoom } from './data/rooms'
 import { AiOutlineMenu } from 'react-icons/ai'
+import { RoomSelector } from './components/organisms/rooms/RoomSelector'
 
 export const Header = () => {
   const { isAuthenticated } = useAuth0()
@@ -43,71 +43,42 @@ export const Header = () => {
   return (
     <>
       <Flex className='header' p='6px' align='center'>
-        <Show below='md'>
-          <OpenDrawerButton onOpen={onOpen} />
-        </Show>
         <Heading size={{ base: 'sm', lg: 'md' }} noOfLines={1}>
-          {room ? room.name : 'Chat Demo'}
+          {room?.name ?? 'Chat Demo'}
         </Heading>
         <Spacer />
         <HStack align='center'>
-          <Show above='md'>
-            <HeaderMenu room={room} isAuthenticated={isAuthenticated} />
-          </Show>
-          <SignInButton />
+          <IconButton variant='ghost' icon={<DrawerIcon />} aria-label={'Open Menu'} onClick={onOpen} />
         </HStack>
       </Flex>
 
-      {isOpen ? <DrawerMenu isOpen={isOpen} onClose={onClose} /> : null}
+      {isOpen ? <DrawerMenu isOpen={isOpen} onClose={onClose} isAuthenticated={isAuthenticated} /> : null}
     </>
   )
 }
 
-type OpenDrawerButtonProps = Required<Pick<UseDisclosureProps, 'onOpen'>>
+const DrawerIcon = () => <Icon as={AiOutlineMenu} boxSize={5} />
 
-const OpenDrawerButton: React.FC<OpenDrawerButtonProps> = ({ onOpen }) => (
-  <IconButton
-    variant='ghost'
-    size={'md'}
-    icon={<Icon as={AiOutlineMenu} boxSize={5} />}
-    aria-label={'Open Menu'}
-    onClick={onOpen}
-  />
-)
+type DrawerMenuProps = Required<Pick<UseDisclosureProps, 'onClose' | 'isOpen'>> & {
+  isAuthenticated: boolean
+}
 
-type DrawerMenuProps = Required<Pick<UseDisclosureProps, 'onClose' | 'isOpen'>>
-
-const DrawerMenu: React.FC<DrawerMenuProps> = ({ onClose, isOpen }) => (
-  <Drawer placement='top' onClose={onClose} isOpen={isOpen}>
+const DrawerMenu: React.FC<DrawerMenuProps> = ({ onClose, isOpen, isAuthenticated }) => (
+  <Drawer placement='right' size='md' onClose={onClose} isOpen={isOpen}>
     <DrawerOverlay />
     <DrawerContent>
       <DrawerCloseButton alignSelf='start' />
       <DrawerHeader borderBottomWidth='1px'>Chat Demo</DrawerHeader>
       <DrawerBody>
-        <Button as={ReactLink} to='/room/new' variant='ghost'>
-          New Room
-        </Button>
+        <SignInButton />
+        {isAuthenticated && (
+          <>
+            <Divider my='2' />
+
+            <RoomSelector />
+          </>
+        )}
       </DrawerBody>
     </DrawerContent>
   </Drawer>
-)
-
-type HeaderMenuProps = {
-  room: Room | undefined
-  isAuthenticated: boolean
-}
-
-const HeaderMenu: React.FC<HeaderMenuProps> = ({ room, isAuthenticated }) => (
-  <>
-    {room && (
-      <Heading size={'md'} noOfLines={1}>
-        Chat Demo
-      </Heading>
-    )}
-    {isAuthenticated && (
-      <Button as={ReactLink} to='/room/new'>
-        New Room
-      </Button>
-    )}
-  </>
 )

@@ -26,6 +26,20 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
     );
     return messages.map(messageFromRecord);
   }
+
+  override async getAuthorHistory(authorId: string): Promise<Message[]> {
+    const messages = await this.adapter.Message.scan(
+      {},
+      {
+        where: '${authorId} = @{authorId}',
+        substitutions: {
+          authorId,
+        },
+        hidden: true,
+      },
+    );
+    return messages.map(messageFromRecord);
+  }
 }
 
 const messageFromRecord = (record: DbMessage): Message => ({

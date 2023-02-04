@@ -21,7 +21,7 @@ export const RoomPage = () => {
   if (!messages) return <LoadingIndicator />
 
   return (
-    <Box display='flex' flexFlow='column' height='100%'>
+    <Box display='flex' flexFlow='column' height='100%' flex='1'>
       {<MessagesList messages={messages} />}
       <ChatBox roomId={roomId} />
     </Box>
