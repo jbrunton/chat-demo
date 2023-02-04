@@ -1,3 +1,4 @@
+import { MembershipStatus } from '@entities/membership.entity';
 import { Entity } from 'dynamodb-onetable';
 
 export const DbSchema = {
@@ -32,6 +33,28 @@ export const DbSchema = {
       name: { type: String, required: true },
       ownerId: { type: String, required: true },
     },
+    Membership: {
+      Id: { type: String, value: '${userId}', required: true },
+      Sort: {
+        type: String,
+        value: 'membership:${roomId}:${from}',
+        required: true,
+      },
+      roomId: { type: String, required: true },
+      userId: { type: String, required: true },
+      status: {
+        type: String,
+        enum: [
+          MembershipStatus.None,
+          MembershipStatus.Joined,
+          MembershipStatus.PendingApproval,
+          MembershipStatus.Revoked,
+        ],
+        required: true,
+      },
+      from: { type: Number, required: true },
+      until: { type: Number },
+    },
   } as const,
   params: {
     timestamps: false,
@@ -41,3 +64,4 @@ export const DbSchema = {
 export type DbUser = Entity<typeof DbSchema.models.User>;
 export type DbMessage = Entity<typeof DbSchema.models.Message>;
 export type DbRoom = Entity<typeof DbSchema.models.Room>;
+export type DbMembership = Entity<typeof DbSchema.models.Membership>;

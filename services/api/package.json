@@ -17,7 +17,7 @@
     "start:debug": "NODE_ENV=development nest start --debug --watch",
     "db:init": "NODE_ENV=development ts-node ./scripts/db/init.ts",
     "db:drop": "NODE_ENV=development ts-node ./scripts/db/drop.ts",
-    "db:test:drop": "NODE_ENV=test ts-node ./scripts/dropdb.ts",
+    "db:test:drop": "NODE_ENV=test ts-node ./scripts/db/drop.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:int": "jest --config ./jest.int.config.js",
