@@ -29,4 +29,8 @@ export class TestMessagesRepository extends MessagesRepository {
   override async getMessagesForRoom(roomId: string): Promise<Message[]> {
     return R.filter((msg) => msg.roomId === roomId, this.messages);
   }
+
+  override async getAuthorHistory(authorId: string): Promise<Message[]> {
+    return R.filter((msg) => msg.authorId === authorId, this.messages);
+  }
 }
