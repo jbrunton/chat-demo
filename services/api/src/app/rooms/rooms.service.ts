@@ -3,6 +3,8 @@ import { RoomsRepository } from '@entities/rooms.repository';
 import { Injectable } from '@nestjs/common';
 import { User } from '@entities/user.entity';
 import { faker } from '@faker-js/faker';
+import { MembershipsRepository } from '@entities/memberships.repository';
+import { MembershipStatus } from '@entities/membership.entity';
 
 const titleCase = (s: string): string => {
   const titleCaseWord = (word: string) =>
@@ -12,14 +14,23 @@ const titleCase = (s: string): string => {
 
 @Injectable()
 export class RoomsService {
-  constructor(private readonly roomsRepo: RoomsRepository) {}
+  constructor(
+    private readonly roomsRepo: RoomsRepository,
+    private readonly membershipsRepo: MembershipsRepository,
+  ) {}
 
   async createRoom(owner: User): Promise<Room> {
     const name = `${faker.word.adjective()} ${faker.color.human()} ${faker.animal.dog()}`;
-    return this.roomsRepo.createRoom({
+    const room = await this.roomsRepo.createRoom({
       ownerId: owner.id,
       name: titleCase(name),
     });
+    await this.membershipsRepo.createMembership({
+      userId: owner.id,
+      roomId: room.id,
+      status: MembershipStatus.Joined,
+    });
+    return room;
   }
 
   async getRoom(roomId: string): Promise<Room> {

@@ -5,7 +5,13 @@ import { ConfigType } from '@nestjs/config';
 import databaseConfig from '@config/database.config';
 import { Dynamo } from 'dynamodb-onetable/Dynamo';
 import { Model, Table } from 'dynamodb-onetable';
-import { DbMessage, DbRoom, DbSchema, DbUser } from '@data/adapters/schema';
+import {
+  DbMembership,
+  DbMessage,
+  DbRoom,
+  DbSchema,
+  DbUser,
+} from '@data/adapters/schema';
 
 @Injectable()
 export class DynamoDBAdapter {
@@ -18,6 +24,7 @@ export class DynamoDBAdapter {
   readonly User: Model<DbUser>;
   readonly Message: Model<DbMessage>;
   readonly Room: Model<DbRoom>;
+  readonly Membership: Model<DbMembership>;
 
   constructor(
     @Inject(databaseConfig.KEY) dbConfig: ConfigType<typeof databaseConfig>,
@@ -38,6 +45,7 @@ export class DynamoDBAdapter {
     this.User = this.table.getModel<DbUser>('User');
     this.Message = this.table.getModel<DbMessage>('Message');
     this.Room = this.table.getModel<DbRoom>('Room');
+    this.Membership = this.table.getModel<DbMembership>('Membership');
   }
 
   async create(): Promise<void> {

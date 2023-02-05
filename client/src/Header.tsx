@@ -74,7 +74,6 @@ const DrawerMenu: React.FC<DrawerMenuProps> = ({ onClose, isOpen, isAuthenticate
         {isAuthenticated && (
           <>
             <Divider my='2' />
-
             <RoomSelector />
           </>
         )}
