@@ -1,14 +1,14 @@
-import { StackConfig } from "./usecases/stack/get-stack-config";
 import * as aws from "@pulumi/aws";
 import * as synced_folder from "@pulumi/synced-folder";
 import { SharedResources } from "./usecases/stack/get-shared-resources";
+import { StackConfig } from "@entities";
 
 export const applyClientConfig = (
-  config: StackConfig,
+  stackConfig: StackConfig,
   shared: SharedResources
 ) => {
   const zone = aws.route53.getZoneOutput({ name: "jbrunton-aws.com" });
-  const namePrefix = `auth0-test-${config.stackName}`;
+  const namePrefix = `auth0-test-${stackConfig.stackName}`;
 
   // Create an S3 bucket and configure it as a website.
   const bucket = new aws.s3.Bucket(`${namePrefix}-bucket`, {
@@ -61,7 +61,7 @@ export const applyClientConfig = (
         restrictionType: "none",
       },
     },
-    aliases: [config.domain],
+    aliases: [stackConfig.client.domain],
     viewerCertificate: {
       cloudfrontDefaultCertificate: false,
       acmCertificateArn: shared.certificateArn,
@@ -72,8 +72,8 @@ export const applyClientConfig = (
     ],
   });
 
-  new aws.route53.Record(config.domain, {
-    name: config.domain,
+  new aws.route53.Record(stackConfig.client.domain, {
+    name: stackConfig.client.domain,
     zoneId: zone.zoneId,
     type: "A",
     aliases: [

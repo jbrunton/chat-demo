@@ -1,20 +1,26 @@
+import { ApplicationConfig, ServiceConfig } from "@entities";
 import { getTaskDefinitionSpec } from "./get-app-spec";
-import { StackConfig } from "./usecases/stack/get-stack-config";
 
 describe("getTaskDefinitionSpec", () => {
   it("generates a TaskDefinition spec for the given stack configuration", () => {
-    const config: StackConfig = {
+    const serviceConfig: ServiceConfig = {
+      name: "auth0-test-api",
+      repository: "auth0-test-api",
+      tag: "latest",
+    };
+    const appConfig: ApplicationConfig = {
       stackName: "test",
       appName: "auth0-test-test",
-      tag: "latest",
       environment: "development",
       protect: false,
-      domain: "auth0-test-test.dev.jbrunton-aws.com",
-      publicUrl: "https://auth0-test-test.dev.jbrunton-aws.com",
-      rootDomain: "jbrunton-aws.com",
+      client: {
+        name: "client",
+      },
+      services: [serviceConfig],
     };
     const spec = getTaskDefinitionSpec({
-      config,
+      appConfig,
+      serviceConfig,
       executionRoleArn: "executionRoleArn",
       taskRoleArn: "taskRoleArn",
       logGroupName: "/ecs/auth0-test-logs",
