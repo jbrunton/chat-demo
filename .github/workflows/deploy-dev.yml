@@ -4,7 +4,7 @@ on:
   pull_request:
   workflow_dispatch:
 
-concurrency: ${{ github.head_ref }}
+concurrency: ${{ github.ref }}
 
 jobs:
 

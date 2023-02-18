@@ -5,6 +5,8 @@ on:
     types:
       - closed
 
+concurrency: ${{ github.head_ref }}
+
 jobs:
   
   destroy-app:
