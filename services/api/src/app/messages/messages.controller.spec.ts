@@ -17,13 +17,26 @@ import { TestDataModule } from '@fixtures/data/test.data.module';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { IdentifyService } from '@app/auth/identity/identify.service';
+import { CaslAuthService } from '@app/auth/auth.service';
+import { Room } from '@entities/room.entity';
+import { RoomsRepository } from '@entities/rooms.repository';
+import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
+import { RoomFactory } from '@fixtures/messages/room.factory';
+import { CreateMessageDto } from './dto/create-message.dto';
+import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
+import { MembershipsRepository } from '@entities/memberships.repository';
+import { MembershipStatus } from '@entities/membership.entity';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
 describe('MessagesController', () => {
   let usersRepository: TestUsersRepository;
   let messagesRepository: TestMessagesRepository;
+  let membershipsRepo: TestMembershipsRepository;
   let app: INestApplication;
+
+  let room: Room;
+  let roomId: string;
 
   beforeEach(async () => {
     jest.useFakeTimers();
@@ -32,7 +45,12 @@ describe('MessagesController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [TestDataModule, CacheModule.register()],
       controllers: [MessagesController],
-      providers: [DispatcherService, MessagesService, IdentifyService],
+      providers: [
+        DispatcherService,
+        MessagesService,
+        IdentifyService,
+        CaslAuthService,
+      ],
     })
       .overrideGuard(AuthGuard('jwt'))
       .useClass(FakeAuthGuard)
@@ -40,6 +58,13 @@ describe('MessagesController', () => {
 
     usersRepository = module.get(UsersRepository);
     messagesRepository = module.get(MessagesRepository);
+    membershipsRepo = module.get(MembershipsRepository);
+
+    room = RoomFactory.build();
+    roomId = room.id;
+
+    const roomsRepository: TestRoomsRepository = module.get(RoomsRepository);
+    roomsRepository.setData([room]);
 
     app = module.createNestApplication();
     await app.init();
@@ -51,16 +76,16 @@ describe('MessagesController', () => {
 
   describe('GET /messages/:roomId', () => {
     it('requires auth', async () => {
-      await request(app.getHttpServer()).get('/messages/Room#1').expect(403, {
-        statusCode: 403,
-        message: 'Forbidden resource',
-        error: 'Forbidden',
-      });
+      await request(app.getHttpServer())
+        .get(`/messages/${roomId}`)
+        .expect(403, {
+          statusCode: 403,
+          message: 'Forbidden resource',
+          error: 'Forbidden',
+        });
     });
 
     it('returns messages for the room', async () => {
-      const roomId = `room_1`;
-
       const { accessToken } = fakeAuthUser();
 
       const message = MessageFactory.build({ roomId });
@@ -75,12 +100,14 @@ describe('MessagesController', () => {
   });
 
   describe('POST /messages', () => {
-    const roomId = 'room_1';
+    let message: CreateMessageDto;
 
-    const message = {
-      content: 'Hello!',
-      roomId,
-    };
+    beforeEach(() => {
+      message = {
+        content: 'Hello!',
+        roomId,
+      };
+    });
 
     it('requires auth', async () => {
       await request(app.getHttpServer())
@@ -95,13 +122,21 @@ describe('MessagesController', () => {
 
     it('stores the posted message and its author', async () => {
       const { accessToken, user } = fakeAuthUser();
+      membershipsRepo.setData([
+        {
+          userId: user.id,
+          from: 1000,
+          status: MembershipStatus.Joined,
+          roomId,
+        },
+      ]);
 
       const expectedMessage = {
         id: 'message:1001',
         time: 1001,
         content: message.content,
         authorId: user.id,
-        roomId: 'room_1',
+        roomId,
       };
 
       await request(app.getHttpServer())

@@ -20,7 +20,10 @@ export class TestMessagesRepository extends MessagesRepository {
     const id = `message:${params.time}`;
     const message = {
       id,
-      ...R.pick(['content', 'time', 'authorId', 'roomId'], params),
+      ...R.pick(
+        ['content', 'time', 'authorId', 'roomId', 'recipientId'],
+        params,
+      ),
     };
     this.messages.push(message);
     return message;

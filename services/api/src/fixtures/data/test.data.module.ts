@@ -27,6 +27,11 @@ import { TestUsersRepository } from './test.users.repository';
       useClass: TestMembershipsRepository,
     },
   ],
-  exports: [UsersRepository, MessagesRepository, RoomsRepository],
+  exports: [
+    UsersRepository,
+    MessagesRepository,
+    RoomsRepository,
+    MembershipsRepository,
+  ],
 })
 export class TestDataModule {}
