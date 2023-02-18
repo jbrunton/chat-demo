@@ -8,15 +8,18 @@ import { randomString } from "@common/random";
 export const getApplicationConfig: GetApplicationConfig = (
   inputs: ApplicationInputs
 ) => {
-  const { stackName, tag } = inputs;
-  const environment = getEnvironment(inputs.stackName);
-  const appName = getAppName(inputs.stackName);
+  const { stackName, services } = inputs;
+  const environment = getEnvironment(stackName);
+  const appName = getAppName(stackName);
   const protect = environment === "production";
   return {
     stackName,
+    client: {
+      name: "client",
+    },
     appName,
     environment,
-    tag,
+    services,
     protect,
   };
 };

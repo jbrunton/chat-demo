@@ -1,8 +1,9 @@
+import { ApplicationConfig, ServiceConfig } from "@entities";
 import * as aws from "@pulumi/aws";
-import { StackConfig } from "./usecases/stack/get-stack-config";
 
 export type GetTaskDefinitionSpecParams = {
-  config: StackConfig;
+  appConfig: ApplicationConfig;
+  serviceConfig: ServiceConfig;
   executionRoleArn: string;
   taskRoleArn: string;
   logGroupName: string;
@@ -10,14 +11,15 @@ export type GetTaskDefinitionSpecParams = {
 };
 
 export const getTaskDefinitionSpec = ({
-  config,
+  appConfig,
+  serviceConfig,
   executionRoleArn,
   taskRoleArn,
   logGroupName,
   tableName,
 }: GetTaskDefinitionSpecParams): aws.ecs.TaskDefinitionArgs => {
   return {
-    family: config.appName,
+    family: appConfig.appName,
     cpu: "256",
     memory: "512",
     networkMode: "awsvpc",
@@ -27,7 +29,7 @@ export const getTaskDefinitionSpec = ({
     containerDefinitions: JSON.stringify([
       {
         name: "auth0-test-api",
-        image: `jbrunton/auth0-test-api:${config.tag}`,
+        image: `jbrunton/${serviceConfig.repository}:${serviceConfig.tag}`,
         portMappings: [
           {
             containerPort: 8080,
@@ -46,11 +48,11 @@ export const getTaskDefinitionSpec = ({
           },
           {
             name: "ENVIRONMENT",
-            value: config.environment,
+            value: appConfig.environment,
           },
           {
             name: "TAG",
-            value: config.tag,
+            value: serviceConfig.tag,
           },
           {
             name: "DB_TABLE_NAME",

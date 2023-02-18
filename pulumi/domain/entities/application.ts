@@ -1,17 +1,26 @@
 export type Environment = "development" | "staging" | "production";
 
+export interface ClientConfig {
+  name: string;
+}
+
+export interface ServiceConfig extends ClientConfig {
+  repository: string;
+  tag: string;
+}
+
 export interface ApplicationConfig {
   stackName: string;
   appName: string;
-  tag: string;
+  client: ClientConfig;
+  services: ServiceConfig[];
   environment: Environment;
   protect: boolean;
 }
 
 export interface ApplicationInputs {
   stackName: string;
-  tag: string;
-  serviceName: string;
+  services: ServiceConfig[];
 }
 
 export interface GetApplicationConfig<
@@ -21,5 +30,5 @@ export interface GetApplicationConfig<
 }
 
 export interface GetApplicationInputs {
-  (serviceName: string): ApplicationInputs;
+  (): ApplicationInputs;
 }
