@@ -1,3 +1,4 @@
+import { AuthService } from '@entities/auth-info';
 import { Command } from '@entities/command.entity';
 import { DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
@@ -14,19 +15,25 @@ export const processCommand = async (
   user: User,
   roomsRepo: RoomsRepository,
   usersRepo: UsersRepository,
+  authService: AuthService,
 ): Promise<DraftMessage> => {
   for (const parser of parsers) {
     const parsedCommand = parser(command, user);
     if (parsedCommand) {
-      return executeCommand(parsedCommand, roomsRepo, usersRepo);
+      return await executeCommand(
+        parsedCommand,
+        roomsRepo,
+        usersRepo,
+        authService,
+      );
     }
   }
 
   return {
-    content: unrecognisedResponse,
-    recipientId: user.id,
     roomId: command.roomId,
+    content: unrecognisedResponse,
     authorId: 'system',
+    recipientId: user.id,
   };
 };
 
@@ -34,12 +41,13 @@ export const executeCommand = async (
   { tag, params }: ParsedCommand,
   roomsRepo: RoomsRepository,
   usersRepo: UsersRepository,
+  authService: AuthService,
 ): Promise<DraftMessage> => {
   switch (tag) {
     case 'help':
       return helpResponse(params);
     case 'renameRoom':
-      return renameRoom(params, roomsRepo);
+      return renameRoom(params, roomsRepo, authService);
     case 'renameUser':
       return renameUser(params, usersRepo);
     case 'lorem':

@@ -11,6 +11,7 @@ import {
 import { map, omit } from 'rambda';
 import { Message } from '@entities/message.entity';
 import { MainModule } from '../src/main.module';
+import { Room } from '@entities/room.entity';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -47,24 +48,21 @@ describe('AppController (e2e)', () => {
   });
 
   it('stores and retrieves messages', async () => {
-    const roomId = 'room_1';
     jest.setSystemTime(1001);
+
+    const roomResponse = await request(app.getHttpServer())
+      .post('/rooms')
+      .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
+      .send()
+      .expect(201);
+
+    const roomId = roomResponse.body.room.id;
 
     await request(app.getHttpServer())
       .post('/messages')
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .send({
         content: 'Hello Room 1, from User 1!',
-        roomId,
-      })
-      .expect(201);
-
-    jest.setSystemTime(1002);
-    await request(app.getHttpServer())
-      .post('/messages')
-      .set('Authorization', `Bearer ${fakeAuth2.accessToken}`)
-      .send({
-        content: 'Hello Room 1, from User 2!',
         roomId,
       })
       .expect(201);
@@ -80,15 +78,9 @@ describe('AppController (e2e)', () => {
     expect(removeIds(body)).toEqual([
       {
         content: 'Hello Room 1, from User 1!',
-        roomId: 'room_1',
+        roomId,
         time: 1001,
         authorId: fakeAuth1.user.id,
-      },
-      {
-        content: 'Hello Room 1, from User 2!',
-        roomId: 'room_1',
-        time: 1002,
-        authorId: fakeAuth2.user.id,
       },
     ]);
   });

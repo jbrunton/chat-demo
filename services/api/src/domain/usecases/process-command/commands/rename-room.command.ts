@@ -1,3 +1,4 @@
+import { AuthService } from '@entities/auth-info';
 import { DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
@@ -11,19 +12,18 @@ export type RenameRoomParams = {
 export const renameRoom = async (
   params: RenameRoomParams,
   roomsRepo: RoomsRepository,
+  authService: AuthService,
 ): Promise<DraftMessage> => {
   const { roomId, newName, authenticatedUser } = params;
 
   const room = await roomsRepo.getRoom(roomId);
 
-  if (authenticatedUser.id !== room.ownerId) {
-    return {
-      content: 'You cannot rename this room. Only the owner can do this.',
-      roomId,
-      authorId: 'system',
-      recipientId: authenticatedUser.id,
-    };
-  }
+  await authService.authorize({
+    user: authenticatedUser,
+    action: 'manage',
+    room,
+    message: 'You cannot rename this room. Only the owner can do this.',
+  });
 
   await roomsRepo.updateRoom({
     id: roomId,

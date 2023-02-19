@@ -30,6 +30,7 @@
     "@aws-sdk/client-dynamodb": "3.238.0",
     "@aws-sdk/credential-provider-node": "3.238.0",
     "@aws-sdk/lib-dynamodb": "3.238.0",
+    "@casl/ability": "6.3.3",
     "@faker-js/faker": "7.6.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "2.2.0",
