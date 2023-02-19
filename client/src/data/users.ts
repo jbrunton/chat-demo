@@ -9,7 +9,7 @@ export type User = {
   picture: string
 }
 
-export type UseDetailsResponse = {
+export type UserDetailsResponse = {
   user: User
   rooms: Room[]
 }
@@ -37,7 +37,7 @@ export const useUser = (userId: string, accessToken?: string): UseQueryResult<Us
   })
 }
 
-export const useUserDetails = (accessToken?: string): UseQueryResult<UseDetailsResponse> => {
+export const useUserDetails = (accessToken?: string): UseQueryResult<UserDetailsResponse> => {
   const queryFn = async (): Promise<User> => {
     const response = await fetch(`${apiUrl}/users/me`, {
       headers: {
