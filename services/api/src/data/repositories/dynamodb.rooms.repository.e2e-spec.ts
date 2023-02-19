@@ -14,12 +14,10 @@ describe('DynamoDBRoomsRepository', () => {
     TestRoomsRepository: TestRoomsRepository;
   };
 
-  const getTestCases = (): TestCase[] => {
-    return [
-      { name: 'DynamoDBRoomsRepository' },
-      { name: 'TestRoomsRepository' },
-    ];
-  };
+  const testCases: TestCase[] = [
+    { name: 'DynamoDBRoomsRepository' },
+    { name: 'TestRoomsRepository' },
+  ];
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -33,24 +31,21 @@ describe('DynamoDBRoomsRepository', () => {
     };
   });
 
-  test.each(getTestCases())(
-    '[$name] stores and finds rooms',
-    async ({ name }) => {
-      const repo = repos[name];
-      const params: CreateRoomParams = {
-        name: 'Some Room',
-        ownerId: 'user:google_123',
-      };
+  test.each(testCases)('[$name] stores and finds rooms', async ({ name }) => {
+    const repo = repos[name];
+    const params: CreateRoomParams = {
+      name: 'Some Room',
+      ownerId: 'user:google_123',
+    };
 
-      const room = await repo.createRoom(params);
-      const found = await repo.getRoom(room.id);
+    const room = await repo.createRoom(params);
+    const found = await repo.getRoom(room.id);
 
-      expect(room).toMatchObject(params);
-      expect(found).toMatchObject(params);
-    },
-  );
+    expect(room).toMatchObject(params);
+    expect(found).toMatchObject(params);
+  });
 
-  test.each(getTestCases())('[$name] updates rooms', async ({ name }) => {
+  test.each(testCases)('[$name] updates rooms', async ({ name }) => {
     const repo = repos[name];
     const params: CreateRoomParams = {
       name: 'Some Room',
