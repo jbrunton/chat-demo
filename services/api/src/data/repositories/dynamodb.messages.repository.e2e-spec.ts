@@ -10,7 +10,7 @@ type TestCase = {
   name: 'DynamoDBMessagesRepository' | 'TestMessagesRepository';
 };
 
-describe('DynamoDBMessagesRepository', () => {
+describe('MessagesRepository', () => {
   let repos: {
     DynamoDBMessagesRepository: DynamoDBMessagesRepository;
     TestMessagesRepository: TestMessagesRepository;
