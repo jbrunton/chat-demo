@@ -1,4 +1,4 @@
-import { useMutation, useQuery, UseQueryResult } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 
 const apiUrl = import.meta.env.VITE_API_URL || ''
 
@@ -42,5 +42,21 @@ export const useCreateRoom = (onSuccess: (room: Room) => void, accessToken?: str
         return response.room
       }),
     onSuccess,
+  })
+}
+
+export const useJoinRoom = (roomId: string, accessToken?: string) => {
+  const client = useQueryClient()
+  return useMutation({
+    mutationFn: () =>
+      fetch(`${apiUrl}/rooms/${roomId}/join`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    onSuccess: () => {
+      client.invalidateQueries(['me'])
+    },
   })
 }

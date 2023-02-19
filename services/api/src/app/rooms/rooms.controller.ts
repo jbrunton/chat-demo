@@ -23,4 +23,9 @@ export class RoomsController {
     const room = await this.roomsService.getRoom(roomId);
     return { room };
   }
+
+  @Post('/:roomId/join')
+  async joinRoom(@Param('roomId') roomId: string, @Identify() user: User) {
+    await this.roomsService.joinRoom(roomId, user);
+  }
 }

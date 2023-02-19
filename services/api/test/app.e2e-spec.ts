@@ -11,14 +11,12 @@ import {
 import { map, omit } from 'rambda';
 import { Message } from '@entities/message.entity';
 import { MainModule } from '../src/main.module';
-import { Room } from '@entities/room.entity';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let fakeAuth1: FakeAuth;
-  let fakeAuth2: FakeAuth;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -36,7 +34,6 @@ describe('AppController (e2e)', () => {
     jest.useFakeTimers();
 
     fakeAuth1 = fakeAuthUser();
-    fakeAuth2 = fakeAuthUser();
   });
 
   afterEach(() => {

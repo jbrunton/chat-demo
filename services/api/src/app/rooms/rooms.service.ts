@@ -36,4 +36,12 @@ export class RoomsService {
   async getRoom(roomId: string): Promise<Room> {
     return this.roomsRepo.getRoom(roomId);
   }
+
+  async joinRoom(roomId: string, user: User): Promise<void> {
+    await this.membershipsRepo.createMembership({
+      userId: user.id,
+      roomId,
+      status: MembershipStatus.Joined,
+    });
+  }
 }
