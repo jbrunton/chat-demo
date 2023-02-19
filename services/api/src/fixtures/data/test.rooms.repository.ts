@@ -50,6 +50,6 @@ export class TestRoomsRepository extends RoomsRepository {
       ...reject((room) => params.id === room.id, this.rooms),
       updatedRoom,
     ];
-    return room;
+    return updatedRoom;
   }
 }
