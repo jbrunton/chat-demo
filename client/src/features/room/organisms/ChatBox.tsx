@@ -10,7 +10,12 @@ export type ChatBoxProps = {
 }
 
 const JoinAlert = ({ roomId }: ChatBoxProps) => {
-  const { mutate: joinRoom, isLoading } = useJoinRoom(roomId)
+  const { mutate: joinRoom, isLoading, isSuccess: isJoined } = useJoinRoom(roomId)
+  useEffect(() => {
+    if (isJoined) {
+      window.location.reload()
+    }
+  }, [isJoined])
   return (
     <Alert status='info' variant='top-accent'>
       <AlertIcon />

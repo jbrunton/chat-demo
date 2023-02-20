@@ -3,9 +3,10 @@ import { Box } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
 import { ChatBox } from '../organisms/ChatBox'
-import { useMessages, useMessagesSubscription } from '../../../data/messages'
+import { Message, useMessages, useMessagesSubscription } from '../../../data/messages'
 import { MessagesList } from '../organisms/MessagesList'
-import { useAuth } from '../../auth'
+import { useRoom } from '../../../data/rooms'
+import { can } from '../../../data/lib'
 
 type Params = {
   roomId: string
@@ -13,17 +14,27 @@ type Params = {
 
 export const RoomPage = () => {
   const { roomId } = useParams() as Params
-  const { data: messages } = useMessages(roomId)
-  const { token } = useAuth()
+  const { data: roomResponse, isLoading: isLoadingRoom } = useRoom(roomId)
 
-  useMessagesSubscription(roomId, token)
+  const canRead = can('read', roomResponse)
 
-  if (!messages) return <LoadingIndicator />
+  const { data: messages, isLoading: isLoadingMessages } = useMessages(roomId, { enabled: canRead })
+  useMessagesSubscription(roomId, { enabled: canRead })
+
+  if ((canRead && isLoadingMessages) || isLoadingRoom) return <LoadingIndicator />
 
   return (
     <Box display='flex' flexFlow='column' height='100%' flex='1'>
-      {<MessagesList messages={messages} />}
+      {<MessagesList messages={messages ?? [restrictedMessage(roomId)]} />}
       <ChatBox roomId={roomId} />
     </Box>
   )
 }
+
+const restrictedMessage = (roomId: string): Message => ({
+  id: '0',
+  authorId: 'system',
+  content: 'You do not have permissions to view messages in this room',
+  time: 0,
+  roomId,
+})

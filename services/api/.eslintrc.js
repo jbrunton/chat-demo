@@ -61,7 +61,12 @@ module.exports = {
           },
           {
             from: ['data'],
-            allow: ['@aws-sdk/*', '@nestjs/*', 'dynamodb-onetable'],
+            allow: [
+              '@aws-sdk/*',
+              '@nestjs/*',
+              'dynamodb-onetable',
+              '@casl/ability',
+            ],
           },
           {
             from: ['config'],

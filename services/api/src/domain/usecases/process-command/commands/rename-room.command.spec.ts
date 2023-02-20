@@ -5,6 +5,7 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 import { renameRoom } from './rename-room.command';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { UnauthorizedException } from '@nestjs/common';
+import { Role } from '@entities/auth';
 
 describe('renameRoom', () => {
   let roomsRepo: TestRoomsRepository;
@@ -56,8 +57,8 @@ describe('renameRoom', () => {
   it('authorizes the user', async () => {
     authService.stubFailure({
       user: otherUser,
-      room,
-      action: 'manage',
+      subject: room,
+      action: Role.Manage,
     });
 
     await expect(

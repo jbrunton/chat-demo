@@ -1,3 +1,4 @@
+import { subject } from '@casl/ability';
 import { Room } from '@entities/room.entity';
 import {
   CreateRoomParams,
@@ -52,7 +53,8 @@ export class DynamoDBRoomsRepository extends RoomsRepository {
   }
 }
 
-const roomFromRecord = (record: DbRoom): Room => ({
-  id: record.Id,
-  ...pick(['name', 'ownerId'], record),
-});
+const roomFromRecord = (record: DbRoom): Room =>
+  subject('Room', {
+    id: record.Id,
+    ...pick(['name', 'ownerId', 'contentPolicy', 'joinPolicy'], record),
+  });

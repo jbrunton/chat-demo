@@ -8,10 +8,6 @@ export const clearBearerToken = () => {
   axios.defaults.headers.common = {}
 }
 
-export const isAuthenticated = (): boolean => {
-  return !!axios.defaults.headers.common['Authorization']
-}
-
 export const apiUrl = import.meta.env.VITE_API_URL
 
 export const configureDefaults = () => {

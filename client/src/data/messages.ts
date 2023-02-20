@@ -4,6 +4,8 @@ import { EventSourcePolyfill } from 'event-source-polyfill'
 import axios from 'axios'
 import debug from 'debug'
 import { apiUrl } from './config'
+import { useAuth } from '../features/auth'
+import { DefaultQueryOptions, QueryOptions } from './lib'
 
 const log = debug('messages')
 
@@ -22,18 +24,22 @@ const getMessages = async (roomId: string): Promise<Message[]> => {
   return response.data
 }
 
-export const useMessages = (roomId: string) => {
+export const useMessages = (roomId?: string, opts: QueryOptions = DefaultQueryOptions) => {
+  const enabled = opts.enabled && roomId !== undefined
   return useQuery({
     queryKey: ['messages', roomId],
     refetchOnWindowFocus: false,
-    queryFn: () => getMessages(roomId),
+    enabled,
+    queryFn: () => getMessages(roomId ?? ''),
   })
 }
 
-export const useMessagesSubscription = (roomId: string, token: string | undefined) => {
+export const useMessagesSubscription = (roomId?: string, opts: QueryOptions = DefaultQueryOptions) => {
+  const enabled = opts.enabled
+  const { token } = useAuth()
   const queryClient = useQueryClient()
   useEffect(() => {
-    if (!token) return
+    if (!enabled) return
 
     const eventSource = new EventSourcePolyfill(`${apiUrl}/messages/${roomId}/subscribe`, {
       headers: {
@@ -59,7 +65,7 @@ export const useMessagesSubscription = (roomId: string, token: string | undefine
     return () => {
       eventSource.close()
     }
-  }, [queryClient, token, roomId])
+  }, [queryClient, token, roomId, enabled])
 }
 
 const sendMessage = async (roomId: string, content?: string): Promise<void> => {

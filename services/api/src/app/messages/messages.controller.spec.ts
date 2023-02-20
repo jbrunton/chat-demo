@@ -17,7 +17,7 @@ import { TestDataModule } from '@fixtures/data/test.data.module';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { IdentifyService } from '@app/auth/identity/identify.service';
-import { CaslAuthService } from '@app/auth/auth.service';
+import { CaslAuthService } from '@app/auth/casl.auth.service';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
@@ -26,6 +26,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
+import { AuthService } from '@entities/auth';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -49,7 +50,7 @@ describe('MessagesController', () => {
         DispatcherService,
         MessagesService,
         IdentifyService,
-        CaslAuthService,
+        { provide: AuthService, useClass: CaslAuthService },
       ],
     })
       .overrideGuard(AuthGuard('jwt'))
@@ -86,11 +87,19 @@ describe('MessagesController', () => {
     });
 
     it('returns messages for the room', async () => {
-      const { accessToken } = fakeAuthUser();
+      const { accessToken, user } = fakeAuthUser();
 
       const message = MessageFactory.build({ roomId });
 
       messagesRepository.setData([message]);
+      membershipsRepo.setData([
+        {
+          userId: user.id,
+          from: 1000,
+          status: MembershipStatus.Joined,
+          roomId,
+        },
+      ]);
 
       await request(app.getHttpServer())
         .get(`/messages/${roomId}`)

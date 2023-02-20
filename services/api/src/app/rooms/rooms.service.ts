@@ -1,10 +1,11 @@
-import { Room } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy, Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { Injectable } from '@nestjs/common';
 import { User } from '@entities/user.entity';
 import { faker } from '@faker-js/faker';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
+import { AuthService, Role } from '@entities/auth';
 
 const titleCase = (s: string): string => {
   const titleCaseWord = (word: string) =>
@@ -12,11 +13,17 @@ const titleCase = (s: string): string => {
   return s.split(' ').map(titleCaseWord).join(' ');
 };
 
+export type RoomResult = {
+  room: Room;
+  roles: Role[];
+};
+
 @Injectable()
 export class RoomsService {
   constructor(
     private readonly roomsRepo: RoomsRepository,
     private readonly membershipsRepo: MembershipsRepository,
+    private readonly authService: AuthService,
   ) {}
 
   async createRoom(owner: User): Promise<Room> {
@@ -24,6 +31,8 @@ export class RoomsService {
     const room = await this.roomsRepo.createRoom({
       ownerId: owner.id,
       name: titleCase(name),
+      contentPolicy: ContentPolicy.Private,
+      joinPolicy: JoinPolicy.Invite,
     });
     await this.membershipsRepo.createMembership({
       userId: owner.id,
@@ -33,8 +42,13 @@ export class RoomsService {
     return room;
   }
 
-  async getRoom(roomId: string): Promise<Room> {
-    return this.roomsRepo.getRoom(roomId);
+  async getRoom(roomId: string, user: User): Promise<RoomResult> {
+    const room = await this.roomsRepo.getRoom(roomId);
+    const roles = await this.authService.authorizedRoles({
+      user,
+      subject: room,
+    });
+    return { room, roles };
   }
 
   async joinRoom(roomId: string, user: User): Promise<void> {

@@ -1,4 +1,5 @@
 import { DynamoDBRoomsRepository } from '@data/repositories/dynamodb.rooms.repository';
+import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { CreateRoomParams } from '@entities/rooms.repository';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { Test } from '@nestjs/testing';
@@ -36,6 +37,8 @@ describe('RoomsRepository', () => {
     const params: CreateRoomParams = {
       name: 'Some Room',
       ownerId: 'user:google_123',
+      contentPolicy: ContentPolicy.Public,
+      joinPolicy: JoinPolicy.Anyone,
     };
 
     const room = await repo.createRoom(params);
@@ -50,6 +53,8 @@ describe('RoomsRepository', () => {
     const params: CreateRoomParams = {
       name: 'Some Room',
       ownerId: 'user:google_123',
+      contentPolicy: ContentPolicy.Public,
+      joinPolicy: JoinPolicy.Anyone,
     };
     const room = await repo.createRoom(params);
 

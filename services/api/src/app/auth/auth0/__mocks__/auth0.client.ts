@@ -1,5 +1,5 @@
 import { getFakeAuthInfo } from '@fixtures/auth/FakeAuth';
-import { AuthInfo } from '@entities/auth-info';
+import { AuthInfo } from '@entities/auth';
 import { UnauthorizedException } from '@nestjs/common';
 
 export const clientCache = {

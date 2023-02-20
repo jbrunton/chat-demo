@@ -7,6 +7,7 @@ import {
 } from '@entities/rooms.repository';
 import { Room } from '@entities/room.entity';
 import { faker } from '@faker-js/faker';
+import { subject } from '@casl/ability';
 
 export class TestRoomsRepository extends RoomsRepository {
   private rooms: Room[] = [];
@@ -22,11 +23,10 @@ export class TestRoomsRepository extends RoomsRepository {
   override async createRoom(params: CreateRoomParams): Promise<Room> {
     const room = {
       id: `room:${faker.random.numeric(8)}`,
-      name: params.name ?? 'New Room',
-      ownerId: params.ownerId,
+      ...params,
     };
     this.rooms.push(room);
-    return room;
+    return asRoom(room);
   }
 
   override async getRoom(roomId: string): Promise<Room> {
@@ -34,7 +34,7 @@ export class TestRoomsRepository extends RoomsRepository {
     if (!room) {
       throw new NotFoundException(`Room ${roomId} does not exist`);
     }
-    return room;
+    return asRoom(room);
   }
 
   override async updateRoom(params: UpdateRoomParams): Promise<Room> {
@@ -50,6 +50,8 @@ export class TestRoomsRepository extends RoomsRepository {
       ...reject((room) => params.id === room.id, this.rooms),
       updatedRoom,
     ];
-    return updatedRoom;
+    return asRoom(updatedRoom);
   }
 }
+
+const asRoom = (room: Room) => subject('Room', room);

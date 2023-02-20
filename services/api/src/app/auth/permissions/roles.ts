@@ -11,9 +11,16 @@ export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   );
   const roomIds = pluck('roomId', activeMemberships);
 
-  can('manage', 'Room', { ownerId: user.id });
+  can('manage', 'Room', {
+    ownerId: user.id,
+  });
+
   can('write', 'Room', {
     id: { $in: roomIds },
+  });
+
+  can('read', 'Room', {
+    contentPolicy: 'public',
   });
   can('read', 'Room', {
     id: { $in: roomIds },
