@@ -1,13 +1,27 @@
 import { MembershipStatus } from '@entities/membership.entity';
 import { CreateMembershipParams } from '@entities/memberships.repository';
+import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
 import { DynamoDBMembershipsRepository } from './dynamodb.memberships.repository';
 
-describe('DynamoDBMembershipsRepository', () => {
-  let membershipsRepo: DynamoDBMembershipsRepository;
+type TestCase = {
+  name: 'DynamoDBMembershipsRepository' | 'TestMembershipsRepository';
+};
+
+describe('MembershipsRepository', () => {
+  let repos: {
+    DynamoDBMembershipsRepository: DynamoDBMembershipsRepository;
+    TestMembershipsRepository: TestMembershipsRepository;
+  };
+
+  const testCases: TestCase[] = [
+    { name: 'DynamoDBMembershipsRepository' },
+    { name: 'TestMembershipsRepository' },
+  ];
+
   const now = 1000;
 
   beforeAll(async () => {
@@ -16,33 +30,44 @@ describe('DynamoDBMembershipsRepository', () => {
       providers: [DynamoDBMembershipsRepository],
     }).compile();
 
-    membershipsRepo = moduleFixture.get(DynamoDBMembershipsRepository);
+    repos = {
+      DynamoDBMembershipsRepository: moduleFixture.get(
+        DynamoDBMembershipsRepository,
+      ),
+      TestMembershipsRepository: new TestMembershipsRepository(),
+    };
 
     jest.useFakeTimers();
     jest.setSystemTime(now);
   });
 
-  it('stores and finds memberships', async () => {
-    const { id: userId } = UserFactory.build();
-    const { id: roomId } = RoomFactory.build();
-    const params: CreateMembershipParams = {
-      userId,
-      roomId,
-      status: MembershipStatus.Joined,
-    };
+  test.each(testCases)(
+    '[$name] stores and finds memberships',
+    async ({ name }) => {
+      const repo = repos[name];
 
-    const membership = await membershipsRepo.createMembership(params);
-    const found = await membershipsRepo.getMemberships(userId);
+      const { id: userId } = UserFactory.build();
+      const { id: roomId } = RoomFactory.build();
+      const params: CreateMembershipParams = {
+        userId,
+        roomId,
+        status: MembershipStatus.Joined,
+      };
 
-    const expected = {
-      ...params,
-      from: now,
-    };
-    expect(membership).toMatchObject(expected);
-    expect(found).toMatchObject([expected]);
-  });
+      const membership = await repo.createMembership(params);
+      const found = await repo.getMemberships(userId);
 
-  it('truncates memberships', async () => {
+      const expected = {
+        ...params,
+        from: now,
+      };
+      expect(membership).toMatchObject(expected);
+      expect(found).toMatchObject([expected]);
+    },
+  );
+
+  test.each(testCases)('[$name] truncates memberships', async ({ name }) => {
+    const repo = repos[name];
     const { id: userId } = UserFactory.build();
     const { id: roomId } = RoomFactory.build();
     const params = {
@@ -52,26 +77,26 @@ describe('DynamoDBMembershipsRepository', () => {
 
     const t1 = now;
     jest.setSystemTime(t1);
-    await membershipsRepo.createMembership({
+    await repo.createMembership({
       ...params,
       status: MembershipStatus.PendingApproval,
     });
 
     const t2 = now + 1;
     jest.setSystemTime(t2);
-    await membershipsRepo.createMembership({
+    await repo.createMembership({
       ...params,
       status: MembershipStatus.Joined,
     });
 
     const t3 = now + 2;
     jest.setSystemTime(t3);
-    await membershipsRepo.createMembership({
+    await repo.createMembership({
       ...params,
       status: MembershipStatus.Revoked,
     });
 
-    const memberships = await membershipsRepo.getMemberships(userId);
+    const memberships = await repo.getMemberships(userId);
 
     expect(memberships).toEqual([
       {

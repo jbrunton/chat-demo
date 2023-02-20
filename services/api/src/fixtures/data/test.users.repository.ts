@@ -46,6 +46,6 @@ export class TestUsersRepository extends UsersRepository {
       ...reject((user) => params.id === user.id, this.users),
       updatedUser,
     ];
-    return user;
+    return updatedUser;
   }
 }

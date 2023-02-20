@@ -1,10 +1,23 @@
 import { DynamoDBUsersRepository } from '@data/repositories/dynamodb.users.repository';
 import { SaveUserParams } from '@entities/users.repository';
+import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
 
-describe('DynamoDBUsersRepository', () => {
-  let usersRepo: DynamoDBUsersRepository;
+type TestCase = {
+  name: 'DynamoDBUsersRepository' | 'TestUsersRepository';
+};
+
+describe('RoomsRepository', () => {
+  let repos: {
+    DynamoDBUsersRepository: DynamoDBUsersRepository;
+    TestUsersRepository: TestUsersRepository;
+  };
+
+  const testCases: TestCase[] = [
+    { name: 'DynamoDBUsersRepository' },
+    { name: 'TestUsersRepository' },
+  ];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -12,17 +25,22 @@ describe('DynamoDBUsersRepository', () => {
       providers: [DynamoDBUsersRepository],
     }).compile();
 
-    usersRepo = moduleFixture.get(DynamoDBUsersRepository);
+    repos = {
+      DynamoDBUsersRepository: moduleFixture.get(DynamoDBUsersRepository),
+      TestUsersRepository: new TestUsersRepository(),
+    };
   });
 
-  it('stores and finds users', async () => {
+  test.each(testCases)('[$name] stores and finds users', async ({ name }) => {
+    const repo = repos[name];
+
     const params: SaveUserParams = {
       sub: 'google_123',
       name: 'Some User',
     };
 
-    const user = await usersRepo.saveUser(params);
-    const found = await usersRepo.getUser('user:google_123');
+    const user = await repo.saveUser(params);
+    const found = await repo.getUser('user:google_123');
 
     expect(user).toMatchObject({
       id: 'user:google_123',
@@ -34,18 +52,19 @@ describe('DynamoDBUsersRepository', () => {
     });
   });
 
-  it('updates users', async () => {
+  test.each(testCases)('[$name] updates users', async ({ name }) => {
+    const repo = repos[name];
     const params: SaveUserParams = {
       name: 'Some User',
       sub: 'user:google_123',
     };
-    const user = await usersRepo.saveUser(params);
+    const user = await repo.saveUser(params);
 
-    const updated = await usersRepo.updateUser({
+    const updated = await repo.updateUser({
       id: user.id,
       name: 'Renamed User',
     });
-    const found = await usersRepo.getUser(user.id);
+    const found = await repo.getUser(user.id);
 
     const expected = {
       id: user.id,
