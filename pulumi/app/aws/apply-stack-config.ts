@@ -1,9 +1,4 @@
-import {
-  ApplyStackConfig,
-  ApplyStackResult,
-  GetStackConfig,
-  StackConfig,
-} from "@entities";
+import { ApplyStackConfig, ApplyStackResult, StackConfig } from "@entities";
 import * as aws from "@pulumi/aws";
 import {
   getSharedResources,
