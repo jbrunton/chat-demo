@@ -26,8 +26,6 @@ jobs:
       url: https://auth0-test-${{ github.head_ref }}.dev.jbrunton-aws.com
     needs: [build-api]
     runs-on: ubuntu-latest
-    env:
-      CURRENT_TASK_DEFINITION: ${{ runner.temp }}/current_task_definition.json
     steps:
       - uses: actions/checkout@v3
       - name: Build Client
@@ -39,27 +37,34 @@ jobs:
         working-directory: client
       - run: npm ci
         working-directory: pulumi
-      - name: Get current task definition
+      - name: Get pulumi outputs
         id: pulumi-outputs
         run: |
-          pulumi stack select ${{ github.head_ref }}
-          export TASK_DEFINITION_ATN=$(pulumi stack output apiTaskDefinitionArn)
           echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
           echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
-          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ATN --output json > $CURRENT_TASK_DEFINITION
+          echo "taskDefinitionArn=$(pulumi stack output apiTaskDefinitionArn)" > $GITHUB_OUTPUT
+      - name: Get current task definition
+        id: current-task-def
+        run: |
+          pulumi stack select ${{ github.head_ref }}
+          export TASK_DEFINITION_FILE=${{ runner.temp }}/taskDefinition.json
+          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN --output json > $TASK_DEFINITION_FILE
+          echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
+        env:
+          TASK_DEFINITION_ARN: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
         working-directory: pulumi
       - name: Render new task definition
-        id: task-def
+        id: new-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.CURRENT_TASK_DEFINITION }}
+          task-definition: ${{ steps.current-task-def.outputs.taskDefinitionFile }}
           container-name: api
           image: ${{ needs.build-api.outputs.tag }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          task-definition: ${{ steps.new-task-def.outputs.task-definition }}
           service: ${{ steps.pulumi-outputs.outputs.service }}
           cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
           wait-for-service-stability: true
