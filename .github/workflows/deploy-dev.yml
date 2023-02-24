@@ -26,6 +26,8 @@ jobs:
       url: https://auth0-test-${{ github.head_ref }}.dev.jbrunton-aws.com
     needs: [build-api]
     runs-on: ubuntu-latest
+    env:
+      CURRENT_TASK_DEFINITION: ${{ runner.temp }}/current_task_definition.json
     steps:
       - uses: actions/checkout@v3
       - name: Build Client
@@ -37,18 +39,44 @@ jobs:
         working-directory: client
       - run: npm ci
         working-directory: pulumi
-      - uses: pulumi/actions@v3
+      - name: Get current task definition
+        id: pulumi-outputs
+        run: |
+          pulumi stack select ${{ github.head_ref }}
+          export TASK_DEFINITION_ATN=$(pulumi stack output apiTaskDefinitionArn)
+          echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
+          echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
+          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ATN --output json > $CURRENT_TASK_DEFINITION
+        working-directory: pulumi
+      - name: Render new task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          command: up
-          stack-name: ${{ github.head_ref }}
-          upsert: true
-          work-dir: pulumi
-          comment-on-pr: true
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          task-definition: ${{ env.CURRENT_TASK_DEFINITION }}
+          container-name: api
+          image: ${{ needs.build-api.outputs.tag }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ steps.pulumi-outputs.outputs.service }}
+          cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
+          wait-for-service-stability: true
+      # - name: Render new task definition
+
+      # - uses: pulumi/actions@v3
+      #   with:
+      #     command: up
+      #     stack-name: ${{ github.head_ref }}
+      #     upsert: true
+      #     work-dir: pulumi
+      #     comment-on-pr: true
+      #     github-token: ${{ secrets.CI_MINION_PAT }}
+      #   env:
+      #     PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: us-east-1
+      #     API_TAG: ${{ needs.build-api.outputs.tag }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
