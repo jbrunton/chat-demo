@@ -15,14 +15,15 @@ import { Output } from "@pulumi/pulumi";
 
 const provider = new aws.Provider("aws", { region: "us-east-1" });
 
-type Result = ApplyStackResult<Result>;
+type Result = ApplyStackResult<Output<unknown>>;
 
-export const applyStackConfig: ApplyStackConfig<Result> = (
+export const applyStackConfig: ApplyStackConfig<Output<unknown>> = (
   config: StackConfig
 ): Result => {
-  return getSharedResources().apply((shared) =>
+  const result: Result = getSharedResources().apply((shared) =>
     createResources(config, shared)
   );
+  return result;
 };
 
 function createResources(
@@ -36,17 +37,31 @@ function createResources(
 
   applyClientConfig(stackConfig, shared);
 
-  const taskDefinitions = stackConfig.services.map((serviceConfig) => {
-    const taskDefinitionArn = applyServiceConfig(
-      stackConfig,
-      serviceConfig,
-      shared,
-      cluster,
-      provider
-    );
-    return [serviceConfig.name, taskDefinitionArn];
-  });
+  const outputs: Record<string, Output<unknown>> = stackConfig.services
+    .map((serviceConfig) => {
+      return [
+        serviceConfig.name,
+        applyServiceConfig(
+          stackConfig,
+          serviceConfig,
+          shared,
+          cluster,
+          provider
+        ),
+      ] as [string, ReturnType<typeof applyServiceConfig>];
+    })
+    .reduce((prev, [name, outputs]) => {
+      return {
+        ...prev,
+        [`${name}TaskDefinitionArn`]: outputs.taskDefinitionArn,
+        [`${name}Service`]: outputs.serviceName,
+      };
+    }, {});
+
   return {
-    outputs: Object.fromEntries(taskDefinitions),
+    outputs: {
+      ...outputs,
+      cluster: cluster.name,
+    },
   };
 }

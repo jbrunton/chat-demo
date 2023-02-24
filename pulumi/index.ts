@@ -31,4 +31,6 @@ const result = applyStackConfig(stackConfig);
 
 export const webUrl = stackConfig.client.publicUrl;
 export const apiUrl = stackConfig.services[0].publicUrl;
-export const apiTaskDefinition = result.outputs["api"];
+export const apiTaskDefinitionArn = result.outputs["apiTaskDefinitionArn"];
+export const apiService = result.outputs["apiService"];
+export const cluster = result.outputs["cluster"];
