@@ -1,4 +1,9 @@
-import { ApplyStackConfig, StackConfig } from "@entities";
+import {
+  ApplyStackConfig,
+  ApplyStackResult,
+  GetStackConfig,
+  StackConfig,
+} from "@entities";
 import * as aws from "@pulumi/aws";
 import {
   getSharedResources,
@@ -6,14 +11,24 @@ import {
 } from "./usecases/stack/get-shared-resources";
 import { applyClientConfig } from "./apply-client-config";
 import { applyServiceConfig } from "./apply-service-config";
+import { Output } from "@pulumi/pulumi";
 
 const provider = new aws.Provider("aws", { region: "us-east-1" });
 
-export const applyStackConfig: ApplyStackConfig = (config: StackConfig) => {
-  getSharedResources().apply((shared) => createResources(config, shared));
+type Result = ApplyStackResult<Result>;
+
+export const applyStackConfig: ApplyStackConfig<Result> = (
+  config: StackConfig
+): Result => {
+  return getSharedResources().apply((shared) =>
+    createResources(config, shared)
+  );
 };
 
-function createResources(stackConfig: StackConfig, shared: SharedResources) {
+function createResources(
+  stackConfig: StackConfig,
+  shared: SharedResources
+): Result {
   // Pulumi adds `-` + 7 random chars for unique names.
   const shortName = stackConfig.appName.slice(0, 24);
 
@@ -21,7 +36,17 @@ function createResources(stackConfig: StackConfig, shared: SharedResources) {
 
   applyClientConfig(stackConfig, shared);
 
-  stackConfig.services.forEach((serviceConfig) => {
-    applyServiceConfig(stackConfig, serviceConfig, shared, cluster, provider);
+  const taskDefinitions = stackConfig.services.map((serviceConfig) => {
+    const taskDefinitionArn = applyServiceConfig(
+      stackConfig,
+      serviceConfig,
+      shared,
+      cluster,
+      provider
+    );
+    return [serviceConfig.name, taskDefinitionArn];
   });
+  return {
+    outputs: Object.fromEntries(taskDefinitions),
+  };
 }

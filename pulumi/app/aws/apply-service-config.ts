@@ -1,9 +1,10 @@
-import { StackConfig } from "@entities";
+import { ApplyStackResult, StackConfig } from "@entities";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import { getTaskDefinitionSpec } from "./get-app-spec";
 import { SharedResources } from "./usecases/stack/get-shared-resources";
 import { Cluster } from "@pulumi/aws/ecs";
+import { Output } from "@pulumi/pulumi";
 
 export const applyServiceConfig = (
   stackConfig: StackConfig,
@@ -11,7 +12,7 @@ export const applyServiceConfig = (
   shared: SharedResources,
   cluster: Cluster,
   provider: aws.Provider
-) => {
+): Output<string> => {
   const resourceName = `${stackConfig.appName}-${serviceConfig.name}`;
 
   // Pulumi sometimes adds `-` + 7 random chars for unique names.
@@ -150,7 +151,7 @@ export const applyServiceConfig = (
     writeCapacity: 1,
   });
 
-  pulumi
+  const taskDefinitionArn = pulumi
     .all([webLogGroup.name, taskExecutionRole.arn, taskRole.arn, table.name])
     .apply(([logGroupName, executionRoleArn, taskRoleArn, tableName]) => {
       const taskDefinitionSpec = getTaskDefinitionSpec({
@@ -184,6 +185,8 @@ export const applyServiceConfig = (
           },
         ],
       });
+
+      return taskDefinition.arn;
     });
 
   const lb = aws.lb.getLoadBalancerOutput({ arn: shared.loadBalancer.arn });
@@ -208,4 +211,6 @@ export const applyServiceConfig = (
     },
     { provider }
   );
+
+  return taskDefinitionArn;
 };
