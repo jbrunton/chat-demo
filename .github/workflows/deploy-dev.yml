@@ -58,6 +58,7 @@ jobs:
           echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
           echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
           echo "taskDefinitionArn=$(pulumi stack output apiTaskDefinitionArn)" > $GITHUB_OUTPUT
+        working-directory: pulumi
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - name: Get current task definition
