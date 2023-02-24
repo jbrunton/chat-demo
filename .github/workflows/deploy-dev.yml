@@ -76,6 +76,9 @@ jobs:
           export TASK_DEFINITION_FILE=${{ runner.temp }}/taskDefinition.json
           aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN --output json > $TASK_DEFINITION_FILE
           echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
+
+          echo "TASK_DEFINITION_FILE: $TASK_DEFINITION_FILE"
+          cat $TASK_DEFINITION_FILE
         env:
           TASK_DEFINITION_ARN: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
         working-directory: pulumi
