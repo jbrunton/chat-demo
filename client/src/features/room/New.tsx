@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoadingIndicator } from '../../shared/molecules/LoadingIndicator'
 import { useCreateRoom } from '../../data/rooms'
-import { useAccessToken } from '../../hooks/useAccessToken'
+import { useAccessToken } from '../../shared/auth/hooks/useAccessToken'
 
 export const NewRoomPage = () => {
   const navigate = useNavigate()

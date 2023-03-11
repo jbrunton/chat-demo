@@ -5,6 +5,8 @@ import { RoomPage } from './features/room/Room'
 import { NotFoundPage } from './features/NotFound'
 import { NewRoomPage } from './features/room/New'
 import { Layout } from './Layout'
+import { RequireAuth } from './shared/auth/organisms/require-auth'
+import { Callback } from './shared/auth/pages/callback'
 
 export const router = createBrowserRouter([
   {
@@ -16,12 +18,24 @@ export const router = createBrowserRouter([
         errorElement: <NotFoundPage />,
       },
       {
+        path: '/callback',
+        element: <Callback />,
+      },
+      {
         path: '/room/new',
-        element: <NewRoomPage />,
+        element: (
+          <RequireAuth>
+            <NewRoomPage />
+          </RequireAuth>
+        ),
       },
       {
         path: '/room/:roomId',
-        element: <RoomPage />,
+        element: (
+          <RequireAuth>
+            <RoomPage />
+          </RequireAuth>
+        ),
       },
     ],
   },
