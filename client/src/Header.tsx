@@ -17,13 +17,13 @@ import {
   UseDisclosureProps,
   Divider,
 } from '@chakra-ui/react'
-import { SignInButton } from './components/organisms/auth/SignInButton'
+import { SignInButton } from './shared/auth/organisms/SignInButton'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useParams } from 'react-router-dom'
 import { useAccessToken } from './hooks/useAccessToken'
 import { useRoom } from './data/rooms'
 import { AiOutlineMenu } from 'react-icons/ai'
-import { RoomSelector } from './components/organisms/rooms/RoomSelector'
+import { RoomSelector } from './shared/navigation/organisms/RoomSelector'
 
 export const Header = () => {
   const { isAuthenticated } = useAuth0()
