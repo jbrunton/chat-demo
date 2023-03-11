@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LoadingIndicator } from '../../shared/molecules/LoadingIndicator'
-import { useCreateRoom } from '../../data/rooms'
-import { useAccessToken } from '../../shared/auth/hooks/useAccessToken'
+import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
+import { useCreateRoom } from '../../../data/rooms'
+import { useAccessToken } from '../../auth/hooks/useAccessToken'
 
 export const NewRoomPage = () => {
   const navigate = useNavigate()

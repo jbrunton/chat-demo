@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { LoadingIndicator } from '../../molecules/LoadingIndicator'
+import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
 import { setRedirectPath } from '../pages/callback'
 
 export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {

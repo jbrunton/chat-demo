@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { AiOutlinePlusSquare, AiOutlineNumber } from 'react-icons/ai'
 import { Room } from '../../../data/rooms'
 import { useUserDetails } from '../../../data/users'
-import { useAccessToken } from '../../auth/hooks/useAccessToken'
+import { useAccessToken } from '../../../features/auth/hooks/useAccessToken'
 
 const NewRoomIcon = () => <Icon as={AiOutlinePlusSquare} />
 const RoomIcon = () => <Icon as={AiOutlineNumber} />
