@@ -2,7 +2,7 @@ import React from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Button, Spinner } from '@chakra-ui/react'
 import { AiOutlineLogout } from 'react-icons/ai'
-import { DefaultUserIcon } from '../../atoms/icons/User'
+import { DefaultUserIcon } from '../../../features/room/atoms/DefaultUserIcon'
 
 export const SignInButton = () => {
   const { user, isAuthenticated, isLoading, loginWithRedirect, logout } = useAuth0()
