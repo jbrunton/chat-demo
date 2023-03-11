@@ -4,7 +4,7 @@ import { AiOutlineArrowRight } from 'react-icons/ai'
 import { usePostMessage } from '../../../data/messages'
 import { useJoinRoom } from '../../../data/rooms'
 import { useUserDetails } from '../../../data/users'
-import { useAccessToken } from '../../../hooks/useAccessToken'
+import { useAccessToken } from '../../../shared/auth/hooks/useAccessToken'
 
 export type ChatBoxProps = {
   roomId: string

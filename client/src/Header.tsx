@@ -17,10 +17,10 @@ import {
   UseDisclosureProps,
   Divider,
 } from '@chakra-ui/react'
-import { SignInButton } from './shared/auth/organisms/SignInButton'
+import { SignInButton } from './shared/auth/organisms/sign-in-button'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useParams } from 'react-router-dom'
-import { useAccessToken } from './hooks/useAccessToken'
+import { useAccessToken } from './shared/auth/hooks/useAccessToken'
 import { useRoom } from './data/rooms'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { RoomSelector } from './shared/navigation/organisms/RoomSelector'
