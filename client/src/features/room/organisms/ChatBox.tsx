@@ -4,15 +4,13 @@ import { AiOutlineArrowRight } from 'react-icons/ai'
 import { usePostMessage } from '../../../data/messages'
 import { useJoinRoom } from '../../../data/rooms'
 import { useUserDetails } from '../../../data/users'
-import { useAccessToken } from '../../auth/hooks/useAccessToken'
 
 export type ChatBoxProps = {
   roomId: string
 }
 
 const JoinAlert = ({ roomId }: ChatBoxProps) => {
-  const accessToken = useAccessToken()
-  const { mutate: joinRoom, isLoading } = useJoinRoom(roomId, accessToken)
+  const { mutate: joinRoom, isLoading } = useJoinRoom(roomId)
   return (
     <Alert status='info' variant='top-accent'>
       <AlertIcon />
@@ -26,11 +24,10 @@ const JoinAlert = ({ roomId }: ChatBoxProps) => {
 }
 
 export const ChatBox: React.FC<ChatBoxProps> = ({ roomId }: ChatBoxProps) => {
-  const accessToken = useAccessToken()
   const [content, setContent] = useState<string>('')
-  const { data: user, isLoading } = useUserDetails(accessToken)
+  const { data: user, isLoading } = useUserDetails()
   const joined = user?.rooms.some((room) => room.id === roomId)
-  const { mutate: postMessage, isLoading: isSending } = usePostMessage(roomId, content, accessToken)
+  const { mutate: postMessage, isLoading: isSending } = usePostMessage(roomId, content)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {

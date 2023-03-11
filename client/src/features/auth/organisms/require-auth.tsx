@@ -1,10 +1,10 @@
 import React from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
 import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
 import { setRedirectPath } from '../pages/callback'
+import { useAuth } from '..'
 
 export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+  const { isAuthenticated, isLoading, signIn } = useAuth()
 
   if (isAuthenticated) {
     return <>{children}</>
@@ -12,7 +12,7 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
 
   if (!isLoading) {
     setRedirectPath(window.location.pathname)
-    loginWithRedirect()
+    signIn()
   }
 
   return <LoadingIndicator />

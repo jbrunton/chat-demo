@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
-
-const apiUrl = import.meta.env.VITE_API_URL || ''
+import axios from 'axios'
+import { isAuthenticated } from './config'
 
 export type Room = {
   id: string
@@ -8,53 +8,39 @@ export type Room = {
   name: string
 }
 
-export const useRoom = (roomId?: string, accessToken?: string): UseQueryResult<Room> => {
-  const queryFn = async (): Promise<Room> => {
-    const response = await fetch(`${apiUrl}/rooms/${roomId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    if (response.ok) {
-      const data = await response.json()
-      return data.room as Room
-    } else {
-      throw new Error(response.statusText)
-    }
-  }
+const getRoom = async (roomId: string): Promise<Room> => {
+  const response = await axios.get(`/rooms/${roomId}`)
+  return response.data.room
+}
+
+export const useRoom = (roomId?: string): UseQueryResult<Room> => {
   return useQuery({
     queryKey: ['rooms', roomId],
-    enabled: !!accessToken && !!roomId,
-    queryFn,
+    enabled: isAuthenticated() && !!roomId,
+    queryFn: () => getRoom(roomId ?? ''),
   })
 }
 
-export const useCreateRoom = (onSuccess: (room: Room) => void, accessToken?: string) => {
+const createRoom = async (): Promise<Room> => {
+  const response = await axios.post('/rooms')
+  return response.data.room
+}
+
+export const useCreateRoom = (onSuccess: (room: Room) => void) => {
   return useMutation({
-    mutationFn: () =>
-      fetch(`${apiUrl}/rooms`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }).then(async (res) => {
-        const response = await res.json()
-        return response.room
-      }),
+    mutationFn: () => createRoom(),
     onSuccess,
   })
 }
 
-export const useJoinRoom = (roomId: string, accessToken?: string) => {
+const joinRoom = async (roomId: string) => {
+  await axios.post(`/rooms/${roomId}/join`)
+}
+
+export const useJoinRoom = (roomId: string) => {
   const client = useQueryClient()
   return useMutation({
-    mutationFn: () =>
-      fetch(`${apiUrl}/rooms/${roomId}/join`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }),
+    mutationFn: () => joinRoom(roomId),
     onSuccess: () => {
       client.invalidateQueries(['me'])
     },

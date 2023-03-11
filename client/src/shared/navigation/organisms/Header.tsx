@@ -20,7 +20,6 @@ import {
 import { SignInButton } from '../../../features/auth/organisms/sign-in-button'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useParams } from 'react-router-dom'
-import { useAccessToken } from '../../../features/auth/hooks/useAccessToken'
 import { useRoom } from '../../../data/rooms'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { RoomSelector } from './RoomSelector'
@@ -28,8 +27,7 @@ import { RoomSelector } from './RoomSelector'
 export const Header = () => {
   const { isAuthenticated } = useAuth0()
   const { roomId } = useParams()
-  const accessToken = useAccessToken()
-  const { data: room } = useRoom(roomId, accessToken)
+  const { data: room } = useRoom(roomId)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 

@@ -2,21 +2,17 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
 import { useCreateRoom } from '../../../data/rooms'
-import { useAccessToken } from '../../auth/hooks/useAccessToken'
 
 export const NewRoomPage = () => {
   const navigate = useNavigate()
-  const accessToken = useAccessToken()
 
-  const { mutate } = useCreateRoom((room) => {
+  const { mutate: createRoom } = useCreateRoom((room) => {
     navigate(`/room/${room.id}`)
-  }, accessToken)
+  })
 
   useEffect(() => {
-    if (accessToken) {
-      mutate()
-    }
-  }, [accessToken])
+    createRoom()
+  }, [])
 
   return <LoadingIndicator />
 }
