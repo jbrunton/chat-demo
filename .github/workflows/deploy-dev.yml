@@ -63,6 +63,7 @@ jobs:
       - name: Get pulumi outputs
         id: pulumi-outputs
         run: |
+          pulumi stack select ${{ github.head_ref }}
           echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
           echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
           echo "taskDefinitionArn=$(pulumi stack output apiTaskDefinitionArn)" > $GITHUB_OUTPUT
@@ -72,9 +73,11 @@ jobs:
       - name: Get current task definition
         id: current-task-def
         run: |
-          pulumi stack select ${{ github.head_ref }}
           export TASK_DEFINITION_FILE=${{ runner.temp }}/taskDefinition.json
-          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN --output json | jq .taskDefinition > $TASK_DEFINITION_FILE
+          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN \
+            --query taskDefinifion --output json \
+            | jq 'del(.revision, .compatibilities, .taskDefinitionArn, .requiresAttributes, .status, .registeredAt, .registeredBy)' \
+            > $TASK_DEFINITION_FILE
           echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
 
           echo "TASK_DEFINITION_FILE: $TASK_DEFINITION_FILE"
