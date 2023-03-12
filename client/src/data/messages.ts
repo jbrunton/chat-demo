@@ -1,8 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { EventSourcePolyfill } from 'event-source-polyfill'
+import axios from 'axios'
+import debug from 'debug'
+import { apiUrl } from './config'
 
-const apiUrl = import.meta.env.VITE_API_URL || ''
+const log = debug('messages')
 
 export type Message = {
   id: string
@@ -14,41 +17,33 @@ export type Message = {
   updatedEntities?: string[]
 }
 
-export const useMessages = (roomId: string, accessToken?: string) => {
-  const queryFn = async () => {
-    const response = await fetch(`${apiUrl}/messages/${roomId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    if (response.ok) {
-      const data = await response.json()
-      return data as Message[]
-    }
-    return []
-  }
+const getMessages = async (roomId: string): Promise<Message[]> => {
+  const response = await axios.get(`/messages/${roomId}`)
+  return response.data
+}
+
+export const useMessages = (roomId: string) => {
   return useQuery({
     queryKey: ['messages', roomId],
-    enabled: !!accessToken,
     refetchOnWindowFocus: false,
-    queryFn,
+    queryFn: () => getMessages(roomId),
   })
 }
 
-export const useMessagesSubscription = (roomId: string, accessToken?: string) => {
+export const useMessagesSubscription = (roomId: string, token: string | undefined) => {
   const queryClient = useQueryClient()
   useEffect(() => {
-    if (!accessToken) return
+    if (!token) return
 
     const eventSource = new EventSourcePolyfill(`${apiUrl}/messages/${roomId}/subscribe`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
     })
 
     eventSource.onmessage = (e) => {
       const { message }: { message: Message } = JSON.parse(e.data)
-      console.log('message received:', message)
+      log('message received:', message)
       if (message.updatedEntities?.includes('room')) {
         queryClient.invalidateQueries({ queryKey: ['rooms'] })
       }
@@ -64,19 +59,16 @@ export const useMessagesSubscription = (roomId: string, accessToken?: string) =>
     return () => {
       eventSource.close()
     }
-  }, [queryClient, accessToken])
+  }, [queryClient, token, roomId])
 }
 
-export const usePostMessage = (roomId: string, content?: string, accessToken?: string) => {
+const sendMessage = async (roomId: string, content?: string): Promise<void> => {
+  log('sending message', { content, roomId })
+  await axios.post('/messages', { content, roomId })
+}
+
+export const usePostMessage = (roomId: string, content?: string) => {
   return useMutation({
-    mutationFn: () =>
-      fetch(`${apiUrl}/messages`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content, roomId }),
-      }).then((res) => res.json()),
+    mutationFn: () => sendMessage(roomId, content),
   })
 }

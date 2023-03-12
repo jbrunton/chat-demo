@@ -4,15 +4,13 @@ import { Link, useParams } from 'react-router-dom'
 import { AiOutlinePlusSquare, AiOutlineNumber } from 'react-icons/ai'
 import { Room } from '../../../data/rooms'
 import { useUserDetails } from '../../../data/users'
-import { useAccessToken } from '../../../features/auth/hooks/useAccessToken'
 
 const NewRoomIcon = () => <Icon as={AiOutlinePlusSquare} />
 const RoomIcon = () => <Icon as={AiOutlineNumber} />
 
 export const RoomSelector = () => {
-  const accessToken = useAccessToken()
   const { roomId: selectedRoomId } = useParams()
-  const { data: userDetails } = useUserDetails(accessToken)
+  const { data: userDetails } = useUserDetails()
   const isSelected = (room: Room) => room.id === selectedRoomId
   return (
     <>

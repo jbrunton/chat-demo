@@ -6,8 +6,12 @@ import { baseTheme, ChakraProvider, extendTheme, StyleFunctionProps } from '@cha
 import 'highlight.js/styles/default.css'
 import './main.css'
 import App from './App'
+import { AuthProvider } from './features/auth/provider'
+import { configureDefaults } from './data/config'
 
 const queryClient = new QueryClient()
+
+configureDefaults()
 
 const theme = extendTheme({
   colors: {
@@ -42,11 +46,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       scope='openid profile email'
       redirectUri={`${window.location.origin}/callback`}
     >
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <App />
-        </ChakraProvider>
-      </QueryClientProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <ChakraProvider theme={theme}>
+            <App />
+          </ChakraProvider>
+        </QueryClientProvider>
+      </AuthProvider>
     </Auth0Provider>
   </React.StrictMode>,
 )

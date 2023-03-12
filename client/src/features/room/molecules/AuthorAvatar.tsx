@@ -13,7 +13,7 @@ export const AuthorAvatar: React.FC<AuthorAvatarProps> = ({ author }) => {
   return (
     <>
       {isSystem ? (
-        <UserAvatar icon={<SystemIcon />} backgroundColor={'primary'} />
+        <UserAvatar icon={<SystemIcon />} backgroundColor='primary.500' />
       ) : author?.picture ? (
         <UserAvatar src={author?.picture} referrerPolicy='no-referrer' />
       ) : (
