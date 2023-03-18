@@ -18,16 +18,16 @@ import {
   Divider,
 } from '@chakra-ui/react'
 import { SignInButton } from '../../../features/auth/organisms/sign-in-button'
-import { useAuth0 } from '@auth0/auth0-react'
 import { useParams } from 'react-router-dom'
 import { useRoom } from '../../../data/rooms'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { RoomSelector } from './RoomSelector'
+import { useAuth } from '../../../features/auth'
 
 export const Header = () => {
-  const { isAuthenticated } = useAuth0()
+  const { isAuthenticated, isLoading } = useAuth()
   const { roomId } = useParams()
-  const { data: room } = useRoom(roomId)
+  const { data: room } = useRoom(!isLoading ? roomId : undefined)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
