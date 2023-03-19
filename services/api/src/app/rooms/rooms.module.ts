@@ -9,6 +9,6 @@ import { RoomsController } from './rooms.controller';
   imports: [AuthModule],
   controllers: [RoomsController],
   providers: [CreateRoomUseCase, GetRoomUseCase, JoinRoomUseCase],
-  exports: [CreateRoomUseCase, GetRoomUseCase, JoinRoomUseCase],
+  exports: [],
 })
 export class RoomsModule {}

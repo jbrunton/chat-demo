@@ -1,59 +1,55 @@
-import { AuthService } from '@entities/auth';
 import { Command } from '@entities/command.entity';
-import { DraftMessage } from '@entities/message.entity';
-import { RoomsRepository } from '@entities/rooms.repository';
+import { Dispatcher } from '@entities/message.entity';
+import { MessagesRepository } from '@entities/messages.repository';
 import { User } from '@entities/user.entity';
-import { UsersRepository } from '@entities/users.repository';
-import { helpResponse } from './commands/help.command';
-import { loremResponse } from './commands/lorem.command';
-import { renameRoom } from './commands/rename-room.command';
-import { renameUser } from './commands/rename-user.command';
+import { Injectable } from '@nestjs/common';
+import { RenameRoomUseCase } from '@usecases/rooms/rename';
+import { RenameUserUseCase } from '@usecases/users/rename';
+import { HelpCommandUseCase } from './commands/help';
+import { LoremCommandUseCase } from './commands/lorem.command';
 import { ParsedCommand, parsers } from './parsers';
 
-export const processCommand = async (
-  command: Command,
-  user: User,
-  roomsRepo: RoomsRepository,
-  usersRepo: UsersRepository,
-  authService: AuthService,
-): Promise<DraftMessage> => {
-  for (const parser of parsers) {
-    const parsedCommand = parser(command, user);
-    if (parsedCommand) {
-      return await executeCommand(
-        parsedCommand,
-        roomsRepo,
-        usersRepo,
-        authService,
-      );
+@Injectable()
+export class ProcessCommandUseCase {
+  constructor(
+    private readonly messages: MessagesRepository,
+    private readonly dispatcher: Dispatcher,
+    private readonly help: HelpCommandUseCase,
+    private readonly lorem: LoremCommandUseCase,
+    private readonly renameUser: RenameUserUseCase,
+    private readonly renameRoom: RenameRoomUseCase,
+  ) {}
+
+  async exec(command: Command, authenticatedUser: User): Promise<void> {
+    for (const parser of parsers) {
+      const parsedCommand = parser(command, authenticatedUser);
+      if (parsedCommand) {
+        return this.execCommand(parsedCommand);
+      }
+    }
+
+    const message = await this.messages.saveMessage({
+      roomId: command.roomId,
+      content: unrecognisedResponse,
+      authorId: 'system',
+      recipientId: authenticatedUser.id,
+    });
+    this.dispatcher.emit(message);
+  }
+
+  private async execCommand({ tag, params }: ParsedCommand): Promise<void> {
+    switch (tag) {
+      case 'help':
+        return this.help.exec(params);
+      case 'renameRoom':
+        return this.renameRoom.exec(params);
+      case 'renameUser':
+        return this.renameUser.exec(params);
+      case 'lorem':
+        return this.lorem.exec(params);
     }
   }
-
-  return {
-    roomId: command.roomId,
-    content: unrecognisedResponse,
-    authorId: 'system',
-    recipientId: user.id,
-  };
-};
-
-export const executeCommand = async (
-  { tag, params }: ParsedCommand,
-  roomsRepo: RoomsRepository,
-  usersRepo: UsersRepository,
-  authService: AuthService,
-): Promise<DraftMessage> => {
-  switch (tag) {
-    case 'help':
-      return helpResponse(params);
-    case 'renameRoom':
-      return renameRoom(params, roomsRepo, authService);
-    case 'renameUser':
-      return renameUser(params, usersRepo);
-    case 'lorem':
-      return loremResponse(params);
-  }
-};
+}
 
 const unrecognisedResponse =
   'Unrecognised command, type <b>/help</b> for further assistance';

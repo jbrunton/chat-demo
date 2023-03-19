@@ -1,5 +1,5 @@
 import { DynamoDBMessagesRepository } from '@data/repositories/dynamodb.messages.repository';
-import { SaveMessageParams } from '@entities/messages.repository';
+import { DraftMessage } from '@entities/message.entity';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
@@ -39,10 +39,9 @@ describe('MessagesRepository', () => {
       const repo = repos[name];
       const { id: authorId } = UserFactory.build();
       const { id: roomId } = RoomFactory.build();
-      const params: SaveMessageParams = {
+      const params: DraftMessage = {
         content: 'Hello, World!',
         authorId,
-        time: 1001,
         roomId,
       };
 
@@ -63,19 +62,16 @@ describe('MessagesRepository', () => {
       const msg1 = await repo.saveMessage({
         content: 'Hello, World!',
         authorId: author1.id,
-        time: 1001,
         roomId: 'room:123',
       });
       const msg2 = await repo.saveMessage({
         content: 'Goodbye, World!',
         authorId: author1.id,
-        time: 1002,
         roomId: 'room:456',
       });
       await repo.saveMessage({
         content: 'Hello, World!',
         authorId: author2.id,
-        time: 1002,
         roomId: 'room:456',
       });
 

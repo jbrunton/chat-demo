@@ -15,11 +15,19 @@ import { RoomFactory } from '@fixtures/messages/room.factory';
 import { User } from '@entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '@entities/auth';
+import { ProcessCommandUseCase } from '@usecases/process-command/process';
+import { HelpCommandUseCase } from '@usecases/process-command/commands/help';
+import { LoremCommandUseCase } from '@usecases/process-command/commands/lorem.command';
+import { RenameUserUseCase } from '@usecases/users/rename';
+import { RenameRoomUseCase } from '@usecases/rooms/rename';
+import { mock, MockProxy } from 'jest-mock-extended';
+import { Dispatcher } from '@entities/message.entity';
 
 describe('MessagesService', () => {
   let service: MessagesService;
   let messagesRepository: TestMessagesRepository;
   let roomsRepo: TestRoomsRepository;
+  let dispatcher: MockProxy<DispatcherService>;
 
   let room: Room;
   let user: User;
@@ -29,12 +37,19 @@ describe('MessagesService', () => {
     jest.useFakeTimers();
     jest.setSystemTime(1001);
 
+    dispatcher = mock<DispatcherService>();
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [TestDataModule],
       providers: [
         MessagesService,
-        DispatcherService,
+        ProcessCommandUseCase,
+        HelpCommandUseCase,
+        LoremCommandUseCase,
+        RenameUserUseCase,
+        RenameRoomUseCase,
         { provide: AuthService, useClass: CaslAuthService },
+        { provide: Dispatcher, useValue: dispatcher },
       ],
     }).compile();
 
@@ -43,7 +58,6 @@ describe('MessagesService', () => {
     roomsRepo = module.get(RoomsRepository);
 
     user = UserFactory.build();
-
     room = RoomFactory.build({ ownerId: user.id });
     roomId = room.id;
     roomsRepo.setData([room]);
@@ -56,7 +70,7 @@ describe('MessagesService', () => {
         roomId,
       };
 
-      const response = await service.handleMessage(message, user);
+      await service.handleMessage(message, user);
 
       const expectedMessage = {
         id: 'message:1001',
@@ -65,7 +79,7 @@ describe('MessagesService', () => {
         authorId: user.id,
         time: 1001,
       };
-      expect(response).toEqual(expectedMessage);
+      expect(dispatcher.emit).toHaveBeenCalledWith(expectedMessage);
       expect(messagesRepository.getData()).toEqual([expectedMessage]);
     });
 
@@ -76,7 +90,7 @@ describe('MessagesService', () => {
         roomId,
       };
 
-      const response = await service.handleMessage(message, user);
+      await service.handleMessage(message, user);
 
       const expectedMessage = {
         id: 'message:1001',
@@ -86,7 +100,7 @@ describe('MessagesService', () => {
         time: 1001,
         recipientId: user.id,
       };
-      expect(response).toEqual(expectedMessage);
+      expect(dispatcher.emit).toHaveBeenCalledWith(expectedMessage);
       expect(messagesRepository.getData()).toEqual([expectedMessage]);
     });
   });

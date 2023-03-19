@@ -27,6 +27,12 @@ import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repos
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
 import { AuthService } from '@entities/auth';
+import { ProcessCommandUseCase } from '@usecases/process-command/process';
+import { HelpCommandUseCase } from '@usecases/process-command/commands/help';
+import { LoremCommandUseCase } from '@usecases/process-command/commands/lorem.command';
+import { RenameRoomUseCase } from '@usecases/rooms/rename';
+import { RenameUserUseCase } from '@usecases/users/rename';
+import { Dispatcher } from '@entities/message.entity';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -47,9 +53,17 @@ describe('MessagesController', () => {
       imports: [TestDataModule, CacheModule.register()],
       controllers: [MessagesController],
       providers: [
-        DispatcherService,
+        {
+          provide: Dispatcher,
+          useClass: DispatcherService,
+        },
         MessagesService,
         IdentifyService,
+        ProcessCommandUseCase,
+        HelpCommandUseCase,
+        LoremCommandUseCase,
+        RenameRoomUseCase,
+        RenameUserUseCase,
         { provide: AuthService, useClass: CaslAuthService },
       ],
     })
@@ -152,7 +166,7 @@ describe('MessagesController', () => {
         .post('/messages')
         .send(message)
         .set('Authorization', `Bearer ${accessToken}`)
-        .expect(201, expectedMessage);
+        .expect(201);
 
       expect(messagesRepository.getData()).toEqual([expectedMessage]);
       expect(usersRepository.getData()).toEqual([user]);

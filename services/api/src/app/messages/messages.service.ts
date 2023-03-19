@@ -1,47 +1,35 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import {
-  Draft,
+  Dispatcher,
   isPrivate,
   Message,
 } from '../../domain/entities/message.entity';
 import * as R from 'rambda';
-import { DispatcherService } from './dispatcher.service';
-import { isCommand, ParsedMessage, parseMessage } from './parse-message';
-import { processCommand } from '@usecases/process-command/process';
+import { isCommand, parseMessage } from './parse-message';
 import { MessagesRepository } from '@entities/messages.repository';
-import { UsersRepository } from '@entities/users.repository';
 import { User } from '@entities/user.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { AuthService, Role } from '@entities/auth';
+import { ProcessCommandUseCase } from '@usecases/process-command/process';
 
 @Injectable()
 export class MessagesService {
-  private readonly logger = new Logger(MessagesService.name);
-
   constructor(
     private readonly messagesRepo: MessagesRepository,
-    private readonly usersRepo: UsersRepository,
     private readonly roomsRepo: RoomsRepository,
     private readonly authService: AuthService,
-    private readonly dispatcher: DispatcherService,
+    private readonly dispatcher: Dispatcher,
+    private readonly processCommand: ProcessCommandUseCase,
   ) {}
 
-  async handleMessage(
-    incoming: CreateMessageDto,
-    author: User,
-  ): Promise<Message> {
-    const processCommands = async (
-      message: ParsedMessage,
-    ): Promise<Draft<Message>> => {
+  async handleMessage(incoming: CreateMessageDto, author: User): Promise<void> {
+    try {
+      const message = parseMessage(incoming, author);
+
       if (isCommand(message)) {
-        return await processCommand(
-          message,
-          author,
-          this.roomsRepo,
-          this.usersRepo,
-          this.authService,
-        );
+        await this.processCommand.exec(message, author);
+        return;
       }
 
       const room = await this.roomsRepo.getRoom(message.roomId);
@@ -52,46 +40,24 @@ export class MessagesService {
         message: 'You do not have permission to post to this room',
       });
 
-      return message;
-    };
-
-    const handleErrors = async (pendingMessage: Promise<Draft<Message>>) => {
-      try {
-        const message = await pendingMessage;
-        return message;
-      } catch (e) {
-        if (e instanceof HttpException) {
-          return {
-            content: e.message,
-            roomId: incoming.roomId,
-            recipientId: author.id,
-            authorId: 'system',
-          };
-        }
+      const savedMessage = await this.messagesRepo.saveMessage({
+        authorId: author.id,
+        ...incoming,
+      });
+      this.dispatcher.emit(savedMessage);
+    } catch (e) {
+      if (e instanceof HttpException) {
+        const message = await this.messagesRepo.saveMessage({
+          content: e.message,
+          roomId: incoming.roomId,
+          recipientId: author.id,
+          authorId: 'system',
+        });
+        this.dispatcher.emit(message);
+      } else {
         throw e;
       }
-    };
-
-    const storeMessage = async (pendingMessage: Promise<Draft<Message>>) => {
-      const message = await pendingMessage;
-      const time = new Date().getTime();
-      const storedMessage = await this.messagesRepo.saveMessage({
-        ...message,
-        time,
-      });
-
-      this.logger.log(`emitting event: ${JSON.stringify(storedMessage)}`);
-      this.dispatcher.emit(storedMessage);
-
-      return storedMessage;
-    };
-
-    return await R.pipe(
-      parseMessage,
-      processCommands,
-      handleErrors,
-      storeMessage,
-    )(incoming, author);
+    }
   }
 
   async findForRoom(roomId: string, user: User): Promise<Message[]> {
