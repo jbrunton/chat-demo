@@ -22,13 +22,19 @@ describe('renameRoom', () => {
 
   beforeEach(async () => {
     roomsRepo = new TestRoomsRepository();
-    authService = new TestAuthService();
     room = RoomFactory.build({
       ownerId: owner.id,
       name: originalName,
     });
     roomId = room.id;
     roomsRepo.setData([room]);
+
+    authService = new TestAuthService();
+    authService.stubPermission({
+      user: owner,
+      subject: room,
+      action: Role.Manage,
+    });
   });
 
   it('renames the room', async () => {
@@ -55,12 +61,6 @@ describe('renameRoom', () => {
   });
 
   it('authorizes the user', async () => {
-    authService.stubFailure({
-      user: otherUser,
-      subject: room,
-      action: Role.Manage,
-    });
-
     await expect(
       renameRoom(
         {

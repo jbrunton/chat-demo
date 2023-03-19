@@ -1,30 +1,36 @@
 import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/identity/identify.decorator';
 import { Controller, Get, Logger, Param, Post } from '@nestjs/common';
-import { RoomsService } from './rooms.service';
 import { User } from '@entities/user.entity';
+import { CreateRoomUseCase } from '@usecases/rooms/create';
+import { GetRoomUseCase } from '@usecases/rooms/get';
+import { JoinRoomUseCase } from '@usecases/rooms/join';
 
 @Auth()
 @Controller('rooms')
 export class RoomsController {
   private readonly logger = new Logger(RoomsController.name);
 
-  constructor(private readonly roomsService: RoomsService) {}
+  constructor(
+    private readonly create: CreateRoomUseCase,
+    private readonly get: GetRoomUseCase,
+    private readonly join: JoinRoomUseCase,
+  ) {}
 
   @Post('/')
   async createRoom(@Identify() user: User) {
-    const room = await this.roomsService.createRoom(user);
+    const room = await this.create.exec(user);
     this.logger.log('created room:' + JSON.stringify(room));
     return { room };
   }
 
   @Get('/:roomId')
   async getRoom(@Param('roomId') roomId: string, @Identify() user: User) {
-    return this.roomsService.getRoom(roomId, user);
+    return this.get.exec(roomId, user);
   }
 
   @Post('/:roomId/join')
   async joinRoom(@Param('roomId') roomId: string, @Identify() user: User) {
-    await this.roomsService.joinRoom(roomId, user);
+    await this.join.exec(roomId, user);
   }
 }
