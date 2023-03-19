@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 import axios from 'axios'
-import { isAuthenticated } from './config'
+import { DefaultQueryOptions, QueryOptions } from './lib'
 
 export type Room = {
   id: string
@@ -8,16 +8,22 @@ export type Room = {
   name: string
 }
 
-const getRoom = async (roomId: string): Promise<Room> => {
-  const response = await axios.get(`/rooms/${roomId}`)
-  return response.data.room
+export type RoomResponse = {
+  room: Room
+  roles: string[]
 }
 
-export const useRoom = (roomId?: string): UseQueryResult<Room> => {
+const getRoom = async (roomId?: string): Promise<RoomResponse> => {
+  const response = await axios.get(`/rooms/${roomId}`)
+  return response.data
+}
+
+export const useRoom = (roomId?: string, opts: QueryOptions = DefaultQueryOptions): UseQueryResult<RoomResponse> => {
+  const enabled = opts.enabled && roomId !== undefined
   return useQuery({
     queryKey: ['rooms', roomId],
-    enabled: isAuthenticated() && !!roomId,
-    queryFn: () => getRoom(roomId ?? ''),
+    enabled,
+    queryFn: () => getRoom(roomId),
   })
 }
 

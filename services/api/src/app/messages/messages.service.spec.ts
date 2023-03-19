@@ -7,12 +7,14 @@ import { MessageFactory } from '@fixtures/messages/message.factory';
 import { DispatcherService } from './dispatcher.service';
 import { MessagesRepository } from '@entities/messages.repository';
 import { TestDataModule } from '@fixtures/data/test.data.module';
-import { CaslAuthService } from '@app/auth/auth.service';
+import { CaslAuthService } from '@app/auth/casl.auth.service';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { Room } from '@entities/room.entity';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { User } from '@entities/user.entity';
+import { UnauthorizedException } from '@nestjs/common';
+import { AuthService } from '@entities/auth';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -29,7 +31,11 @@ describe('MessagesService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [TestDataModule],
-      providers: [MessagesService, DispatcherService, CaslAuthService],
+      providers: [
+        MessagesService,
+        DispatcherService,
+        { provide: AuthService, useClass: CaslAuthService },
+      ],
     }).compile();
 
     service = module.get(MessagesService);
@@ -92,9 +98,20 @@ describe('MessagesService', () => {
       const msg2 = MessageFactory.build({ roomId });
       messagesRepository.setData([msg1, msg2]);
 
-      const response = await service.findForRoom(roomId);
+      const response = await service.findForRoom(roomId, user);
 
       expect(response).toEqual([msg1, msg2]);
+    });
+
+    it('authorizes access to messages', async () => {
+      const roomId = room.id;
+      const otherUser = UserFactory.build();
+
+      await expect(service.findForRoom(roomId, otherUser)).rejects.toEqual(
+        new UnauthorizedException(
+          'You do not have permission to perform this action.',
+        ),
+      );
     });
   });
 });

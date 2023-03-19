@@ -1,4 +1,4 @@
-import { AuthInfo } from '@entities/auth-info';
+import { AuthInfo } from '@entities/auth';
 import { Logger } from '@nestjs/common';
 import { AuthenticationClient } from 'auth0';
 import { config } from './auth0.config';

@@ -25,9 +25,9 @@ import { RoomSelector } from './RoomSelector'
 import { useAuth } from '../../../features/auth'
 
 export const Header = () => {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isLoading: isLoadingAuth } = useAuth()
   const { roomId } = useParams()
-  const { data: room } = useRoom(!isLoading ? roomId : undefined)
+  const { data: roomResponse } = useRoom(roomId, { enabled: !isLoadingAuth })
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -42,7 +42,7 @@ export const Header = () => {
     <>
       <Flex className='header' p='6px' align='center'>
         <Heading size={{ base: 'sm', lg: 'md' }} noOfLines={1}>
-          {room?.name ?? 'Chat Demo'}
+          {roomResponse?.room.name ?? 'Chat Demo'}
         </Heading>
         <Spacer />
         <HStack align='center'>

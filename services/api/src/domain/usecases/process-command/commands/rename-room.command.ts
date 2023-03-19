@@ -1,4 +1,4 @@
-import { AuthService } from '@entities/auth-info';
+import { AuthService, Role } from '@entities/auth';
 import { DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
@@ -20,8 +20,8 @@ export const renameRoom = async (
 
   await authService.authorize({
     user: authenticatedUser,
-    action: 'manage',
-    room,
+    action: Role.Manage,
+    subject: room,
     message: 'You cannot rename this room. Only the owner can do this.',
   });
 

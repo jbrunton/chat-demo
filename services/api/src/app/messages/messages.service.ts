@@ -13,7 +13,7 @@ import { MessagesRepository } from '@entities/messages.repository';
 import { UsersRepository } from '@entities/users.repository';
 import { User } from '@entities/user.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { CaslAuthService } from '@app/auth/auth.service';
+import { AuthService, Role } from '@entities/auth';
 
 @Injectable()
 export class MessagesService {
@@ -23,7 +23,7 @@ export class MessagesService {
     private readonly messagesRepo: MessagesRepository,
     private readonly usersRepo: UsersRepository,
     private readonly roomsRepo: RoomsRepository,
-    private readonly authService: CaslAuthService,
+    private readonly authService: AuthService,
     private readonly dispatcher: DispatcherService,
   ) {}
 
@@ -47,8 +47,8 @@ export class MessagesService {
       const room = await this.roomsRepo.getRoom(message.roomId);
       await this.authService.authorize({
         user: author,
-        room,
-        action: 'write',
+        subject: room,
+        action: Role.Write,
         message: 'You do not have permission to post to this room',
       });
 
@@ -94,9 +94,17 @@ export class MessagesService {
     )(incoming, author);
   }
 
-  async findForRoom(roomId: string): Promise<Message[]> {
+  async findForRoom(roomId: string, user: User): Promise<Message[]> {
+    const room = await this.roomsRepo.getRoom(roomId);
+    await this.authService.authorize({
+      user,
+      subject: room,
+      action: Role.Read,
+    });
+
     const allMessages = await this.messagesRepo.getMessagesForRoom(roomId);
     const publicMessages = R.pipe(R.reject(isPrivate))(allMessages);
+
     return publicMessages;
   }
 }

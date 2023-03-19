@@ -1,4 +1,5 @@
 import { MembershipStatus } from '@entities/membership.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { Entity } from 'dynamodb-onetable';
 
 export const DbSchema = {
@@ -32,6 +33,16 @@ export const DbSchema = {
       uuid: { type: String, generate: 'ulid', required: true },
       name: { type: String, required: true },
       ownerId: { type: String, required: true },
+      contentPolicy: {
+        type: String,
+        enum: [ContentPolicy.Public, ContentPolicy.Private],
+        required: true,
+      },
+      joinPolicy: {
+        type: String,
+        enum: [JoinPolicy.Anyone, JoinPolicy.Request, JoinPolicy.Invite],
+        required: true,
+      },
     },
     Membership: {
       Id: { type: String, value: '${userId}', required: true },

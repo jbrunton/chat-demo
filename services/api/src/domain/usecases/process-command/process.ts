@@ -1,4 +1,4 @@
-import { AuthService } from '@entities/auth-info';
+import { AuthService } from '@entities/auth';
 import { Command } from '@entities/command.entity';
 import { DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';

@@ -1,4 +1,6 @@
+import { AuthService, Role } from '@entities/auth';
 import { isPrivate, Message } from '@entities/message.entity';
+import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { fromEvent, merge } from 'rxjs';
@@ -8,11 +10,21 @@ import { EventEmitter } from 'stream';
 export class DispatcherService {
   readonly emitter: EventEmitter;
 
-  constructor() {
+  constructor(
+    private readonly roomsRepository: RoomsRepository,
+    private readonly authService: AuthService,
+  ) {
     this.emitter = new EventEmitter();
   }
 
-  subscribe(roomId: string, user: User) {
+  async subscribe(roomId: string, user: User) {
+    const room = await this.roomsRepository.getRoom(roomId);
+    await this.authService.authorize({
+      user,
+      action: Role.Read,
+      subject: room,
+    });
+
     const publicMessages = fromEvent(
       this.emitter,
       publicMessageChannel(roomId),

@@ -23,8 +23,8 @@ export class MessagesController {
   }
 
   @Get('/:roomId')
-  getMessages(@Param('roomId') roomId: string) {
-    return this.messagesService.findForRoom(roomId);
+  getMessages(@Param('roomId') roomId: string, @Identify() user: User) {
+    return this.messagesService.findForRoom(roomId, user);
   }
 
   @Sse('/:roomId/subscribe')

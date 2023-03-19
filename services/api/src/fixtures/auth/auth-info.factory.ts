@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { AuthInfo } from '@entities/auth-info';
+import { AuthInfo } from '@entities/auth';
 
 export const AuthInfoFactory = {
   build: (overrides?: Partial<AuthInfo>): AuthInfo => ({

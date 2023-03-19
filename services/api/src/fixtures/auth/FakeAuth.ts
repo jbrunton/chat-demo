@@ -1,4 +1,4 @@
-import { AuthInfo } from '@entities/auth-info';
+import { AuthInfo } from '@entities/auth';
 import { CanActivate, Injectable } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
