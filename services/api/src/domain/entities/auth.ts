@@ -1,3 +1,5 @@
+import { UnauthorizedException } from '@nestjs/common';
+import { isNil, reject } from 'rambda';
 import { Room } from './room.entity';
 import { User } from './user.entity';
 
@@ -18,6 +20,7 @@ export enum Role {
   Read = 'read',
   Write = 'write',
   Manage = 'manage',
+  Join = 'join',
 }
 
 export type AuthorizeParams = {
@@ -28,9 +31,32 @@ export type AuthorizeParams = {
 };
 
 export abstract class AuthService {
-  abstract authorize(params: AuthorizeParams): Promise<void>;
-  abstract can(params: Omit<AuthorizeParams, 'message'>): Promise<boolean>;
-  abstract authorizedRoles(
-    params: Omit<AuthorizeParams, 'message' | 'action'>,
-  ): Promise<Role[]>;
+  async authorize({ user, subject, action, message }: AuthorizeParams) {
+    const hasRole = await this.can({ user, action, subject });
+    if (!hasRole) {
+      throw new UnauthorizedException(message ?? defaultMessage);
+    }
+  }
+
+  abstract can({
+    user,
+    subject,
+    action,
+  }: Omit<AuthorizeParams, 'message'>): Promise<boolean>;
+
+  async authorizedRoles({
+    user,
+    subject,
+  }: Omit<AuthorizeParams, 'message' | 'action'>): Promise<Role[]> {
+    const actions: Role[] = [Role.Read, Role.Write, Role.Manage, Role.Join];
+    const roles = await Promise.all(
+      actions.map(async (action) => {
+        const hasRole = await this.can({ user, subject, action });
+        return hasRole ? action : undefined;
+      }),
+    );
+    return reject(isNil)(roles);
+  }
 }
+
+const defaultMessage = 'You do not have permission to perform this action.';

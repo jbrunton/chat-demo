@@ -74,7 +74,13 @@ module.exports = {
           },
           {
             from: ['entities', 'usecases'],
-            allow: ['@faker-js/faker'],
+            allow: [
+              '@faker-js/faker',
+              [
+                '@nestjs/common',
+                { specifiers: ['Injectable', 'UnauthorizedException'] },
+              ],
+            ],
           },
           {
             from: ['*'],

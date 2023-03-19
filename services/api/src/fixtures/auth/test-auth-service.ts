@@ -1,30 +1,17 @@
-import { AuthorizeParams, AuthService, Role } from '@entities/auth';
-import { UnauthorizedException } from '@nestjs/common';
-import { mock } from 'jest-mock-extended';
+import { AuthorizeParams, AuthService } from '@entities/auth';
+import { equals } from 'rambda';
 
-export class TestAuthService implements AuthService {
-  private proxy = mock<AuthService>();
+type Permission = Omit<AuthorizeParams, 'message'>;
 
-  async authorize(params: AuthorizeParams): Promise<void> {
-    await this.proxy.authorize(params);
+export class TestAuthService extends AuthService {
+  private permissions: Permission[] = [];
+
+  async can(params: Permission): Promise<boolean> {
+    return this.permissions.some((permission) => equals(permission, params));
   }
 
-  async can(params: Omit<AuthorizeParams, 'message'>): Promise<boolean> {
-    return this.proxy.can(params);
-  }
-
-  async authorizedRoles(
-    params: Omit<AuthorizeParams, 'message' | 'action'>,
-  ): Promise<Role[]> {
-    return this.proxy.authorizedRoles(params);
-  }
-
-  stubFailure(params: Partial<AuthorizeParams>): TestAuthService {
-    this.proxy.authorize
-      .calledWith(expect.objectContaining(params))
-      .mockImplementation(({ message }) =>
-        Promise.reject(new UnauthorizedException(message)),
-      );
+  stubPermission(permission: Permission): TestAuthService {
+    this.permissions.push(permission);
     return this;
   }
 }

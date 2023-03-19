@@ -1,5 +1,7 @@
 import { AbilityBuilder, createMongoAbility } from '@casl/ability';
+import { Role } from '@entities/auth';
 import { Membership, MembershipStatus } from '@entities/membership.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { User } from '@entities/user.entity';
 import { pluck } from 'rambda';
 
@@ -11,19 +13,23 @@ export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   );
   const roomIds = pluck('roomId', activeMemberships);
 
-  can('manage', 'Room', {
+  can(Role.Manage, 'Room', {
     ownerId: user.id,
   });
 
-  can('write', 'Room', {
+  can(Role.Write, 'Room', {
     id: { $in: roomIds },
   });
 
-  can('read', 'Room', {
-    contentPolicy: 'public',
+  can(Role.Read, 'Room', {
+    contentPolicy: ContentPolicy.Public,
   });
-  can('read', 'Room', {
+  can(Role.Read, 'Room', {
     id: { $in: roomIds },
+  });
+
+  can(Role.Join, 'Room', {
+    joinPolicy: JoinPolicy.Anyone,
   });
 
   return build();
