@@ -9,6 +9,8 @@ import { LoremCommandUseCase } from '@usecases/process-command/commands/lorem.co
 import { HelpCommandUseCase } from '@usecases/process-command/commands/help';
 import { ProcessCommandUseCase } from '@usecases/process-command/process';
 import { Dispatcher } from '@entities/message.entity';
+import { SendMessageUseCase } from '@usecases/messages/send';
+import { GetMessagesUseCase } from '@usecases/messages/get-messages';
 
 @Module({
   imports: [AuthModule],
@@ -24,6 +26,8 @@ import { Dispatcher } from '@entities/message.entity';
     LoremCommandUseCase,
     HelpCommandUseCase,
     ProcessCommandUseCase,
+    SendMessageUseCase,
+    GetMessagesUseCase,
   ],
   exports: [MessagesService],
 })

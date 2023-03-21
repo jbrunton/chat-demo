@@ -33,6 +33,8 @@ import { LoremCommandUseCase } from '@usecases/process-command/commands/lorem.co
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
 import { Dispatcher } from '@entities/message.entity';
+import { SendMessageUseCase } from '@usecases/messages/send';
+import { GetMessagesUseCase } from '@usecases/messages/get-messages';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -64,6 +66,8 @@ describe('MessagesController', () => {
         LoremCommandUseCase,
         RenameRoomUseCase,
         RenameUserUseCase,
+        SendMessageUseCase,
+        GetMessagesUseCase,
         { provide: AuthService, useClass: CaslAuthService },
       ],
     })
