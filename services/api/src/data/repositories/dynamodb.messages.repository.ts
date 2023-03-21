@@ -1,8 +1,5 @@
-import { Message } from '@entities/message.entity';
-import {
-  MessagesRepository,
-  SaveMessageParams,
-} from '@entities/messages.repository';
+import { DraftMessage, Message } from '@entities/message.entity';
+import { MessagesRepository } from '@entities/messages.repository';
 import { Injectable } from '@nestjs/common';
 import { pick } from 'rambda';
 import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';
@@ -14,8 +11,14 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
     super();
   }
 
-  override async saveMessage(params: SaveMessageParams): Promise<Message> {
-    const message = await this.adapter.Message.create(params, { hidden: true });
+  override async saveMessage(params: DraftMessage): Promise<Message> {
+    const message = await this.adapter.Message.create(
+      {
+        ...params,
+        time: new Date().getTime(),
+      },
+      { hidden: true },
+    );
     return messageFromRecord(message);
   }
 

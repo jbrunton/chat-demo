@@ -1,23 +1,26 @@
 import { AuthService, Role } from '@entities/auth';
-import { isPrivate, Message } from '@entities/message.entity';
+import { Dispatcher, isPrivate, Message } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
-import { Injectable } from '@nestjs/common';
-import { fromEvent, merge } from 'rxjs';
+import { Injectable, Logger } from '@nestjs/common';
+import { fromEvent, merge, Observable } from 'rxjs';
 import { EventEmitter } from 'stream';
 
 @Injectable()
-export class DispatcherService {
+export class DispatcherService extends Dispatcher {
   readonly emitter: EventEmitter;
+
+  private readonly logger = new Logger(DispatcherService.name);
 
   constructor(
     private readonly roomsRepository: RoomsRepository,
     private readonly authService: AuthService,
   ) {
+    super();
     this.emitter = new EventEmitter();
   }
 
-  async subscribe(roomId: string, user: User) {
+  async subscribe(roomId: string, user: User): Promise<Observable<unknown>> {
     const room = await this.roomsRepository.getRoom(roomId);
     await this.authService.authorize({
       user,
@@ -39,6 +42,7 @@ export class DispatcherService {
   emit(message: Message) {
     const data = { message };
     const { roomId } = message;
+    this.logger.log(`emitting event: ${JSON.stringify(message)}`);
     if (isPrivate(message)) {
       this.emitter.emit(privateMessageChannel(roomId, message.recipientId), {
         data,

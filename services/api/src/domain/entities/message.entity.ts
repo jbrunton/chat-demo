@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { User } from './user.entity';
+
 export class Message {
   id: string;
   content: string;
@@ -24,3 +27,8 @@ export const isPrivate = (message: Message): message is PrivateMessage => {
 
 export type Draft<T = Message> = Omit<T, 'id' | 'time'>;
 export type DraftMessage = Draft<Message>;
+
+export abstract class Dispatcher {
+  abstract subscribe(roomId: string, user: User): Promise<Observable<unknown>>;
+  abstract emit(message: Message): void;
+}

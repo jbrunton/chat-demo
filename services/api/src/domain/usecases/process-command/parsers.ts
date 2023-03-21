@@ -1,9 +1,9 @@
 import { Command } from '@entities/command.entity';
 import { User } from '@entities/user.entity';
-import { HelpParams } from './commands/help.command';
+import { RenameRoomParams } from '@usecases/rooms/rename';
+import { RenameUserParams } from '@usecases/users/rename';
+import { HelpParams } from './commands/help';
 import { LoremParams } from './commands/lorem.command';
-import { RenameRoomParams } from './commands/rename-room.command';
-import { RenameUserParams } from './commands/rename-user.command';
 
 export type ParsedCommand =
   | { tag: 'help'; params: HelpParams }

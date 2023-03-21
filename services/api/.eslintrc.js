@@ -76,6 +76,7 @@ module.exports = {
             from: ['entities', 'usecases'],
             allow: [
               '@faker-js/faker',
+              'rxjs',
               [
                 '@nestjs/common',
                 { specifiers: ['Injectable', 'UnauthorizedException'] },

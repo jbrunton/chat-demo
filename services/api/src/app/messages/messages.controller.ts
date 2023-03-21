@@ -3,15 +3,15 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/identity/identify.decorator';
-import { DispatcherService } from './dispatcher.service';
 import { User } from '@entities/user.entity';
+import { Dispatcher } from '@entities/message.entity';
 
 @Auth()
 @Controller('messages')
 export class MessagesController {
   constructor(
     private readonly messagesService: MessagesService,
-    private readonly dispatcher: DispatcherService,
+    private readonly dispatcher: Dispatcher,
   ) {}
 
   @Post('/')
