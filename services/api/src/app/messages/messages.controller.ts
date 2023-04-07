@@ -5,12 +5,14 @@ import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/identity/identify.decorator';
 import { User } from '@entities/user.entity';
 import { Dispatcher } from '@entities/message.entity';
+import { GetMessagesUseCase } from '@usecases/messages/get-messages';
 
 @Auth()
 @Controller('messages')
 export class MessagesController {
   constructor(
     private readonly messagesService: MessagesService,
+    private readonly getMessages: GetMessagesUseCase,
     private readonly dispatcher: Dispatcher,
   ) {}
 
@@ -23,8 +25,8 @@ export class MessagesController {
   }
 
   @Get('/:roomId')
-  getMessages(@Param('roomId') roomId: string, @Identify() user: User) {
-    return this.messagesService.findForRoom(roomId, user);
+  get(@Param('roomId') roomId: string, @Identify() user: User) {
+    return this.getMessages.exec(roomId, user);
   }
 
   @Sse('/:roomId/subscribe')
