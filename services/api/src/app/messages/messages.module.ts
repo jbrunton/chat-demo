@@ -3,14 +3,15 @@ import { MessagesService } from './messages.service';
 import { MessagesController } from './messages.controller';
 import { DispatcherService } from './dispatcher.service';
 import { AuthModule } from '@app/auth/auth.module';
-import { RenameRoomUseCase } from '@usecases/rooms/rename';
-import { RenameUserUseCase } from '@usecases/users/rename';
-import { LoremCommandUseCase } from '@usecases/process-command/commands/lorem.command';
-import { HelpCommandUseCase } from '@usecases/process-command/commands/help';
-import { ProcessCommandUseCase } from '@usecases/process-command/process';
 import { Dispatcher } from '@entities/message.entity';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { GetMessagesUseCase } from '@usecases/messages/get-messages';
+import { ParseCommandUseCase } from '@usecases/commands/parse';
+import { CommandService } from '@app/commands/commands.service';
+import { RenameRoomUseCase } from '@usecases/rooms/rename';
+import { RenameUserUseCase } from '@usecases/users/rename';
+import { LoremCommandUseCase } from '@usecases/commands/commands/lorem.command';
+import { HelpCommandUseCase } from '@usecases/commands/commands/help';
 
 @Module({
   imports: [AuthModule],
@@ -21,13 +22,14 @@ import { GetMessagesUseCase } from '@usecases/messages/get-messages';
       provide: Dispatcher,
       useClass: DispatcherService,
     },
+    ParseCommandUseCase,
+    SendMessageUseCase,
+    GetMessagesUseCase,
+    CommandService,
     RenameRoomUseCase,
     RenameUserUseCase,
     LoremCommandUseCase,
     HelpCommandUseCase,
-    ProcessCommandUseCase,
-    SendMessageUseCase,
-    GetMessagesUseCase,
   ],
   exports: [MessagesService],
 })

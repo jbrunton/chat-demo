@@ -27,14 +27,15 @@ import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repos
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
 import { AuthService } from '@entities/auth';
-import { ProcessCommandUseCase } from '@usecases/process-command/process';
-import { HelpCommandUseCase } from '@usecases/process-command/commands/help';
-import { LoremCommandUseCase } from '@usecases/process-command/commands/lorem.command';
+import { HelpCommandUseCase } from '@usecases/commands/commands/help';
+import { LoremCommandUseCase } from '@usecases/commands/commands/lorem.command';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
 import { Dispatcher } from '@entities/message.entity';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { GetMessagesUseCase } from '@usecases/messages/get-messages';
+import { CommandService } from '@app/commands/commands.service';
+import { ParseCommandUseCase } from '@usecases/commands/parse';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -60,8 +61,9 @@ describe('MessagesController', () => {
           useClass: DispatcherService,
         },
         MessagesService,
+        CommandService,
         IdentifyService,
-        ProcessCommandUseCase,
+        ParseCommandUseCase,
         HelpCommandUseCase,
         LoremCommandUseCase,
         RenameRoomUseCase,
