@@ -13,15 +13,16 @@ import { Room } from '@entities/room.entity';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { User } from '@entities/user.entity';
 import { AuthService } from '@entities/auth';
-import { ProcessCommandUseCase } from '@usecases/process-command/process';
-import { HelpCommandUseCase } from '@usecases/process-command/commands/help';
-import { LoremCommandUseCase } from '@usecases/process-command/commands/lorem.command';
+import { HelpCommandUseCase } from '@usecases/commands/commands/help';
+import { LoremCommandUseCase } from '@usecases/commands/commands/lorem.command';
 import { RenameUserUseCase } from '@usecases/users/rename';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { Dispatcher } from '@entities/message.entity';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { GetMessagesUseCase } from '@usecases/messages/get-messages';
+import { CommandService } from '@app/commands/commands.service';
+import { ParseCommandUseCase } from '@usecases/commands/parse';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -43,7 +44,8 @@ describe('MessagesService', () => {
       imports: [TestDataModule],
       providers: [
         MessagesService,
-        ProcessCommandUseCase,
+        CommandService,
+        ParseCommandUseCase,
         HelpCommandUseCase,
         LoremCommandUseCase,
         RenameUserUseCase,

@@ -6,7 +6,7 @@ import { CreateMessageDto } from 'src/app/messages/dto/create-message.dto';
 export type ParsedMessage = Draft<PublicMessage> | Command;
 
 export const isCommand = (message: ParsedMessage): message is Command => {
-  return (message as Command).name !== undefined;
+  return (message as Command).tokens !== undefined;
 };
 
 export const parseMessage = (
@@ -14,15 +14,15 @@ export const parseMessage = (
   authenticatedUser: User,
 ): ParsedMessage => {
   if (content.startsWith('/')) {
-    const args = content.slice(1).split(' ');
-    const commandName = args[0];
+    const tokens = content.slice(1).split(' ');
+    const canonicalInput = `/${tokens.join(' ')}`;
+
     const command: Command = {
       roomId,
-      name: commandName,
-      args: args.slice(1),
+      tokens,
+      canonicalInput,
     };
 
-    //debug.messages("received command: %O", command);
     return command;
   }
 
@@ -32,6 +32,5 @@ export const parseMessage = (
     authorId: authenticatedUser.id,
   };
 
-  //debug.messages("received message: %O", message);
   return message;
 };

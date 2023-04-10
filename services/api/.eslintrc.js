@@ -77,9 +77,16 @@ module.exports = {
             allow: [
               '@faker-js/faker',
               'rxjs',
+              'zod',
               [
                 '@nestjs/common',
-                { specifiers: ['Injectable', 'UnauthorizedException'] },
+                {
+                  specifiers: [
+                    'Injectable',
+                    'UnauthorizedException',
+                    'BadRequestException',
+                  ],
+                },
               ],
             ],
           },

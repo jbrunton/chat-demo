@@ -2,15 +2,15 @@ import { Dispatcher } from '@entities/message.entity';
 import { MessagesRepository } from '@entities/messages.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
+import { parsers } from '../parse/parsers';
 
-const helpContent = `
-Type to chat, or enter one of the following commands:
-
-\`/help\`: list commands
-\`/rename user {name}\`: change your display name
-\`/rename room {name}\`: change the room name
-\`/lorem {count} {'words' | 'paragraphs'}\`: generate lorem text
-`;
+const helpContent = (): string => {
+  const title = 'Type to chat, or enter one of the following commands:';
+  const commands = parsers.map(
+    (parser) => `* \`${parser.signature}\`: ${parser.summary}`,
+  );
+  return [title, ...commands].join('\n');
+};
 
 export type HelpParams = {
   authenticatedUser: User;
@@ -27,7 +27,7 @@ export class HelpCommandUseCase {
   async exec(params: HelpParams): Promise<void> {
     const { roomId, authenticatedUser } = params;
     const message = await this.messages.saveMessage({
-      content: helpContent,
+      content: helpContent(),
       recipientId: authenticatedUser.id,
       roomId,
       authorId: 'system',
