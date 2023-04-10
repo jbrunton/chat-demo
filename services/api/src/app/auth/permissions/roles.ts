@@ -7,6 +7,7 @@ import { pluck } from 'rambda';
 
 export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   const { can, build } = new AbilityBuilder(createMongoAbility);
+
   const activeMemberships = memberships.filter(
     (membership) =>
       !membership.until && membership.status === MembershipStatus.Joined,

@@ -1,10 +1,9 @@
 import { Dispatcher, DraftMessage } from '@entities/message.entity';
 import { MessagesRepository } from '@entities/messages.repository';
 import { User } from '@entities/user.entity';
-import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 
-type LoremType = 'words' | 'paragraphs';
+export type LoremType = 'words' | 'paragraphs';
 
 export type LoremParams = {
   roomId: string;
@@ -13,11 +12,18 @@ export type LoremParams = {
   typeToken: LoremType;
 };
 
+export type LoremGeneratorParams = Pick<LoremParams, 'count' | 'typeToken'>;
+
+export abstract class LoremGenerator {
+  abstract generate(params: LoremGeneratorParams): string;
+}
+
 @Injectable()
 export class LoremCommandUseCase {
   constructor(
     private readonly messages: MessagesRepository,
     private readonly dispatcher: Dispatcher,
+    private readonly loremGenerator: LoremGenerator,
   ) {}
 
   async exec(params: LoremParams): Promise<void> {
@@ -28,15 +34,14 @@ export class LoremCommandUseCase {
 
   private async getResponse(params: LoremParams): Promise<DraftMessage> {
     const authorId = 'system';
-    const { roomId, authenticatedUser, count, typeToken } = params;
+    const { roomId, authenticatedUser, count } = params;
 
     if (count <= 0 || count > 20) {
       const content = '`count` must be between 1 and 20';
       return { content, roomId, recipientId: authenticatedUser.id, authorId };
     }
 
-    const loremType = typeToken as LoremType;
-    const content = faker.lorem[loremType](count);
+    const content = this.loremGenerator.generate(params);
     return {
       content,
       roomId,

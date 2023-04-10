@@ -10,7 +10,7 @@ export class SendMessageUseCase {
   constructor(
     private readonly rooms: RoomsRepository,
     private readonly messages: MessagesRepository,
-    private readonly dispatcher: Dispatcher,
+    readonly dispatcher: Dispatcher,
     private readonly authService: AuthService,
   ) {}
 
