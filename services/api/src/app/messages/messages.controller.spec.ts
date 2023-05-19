@@ -27,15 +27,16 @@ import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repos
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
 import { AuthService } from '@entities/auth';
-import { HelpCommandUseCase } from '@usecases/commands/commands/help';
-import { LoremCommandUseCase } from '@usecases/commands/commands/lorem.command';
+import { HelpCommandUseCase } from '@usecases/commands/help';
+import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
 import { Dispatcher } from '@entities/message.entity';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { GetMessagesUseCase } from '@usecases/messages/get-messages';
-import { CommandService } from '@app/commands/commands.service';
+import { CommandService } from '@app/messages/command.service';
 import { ParseCommandUseCase } from '@usecases/commands/parse';
+import { FakerLoremGenerator } from './faker.lorem.generator';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -71,6 +72,7 @@ describe('MessagesController', () => {
         SendMessageUseCase,
         GetMessagesUseCase,
         { provide: AuthService, useClass: CaslAuthService },
+        { provide: LoremGenerator, useClass: FakerLoremGenerator },
       ],
     })
       .overrideGuard(AuthGuard('jwt'))

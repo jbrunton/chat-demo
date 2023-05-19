@@ -3,3 +3,8 @@ export class User {
   name: string;
   picture?: string;
 }
+
+export const systemUser = {
+  id: 'system',
+  name: 'System',
+};
