@@ -3,33 +3,22 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { UserFactory } from '@fixtures/messages/user.factory';
-import { DispatcherService } from './dispatcher.service';
 import { MessagesRepository } from '@entities/messages.repository';
 import { TestDataModule } from '@fixtures/data/test.data.module';
-import { CaslAuthService } from '@app/auth/casl.auth.service';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { Room } from '@entities/room.entity';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { User } from '@entities/user.entity';
-import { AuthService } from '@entities/auth';
-import { HelpCommandUseCase } from '@usecases/commands/help';
-import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
-import { RenameUserUseCase } from '@usecases/users/rename';
-import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { Dispatcher } from '@entities/message.entity';
-import { SendMessageUseCase } from '@usecases/messages/send';
-import { GetMessagesUseCase } from '@usecases/messages/get-messages';
-import { CommandService } from '@app/messages/command.service';
-import { ParseCommandUseCase } from '@usecases/commands/parse';
-import { FakerLoremGenerator } from './faker.lorem.generator';
+import { MessagesModule } from './messages.module';
 
 describe('MessagesService', () => {
   let service: MessagesService;
   let messagesRepository: TestMessagesRepository;
   let roomsRepo: TestRoomsRepository;
-  let dispatcher: MockProxy<DispatcherService>;
+  let dispatcher: MockProxy<Dispatcher>;
 
   let room: Room;
   let user: User;
@@ -39,25 +28,14 @@ describe('MessagesService', () => {
     jest.useFakeTimers();
     jest.setSystemTime(1001);
 
-    dispatcher = mock<DispatcherService>();
+    dispatcher = mock<Dispatcher>();
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TestDataModule],
-      providers: [
-        MessagesService,
-        CommandService,
-        ParseCommandUseCase,
-        HelpCommandUseCase,
-        LoremCommandUseCase,
-        RenameUserUseCase,
-        RenameRoomUseCase,
-        SendMessageUseCase,
-        GetMessagesUseCase,
-        { provide: AuthService, useClass: CaslAuthService },
-        { provide: Dispatcher, useValue: dispatcher },
-        { provide: LoremGenerator, useClass: FakerLoremGenerator },
-      ],
-    }).compile();
+      imports: [TestDataModule, MessagesModule],
+    })
+      .overrideProvider(Dispatcher)
+      .useValue(dispatcher)
+      .compile();
 
     service = module.get(MessagesService);
     messagesRepository = module.get(MessagesRepository);

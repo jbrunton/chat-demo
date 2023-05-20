@@ -1,6 +1,5 @@
 import { CacheModule, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MessagesController } from './messages.controller';
 import * as request from 'supertest';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -8,16 +7,12 @@ import {
   fakeAuthUser,
   resetFakeAuthUsers,
 } from '@fixtures/auth/FakeAuth';
-import { MessagesService } from './messages.service';
 import { MessageFactory } from '@fixtures/messages/message.factory';
-import { DispatcherService } from './dispatcher.service';
 import { UsersRepository } from '@entities/users.repository';
 import { MessagesRepository } from '@entities/messages.repository';
 import { TestDataModule } from '@fixtures/data/test.data.module';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
-import { IdentifyService } from '@app/auth/identity/identify.service';
-import { CaslAuthService } from '@app/auth/casl.auth.service';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
@@ -26,17 +21,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
-import { AuthService } from '@entities/auth';
-import { HelpCommandUseCase } from '@usecases/commands/help';
-import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
-import { RenameRoomUseCase } from '@usecases/rooms/rename';
-import { RenameUserUseCase } from '@usecases/users/rename';
-import { Dispatcher } from '@entities/message.entity';
-import { SendMessageUseCase } from '@usecases/messages/send';
-import { GetMessagesUseCase } from '@usecases/messages/get-messages';
-import { CommandService } from '@app/messages/command.service';
-import { ParseCommandUseCase } from '@usecases/commands/parse';
-import { FakerLoremGenerator } from './faker.lorem.generator';
+import { MessagesModule } from './messages.module';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -54,26 +39,7 @@ describe('MessagesController', () => {
     jest.setSystemTime(1001);
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TestDataModule, CacheModule.register()],
-      controllers: [MessagesController],
-      providers: [
-        {
-          provide: Dispatcher,
-          useClass: DispatcherService,
-        },
-        MessagesService,
-        CommandService,
-        IdentifyService,
-        ParseCommandUseCase,
-        HelpCommandUseCase,
-        LoremCommandUseCase,
-        RenameRoomUseCase,
-        RenameUserUseCase,
-        SendMessageUseCase,
-        GetMessagesUseCase,
-        { provide: AuthService, useClass: CaslAuthService },
-        { provide: LoremGenerator, useClass: FakerLoremGenerator },
-      ],
+      imports: [TestDataModule, MessagesModule, CacheModule.register()],
     })
       .overrideGuard(AuthGuard('jwt'))
       .useClass(FakeAuthGuard)
