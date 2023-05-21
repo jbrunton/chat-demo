@@ -1,4 +1,3 @@
-import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { RenameUserUseCase } from './rename';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { RoomFactory } from '@fixtures/messages/room.factory';
@@ -9,7 +8,6 @@ import { Dispatcher } from '@entities/message.entity';
 describe('RenameUserUseCase', () => {
   let rename: RenameUserUseCase;
   let users: TestUsersRepository;
-  let messages: TestMessagesRepository;
   let dispatcher: MockProxy<Dispatcher>;
 
   const originalName = 'Original User Name';
@@ -21,11 +19,10 @@ describe('RenameUserUseCase', () => {
   beforeEach(() => {
     users = new TestUsersRepository();
     users.setData([user]);
-    messages = new TestMessagesRepository();
 
     dispatcher = mock<Dispatcher>();
 
-    rename = new RenameUserUseCase(users, messages, dispatcher);
+    rename = new RenameUserUseCase(users, dispatcher);
   });
 
   it('renames the room', async () => {
@@ -46,13 +43,11 @@ describe('RenameUserUseCase', () => {
       newName,
     });
 
-    expect(dispatcher.emit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        content: 'User Original User Name renamed to New User Name',
-        authorId: 'system',
-        roomId: room.id,
-        updatedEntities: ['users'],
-      }),
-    );
+    expect(dispatcher.send).toHaveBeenCalledWith({
+      content: 'User Original User Name renamed to New User Name',
+      authorId: 'system',
+      roomId: room.id,
+      updatedEntities: ['users'],
+    });
   });
 });

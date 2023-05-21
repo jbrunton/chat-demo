@@ -1,4 +1,3 @@
-import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { LoremCommandUseCase, LoremGenerator, LoremParams } from './lorem';
 import { MockProxy, mock } from 'jest-mock-extended';
 import { Dispatcher } from '@entities/message.entity';
@@ -9,25 +8,22 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 describe('LoremCommandUseCase', () => {
   let lorem: LoremCommandUseCase;
 
-  //let messages: TestMessagesRepository;
   let dispatcher: MockProxy<Dispatcher>;
   let authenticatedUser: User;
   let roomId: string;
 
-  let loremGenerator: LoremGenerator;
+  class TestLoremGenerator extends LoremGenerator {
+    generate(params: LoremParams): string {
+      return `lorem ${params.count} ${params.typeToken}`;
+    }
+  }
 
   beforeEach(() => {
-    const messages = new TestMessagesRepository();
     dispatcher = mock<Dispatcher>();
     authenticatedUser = UserFactory.build();
     roomId = RoomFactory.id();
-    loremGenerator = new (class extends LoremGenerator {
-      generate(params: LoremParams): string {
-        return `lorem ${params.count} ${params.typeToken}`;
-      }
-    })();
 
-    lorem = new LoremCommandUseCase(messages, dispatcher, loremGenerator);
+    lorem = new LoremCommandUseCase(dispatcher, new TestLoremGenerator());
   });
 
   it('validates the count argument', async () => {
@@ -38,14 +34,12 @@ describe('LoremCommandUseCase', () => {
       authenticatedUser,
     });
 
-    expect(dispatcher.emit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        authorId: 'system',
-        roomId,
-        recipientId: authenticatedUser.id,
-        content: '`count` must be between 1 and 20',
-      }),
-    );
+    expect(dispatcher.send).toHaveBeenCalledWith({
+      authorId: 'system',
+      roomId,
+      recipientId: authenticatedUser.id,
+      content: '`count` must be between 1 and 20',
+    });
   });
 
   it('generates lorem content', async () => {
@@ -56,12 +50,10 @@ describe('LoremCommandUseCase', () => {
       authenticatedUser,
     });
 
-    expect(dispatcher.emit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        authorId: 'system',
-        roomId,
-        content: 'lorem 3 words',
-      }),
-    );
+    expect(dispatcher.send).toHaveBeenCalledWith({
+      authorId: 'system',
+      roomId,
+      content: 'lorem 3 words',
+    });
   });
 });

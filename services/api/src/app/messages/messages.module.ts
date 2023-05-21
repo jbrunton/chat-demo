@@ -13,6 +13,7 @@ import { RenameUserUseCase } from '@usecases/users/rename';
 import { HelpCommandUseCase } from '@usecases/commands/help';
 import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
 import { FakerLoremGenerator } from './faker.lorem.generator';
+import { EventEmitter } from 'stream';
 
 @Module({
   imports: [AuthModule],
@@ -35,6 +36,7 @@ import { FakerLoremGenerator } from './faker.lorem.generator';
     RenameUserUseCase,
     LoremCommandUseCase,
     HelpCommandUseCase,
+    EventEmitter,
   ],
   exports: [MessagesService],
 })
