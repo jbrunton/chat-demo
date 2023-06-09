@@ -1,5 +1,4 @@
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
-import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RenameRoomUseCase } from './rename';
 import { mock, MockProxy } from 'jest-mock-extended';
@@ -12,7 +11,6 @@ import { Dispatcher } from '@entities/message.entity';
 describe('RenameRoomUseCase', () => {
   let rename: RenameRoomUseCase;
   let rooms: TestRoomsRepository;
-  let messages: TestMessagesRepository;
   let auth: TestAuthService;
   let dispatcher: MockProxy<Dispatcher>;
 
@@ -26,14 +24,13 @@ describe('RenameRoomUseCase', () => {
   beforeEach(() => {
     rooms = new TestRoomsRepository();
     rooms.setData([room]);
-    messages = new TestMessagesRepository();
 
     auth = new TestAuthService();
     auth.stubPermission({ user: owner, subject: room, action: Role.Manage });
 
     dispatcher = mock<Dispatcher>();
 
-    rename = new RenameRoomUseCase(rooms, messages, auth, dispatcher);
+    rename = new RenameRoomUseCase(rooms, auth, dispatcher);
   });
 
   it('renames the room', async () => {
@@ -54,14 +51,12 @@ describe('RenameRoomUseCase', () => {
       newName,
     });
 
-    expect(dispatcher.emit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        content: 'Room renamed to New Room Name',
-        authorId: 'system',
-        roomId: room.id,
-        updatedEntities: ['room'],
-      }),
-    );
+    expect(dispatcher.send).toHaveBeenCalledWith({
+      content: 'Room renamed to New Room Name',
+      authorId: 'system',
+      roomId: room.id,
+      updatedEntities: ['room'],
+    });
   });
 
   it('authorizes the user', async () => {

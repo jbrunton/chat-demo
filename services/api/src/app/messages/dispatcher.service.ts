@@ -1,5 +1,6 @@
 import { AuthService, Role } from '@entities/auth';
-import { Dispatcher, isPrivate, Message } from '@entities/message.entity';
+import { Dispatcher, DraftMessage, isPrivate } from '@entities/message.entity';
+import { MessagesRepository } from '@entities/messages.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { Injectable, Logger } from '@nestjs/common';
@@ -8,16 +9,15 @@ import { EventEmitter } from 'stream';
 
 @Injectable()
 export class DispatcherService extends Dispatcher {
-  readonly emitter: EventEmitter;
-
   private readonly logger = new Logger(DispatcherService.name);
 
   constructor(
+    private readonly messagesRepository: MessagesRepository,
     private readonly roomsRepository: RoomsRepository,
     private readonly authService: AuthService,
+    private readonly emitter: EventEmitter,
   ) {
     super();
-    this.emitter = new EventEmitter();
   }
 
   async subscribe(roomId: string, user: User): Promise<Observable<unknown>> {
@@ -39,10 +39,13 @@ export class DispatcherService extends Dispatcher {
     return merge(publicMessages, privateMessages);
   }
 
-  emit(message: Message) {
+  async send(draft: DraftMessage) {
+    const message = await this.messagesRepository.saveMessage(draft);
+
     const data = { message };
     const { roomId } = message;
     this.logger.log(`emitting event: ${JSON.stringify(message)}`);
+
     if (isPrivate(message)) {
       this.emitter.emit(privateMessageChannel(roomId, message.recipientId), {
         data,

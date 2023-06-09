@@ -1,6 +1,5 @@
 import { AuthService, Role } from '@entities/auth';
-import { Dispatcher } from '@entities/message.entity';
-import { MessagesRepository } from '@entities/messages.repository';
+import { Dispatcher, DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
@@ -15,7 +14,6 @@ export type RenameRoomParams = {
 export class RenameRoomUseCase {
   constructor(
     private readonly rooms: RoomsRepository,
-    private readonly messages: MessagesRepository,
     private readonly auth: AuthService,
     private readonly dispatcher: Dispatcher,
   ) {}
@@ -37,13 +35,13 @@ export class RenameRoomUseCase {
       name: newName,
     });
 
-    const message = await this.messages.saveMessage({
+    const message: DraftMessage = {
       content: `Room renamed to ${updatedRoom.name}`,
       roomId: room.id,
       authorId: 'system',
       updatedEntities: ['room'],
-    });
+    };
 
-    this.dispatcher.emit(message);
+    this.dispatcher.send(message);
   }
 }

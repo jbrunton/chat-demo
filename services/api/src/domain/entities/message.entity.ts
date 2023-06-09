@@ -1,20 +1,14 @@
 import { Observable } from 'rxjs';
 import { User } from './user.entity';
 
-export class Message {
+export type Message = {
   id: string;
-  content: string;
   time: number;
+  content: string;
   authorId: string;
   roomId: string;
   recipientId?: string;
   updatedEntities?: string[];
-}
-
-export type PublicMessage<T = Message> = Omit<T, 'recipientId'>;
-
-export const isPublic = (message: Message): message is PublicMessage => {
-  return message.recipientId === undefined;
 };
 
 export type PrivateMessage = Message & {
@@ -22,13 +16,12 @@ export type PrivateMessage = Message & {
 };
 
 export const isPrivate = (message: Message): message is PrivateMessage => {
-  return !isPublic(message);
+  return (message as PrivateMessage).recipientId !== undefined;
 };
 
-export type Draft<T = Message> = Omit<T, 'id' | 'time'>;
-export type DraftMessage = Draft<Message>;
+export type DraftMessage = Omit<Message, 'id' | 'time'>;
 
 export abstract class Dispatcher {
   abstract subscribe(roomId: string, user: User): Promise<Observable<unknown>>;
-  abstract emit(message: Message): void;
+  abstract send(draft: DraftMessage): Promise<void>;
 }

@@ -1,5 +1,4 @@
 import { Dispatcher, DraftMessage } from '@entities/message.entity';
-import { MessagesRepository } from '@entities/messages.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
 
@@ -21,15 +20,13 @@ export abstract class LoremGenerator {
 @Injectable()
 export class LoremCommandUseCase {
   constructor(
-    private readonly messages: MessagesRepository,
     private readonly dispatcher: Dispatcher,
     private readonly loremGenerator: LoremGenerator,
   ) {}
 
   async exec(params: LoremParams): Promise<void> {
     const draft = await this.getResponse(params);
-    const message = await this.messages.saveMessage(draft);
-    this.dispatcher.emit(message);
+    this.dispatcher.send(draft);
   }
 
   private async getResponse(params: LoremParams): Promise<DraftMessage> {
