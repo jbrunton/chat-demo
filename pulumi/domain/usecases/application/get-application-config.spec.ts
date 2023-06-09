@@ -19,7 +19,7 @@ describe("getApplicationConfig", () => {
     const config = getApplicationConfig(inputs);
     expect(config).toEqual({
       stackName: "dev",
-      appName: "auth0-test-dev",
+      appName: "chat-demo-dev",
       environment: "development",
       protect: false,
       client: {
@@ -95,12 +95,12 @@ describe("getApplicationConfig", () => {
   });
 
   describe(".appName", () => {
-    it("prepends auth0-test", () => {
+    it("prepends chat-demo", () => {
       const config = getApplicationConfig({
         ...inputs,
         stackName: "dev",
       });
-      expect(config.appName).toEqual("auth0-test-dev");
+      expect(config.appName).toEqual("chat-demo-dev");
     });
 
     it("truncates names greater than 32 chars long", () => {
@@ -108,7 +108,7 @@ describe("getApplicationConfig", () => {
         ...inputs,
         stackName: "deps-some-long-name-lib-3.x",
       });
-      expect(config.appName).toEqual("auth0-test-deps-some-long-n-a1a1");
+      expect(config.appName).toEqual("chat-demo-deps-some-long-na-a1a1");
       expect(config.appName.length).toEqual(32);
     });
 
@@ -117,7 +117,7 @@ describe("getApplicationConfig", () => {
         ...inputs,
         stackName: "deps-some-lib-3.x",
       });
-      expect(config.appName).toEqual("auth0-test-deps-some-lib-3x");
+      expect(config.appName).toEqual("chat-demo-deps-some-lib-3x");
     });
   });
 });

@@ -4,13 +4,13 @@ import { getTaskDefinitionSpec } from "./get-app-spec";
 describe("getTaskDefinitionSpec", () => {
   it("generates a TaskDefinition spec for the given stack configuration", () => {
     const serviceConfig: ServiceConfig = {
-      name: "auth0-test-api",
-      repository: "auth0-test-api",
+      name: "chat-demo-api",
+      repository: "chat-demo-api",
       tag: "latest",
     };
     const appConfig: ApplicationConfig = {
       stackName: "test",
-      appName: "auth0-test-test",
+      appName: "chat-demo-test",
       environment: "development",
       protect: false,
       client: {
@@ -23,11 +23,11 @@ describe("getTaskDefinitionSpec", () => {
       serviceConfig,
       executionRoleArn: "executionRoleArn",
       taskRoleArn: "taskRoleArn",
-      logGroupName: "/ecs/auth0-test-logs",
+      logGroupName: "/ecs/chat-demo-logs",
       tableName: "MyTable",
     });
     expect(spec).toEqual({
-      family: "auth0-test-test",
+      family: "chat-demo-test",
       cpu: "256",
       memory: "512",
       networkMode: "awsvpc",
@@ -36,8 +36,8 @@ describe("getTaskDefinitionSpec", () => {
       taskRoleArn: "taskRoleArn",
       containerDefinitions: JSON.stringify([
         {
-          name: "auth0-test-api",
-          image: "jbrunton/auth0-test-api:latest",
+          name: "chat-demo-api",
+          image: "jbrunton/chat-demo-api:latest",
           portMappings: [
             {
               containerPort: 8080,
@@ -71,7 +71,7 @@ describe("getTaskDefinitionSpec", () => {
           logConfiguration: {
             logDriver: "awslogs",
             options: {
-              "awslogs-group": "/ecs/auth0-test-logs",
+              "awslogs-group": "/ecs/chat-demo-logs",
               "awslogs-region": "us-east-1",
               "awslogs-stream-prefix": "ecs",
             },

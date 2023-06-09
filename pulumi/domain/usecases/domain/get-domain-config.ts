@@ -31,9 +31,9 @@ const getSubdomain = ({
   switch (environment) {
     case "development":
       return isClient
-        ? `auth0-test-${stackName}`
-        : `auth0-test-${serviceName}-${stackName}`;
+        ? `chat-demo-${stackName}`
+        : `chat-demo-${serviceName}-${stackName}`;
     default:
-      return isClient ? `auth0-test` : `auth0-test-${serviceName}`;
+      return isClient ? `chat-demo` : `chat-demo-${serviceName}`;
   }
 };

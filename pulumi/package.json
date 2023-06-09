@@ -1,5 +1,5 @@
 {
-  "name": "auth0-test-services",
+  "name": "chat-demo-services",
   "main": "index.ts",
   "scripts": {
     "test": "jest",

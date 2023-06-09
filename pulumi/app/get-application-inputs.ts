@@ -9,7 +9,7 @@ export const getApplicationInputs: GetApplicationInputs = () => {
     services: [
       {
         name: "api",
-        repository: "auth0-test-api",
+        repository: "chat-demo-api",
         tag: process.env.API_TAG || "latest",
       },
     ],

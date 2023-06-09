@@ -52,19 +52,19 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
     with:
-      repo-name: jbrunton/auth0-test-api
+      repo-name: jbrunton/chat-demo-api
       working-directory: services/api
       buildpack: paketo-buildpacks/nodejs
       publish: true
       docker-username: jbrunton
-      cache-image: jbrunton/auth0-test-api-cache-image:latest
+      cache-image: jbrunton/chat-demo-api-cache-image:latest
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   deploy-staging:
     environment:
       name: Staging
-      url: https://auth0-test.staging.jbrunton-aws.com
+      url: https://chat-demo.staging.jbrunton-aws.com
     concurrency: staging
     needs: [build-api]
     if: github.ref == 'refs/heads/develop'
@@ -73,7 +73,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build Client
         env:
-            VITE_API_URL: https://auth0-test-api.staging.jbrunton-aws.com
+            VITE_API_URL: https:/chat-demo-api.staging.jbrunton-aws.com
         run: |
           npm ci
           npm run build
@@ -99,7 +99,7 @@ jobs:
   deploy-production:
     environment:
       name: Production
-      url: https://auth0-test.jbrunton-aws.com
+      url: https://chat-demo.jbrunton-aws.com
     concurrency: production
     needs: [build-api, deploy-staging]
     if: github.ref == 'refs/heads/develop'
@@ -108,7 +108,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: build
         env:
-          VITE_API_URL: https://auth0-test-api.jbrunton-aws.com
+          VITE_API_URL: https://chat-demo-api.jbrunton-aws.com
         run: |
           npm ci
           npm run build

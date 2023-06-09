@@ -28,7 +28,7 @@ export const getTaskDefinitionSpec = ({
     executionRoleArn,
     containerDefinitions: JSON.stringify([
       {
-        name: "auth0-test-api",
+        name: "chat-demo-api",
         image: `jbrunton/${serviceConfig.repository}:${serviceConfig.tag}`,
         portMappings: [
           {

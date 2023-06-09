@@ -10,7 +10,7 @@ export const useAccessToken = (): { accessToken: string | undefined; isLoading: 
     if (isAuthenticated) {
       const getAccessToken = async () => {
         const accessToken = await getAccessTokenSilently({
-          audience: `https://auth0-test-api.jbrunton-aws.com`,
+          audience: `https://chat-demo-api.jbrunton-aws.com`,
           scope: 'openid profile email',
         })
         setAccessToken(accessToken)

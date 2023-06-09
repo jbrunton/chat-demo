@@ -9,7 +9,7 @@ export const applyClientConfig = (
   shared: SharedResources
 ) => {
   const zone = aws.route53.getZoneOutput({ name: "jbrunton-aws.com" });
-  const namePrefix = `auth0-test-${stackConfig.stackName}`;
+  const namePrefix = `chat-demo-${stackConfig.stackName}`;
 
   // Create an S3 bucket and configure it as a website.
   const bucket = new aws.s3.Bucket(`${namePrefix}-bucket`, {

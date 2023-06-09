@@ -11,26 +11,26 @@ jobs:
   build-api:
     uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
     with:
-      repo-name: jbrunton/auth0-test-api
+      repo-name: jbrunton/chat-demo-api
       working-directory: services/api
       buildpack: paketo-buildpacks/nodejs
       publish: true
       docker-username: jbrunton
-      cache-image: jbrunton/auth0-test-api-cache-image:latest
+      cache-image: jbrunton/chat-demo-api-cache-image:latest
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
   deploy-app:
     environment:
       name: Development
-      url: https://auth0-test-${{ github.head_ref }}.dev.jbrunton-aws.com
+      url: https://chat-demo-${{ github.head_ref }}.dev.jbrunton-aws.com
     needs: [build-api]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Build Client
         env:
-          VITE_API_URL: https://auth0-test-api-${{ github.head_ref }}.dev.jbrunton-aws.com
+          VITE_API_URL: https://chat-demo-api-${{ github.head_ref }}.dev.jbrunton-aws.com
         run: |
           npm ci
           npm run build
