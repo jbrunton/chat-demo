@@ -42,7 +42,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Auth0Provider
       domain='jbrunton.eu.auth0.com'
       clientId='Nv4fV7kgzIIQ7LobQgZQpWQ6WOWinFLJ'
-      audience='https://auth0-test-api.jbrunton-aws.com'
+      audience='https://chat-demo-api.jbrunton-aws.com'
       scope='openid profile email'
       redirectUri={`${window.location.origin}/callback`}
     >

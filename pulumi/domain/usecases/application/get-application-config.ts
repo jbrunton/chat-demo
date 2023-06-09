@@ -35,7 +35,7 @@ export const getEnvironment = (stackName: string): Environment => {
 };
 
 const getAppName = (stackName: string): string => {
-  const cleanName = `auth0-test-${cleanString(stackName)}`;
+  const cleanName = `chat-demo-${cleanString(stackName)}`;
   if (cleanName.length > 32) {
     const shortName = cleanName.slice(0, 27);
     return `${shortName}-${randomString(2)}`;

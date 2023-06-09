@@ -68,7 +68,7 @@ export const applyServiceConfig = (
           Effect: "Allow",
           Action: ["ssm:GetParameters", "kms:Decrypt"],
           Resource: [
-            "arn:aws:ssm:us-east-1:030461922427:parameter/auth0-test/*",
+            "arn:aws:ssm:us-east-1:030461922427:parameter/chat-demo/*",
           ],
         },
       ],
@@ -179,7 +179,7 @@ export const applyServiceConfig = (
         loadBalancers: [
           {
             targetGroupArn: targetGroup.arn,
-            containerName: "auth0-test-api",
+            containerName: "chat-demo-api",
             containerPort: 8080,
           },
         ],

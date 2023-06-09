@@ -9,9 +9,9 @@ describe("getDomainConfig", () => {
       serviceName: "client",
     });
     expect(config).toEqual({
-      domain: "auth0-test.jbrunton-aws.com",
+      domain: "chat-demo.jbrunton-aws.com",
       rootDomain: "jbrunton-aws.com",
-      publicUrl: "https://auth0-test.jbrunton-aws.com",
+      publicUrl: "https://chat-demo.jbrunton-aws.com",
     });
   });
 
@@ -23,9 +23,9 @@ describe("getDomainConfig", () => {
       serviceName: "client",
     });
     expect(config).toEqual({
-      domain: "auth0-test.staging.jbrunton-aws.com",
+      domain: "chat-demo.staging.jbrunton-aws.com",
       rootDomain: "jbrunton-aws.com",
-      publicUrl: "https://auth0-test.staging.jbrunton-aws.com",
+      publicUrl: "https://chat-demo.staging.jbrunton-aws.com",
     });
   });
 
@@ -37,9 +37,9 @@ describe("getDomainConfig", () => {
       serviceName: "client",
     });
     expect(config).toEqual({
-      domain: "auth0-test-my-branch.dev.jbrunton-aws.com",
+      domain: "chat-demo-my-branch.dev.jbrunton-aws.com",
       rootDomain: "jbrunton-aws.com",
-      publicUrl: "https://auth0-test-my-branch.dev.jbrunton-aws.com",
+      publicUrl: "https://chat-demo-my-branch.dev.jbrunton-aws.com",
     });
   });
 
@@ -55,9 +55,9 @@ describe("getDomainConfig", () => {
         ...apiConfig,
       })
     ).toEqual({
-      domain: "auth0-test-api.jbrunton-aws.com",
+      domain: "chat-demo-api.jbrunton-aws.com",
       rootDomain: "jbrunton-aws.com",
-      publicUrl: "https://auth0-test-api.jbrunton-aws.com",
+      publicUrl: "https://chat-demo-api.jbrunton-aws.com",
     });
     expect(
       getDomainConfig({
@@ -66,9 +66,9 @@ describe("getDomainConfig", () => {
         ...apiConfig,
       })
     ).toEqual({
-      domain: "auth0-test-api-my-branch.dev.jbrunton-aws.com",
+      domain: "chat-demo-api-my-branch.dev.jbrunton-aws.com",
       rootDomain: "jbrunton-aws.com",
-      publicUrl: "https://auth0-test-api-my-branch.dev.jbrunton-aws.com",
+      publicUrl: "https://chat-demo-api-my-branch.dev.jbrunton-aws.com",
     });
   });
 });
