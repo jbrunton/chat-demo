@@ -1,6 +1,7 @@
 # Chat Demo
 
 [![build](https://github.com/jbrunton/chat-demo/actions/workflows/build.yml/badge.svg?query=branch%3Amain)](https://github.com/jbrunton/chat-demo/actions/workflows/build.yml?query=branch%3Amain)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fjbrunton%2Fchat-demo%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/jbrunton/chat-demo/main)
 
 This project is an exercise in developing good clean architecture and CI/CD practices. It includes (or will include):
 
