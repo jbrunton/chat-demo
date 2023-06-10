@@ -47,6 +47,20 @@ jobs:
       - run: npm ci
       - run: npm run test:e2e
 
+  mutation-test:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.ref == 'refs/heads/main'
+    env:
+      STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+    defaults:
+      run:
+        working-directory: services/api
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run test:mutate
+
   build-api:
     needs: [lint, test, e2e-test]
     if: github.ref == 'refs/heads/main'
