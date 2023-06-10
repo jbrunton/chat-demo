@@ -49,7 +49,7 @@ jobs:
 
   build-api:
     needs: [lint, test, e2e-test]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/main'
     uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
     with:
       repo-name: jbrunton/chat-demo-api
@@ -67,7 +67,7 @@ jobs:
       url: https://chat-demo.staging.jbrunton-aws.com
     concurrency: staging
     needs: [build-api]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -102,7 +102,7 @@ jobs:
       url: https://chat-demo.jbrunton-aws.com
     concurrency: production
     needs: [build-api, deploy-staging]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
