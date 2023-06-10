@@ -1,6 +1,9 @@
 {
   "name": "chat-demo-services",
   "main": "index.ts",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint --max-warnings 0 .",

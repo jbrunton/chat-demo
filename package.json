@@ -1,10 +1,13 @@
 {
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  },
   "devDependencies": {
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
     "prettier": "^2.8.1"
-  },
-  "scripts": {
-    "prepare": "husky install"
   }
 }
