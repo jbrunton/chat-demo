@@ -1,8 +1,9 @@
-import { CacheModule, INestApplication } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AuthGuard } from '@nestjs/passport';
 import {
+  FakeAuth0Client,
   FakeAuthGuard,
   fakeAuthUser,
   resetFakeAuthUsers,
@@ -22,6 +23,8 @@ import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repos
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
 import { MessagesModule } from './messages.module';
+import { LoggerModule } from '@app/app.logger';
+import { Auth0Client } from '@app/auth/auth0/auth0.client';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -39,10 +42,12 @@ describe('MessagesController', () => {
     jest.setSystemTime(1001);
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TestDataModule, MessagesModule, CacheModule.register()],
+      imports: [TestDataModule, MessagesModule, LoggerModule, LoggerModule],
     })
       .overrideGuard(AuthGuard('jwt'))
       .useClass(FakeAuthGuard)
+      .overrideProvider(Auth0Client)
+      .useClass(FakeAuth0Client)
       .compile();
 
     usersRepository = module.get(UsersRepository);

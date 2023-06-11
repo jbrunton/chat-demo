@@ -1,12 +1,16 @@
 import { AuthorizeParams, AuthService } from '@entities/auth';
 import { MembershipsRepository } from '@entities/memberships.repository';
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { defineRolesForUser } from './permissions/roles';
 
 @Injectable()
 export class CaslAuthService extends AuthService {
-  constructor(private readonly membershipsRepo: MembershipsRepository) {
-    super();
+  constructor(
+    private readonly membershipsRepo: MembershipsRepository,
+    logger: ConsoleLogger,
+  ) {
+    super(logger);
+    logger.setContext('CaslAuthService');
   }
 
   async can({

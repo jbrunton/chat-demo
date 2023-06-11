@@ -6,6 +6,7 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
 import { DynamoDBMembershipsRepository } from './dynamodb.memberships.repository';
+import { LoggerModule } from '@app/app.logger';
 
 type TestCase = {
   name: 'DynamoDBMembershipsRepository' | 'TestMembershipsRepository';
@@ -26,7 +27,7 @@ describe('MembershipsRepository', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [DataModule],
+      imports: [DataModule, LoggerModule],
       providers: [DynamoDBMembershipsRepository],
     }).compile();
 

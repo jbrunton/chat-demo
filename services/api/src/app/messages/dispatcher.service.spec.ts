@@ -7,6 +7,7 @@ import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MockProxy, mock } from 'jest-mock-extended';
 import { EventEmitter } from 'stream';
+import { AppLogger } from '@app/app.logger';
 
 describe('DispatcherService', () => {
   let dispatcher: DispatcherService;
@@ -24,14 +25,20 @@ describe('DispatcherService', () => {
   beforeEach(() => {
     rooms = new TestRoomsRepository();
     messages = new TestMessagesRepository();
-    auth = new TestAuthService();
+    auth = new TestAuthService(new AppLogger());
     emitter = mock<EventEmitter>();
 
     roomId = RoomFactory.id();
     authorId = UserFactory.id();
     recipientId = UserFactory.id();
 
-    dispatcher = new DispatcherService(messages, rooms, auth, emitter);
+    dispatcher = new DispatcherService(
+      messages,
+      rooms,
+      auth,
+      emitter,
+      new AppLogger(),
+    );
 
     jest.useFakeTimers({ now });
   });

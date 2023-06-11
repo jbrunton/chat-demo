@@ -4,22 +4,26 @@ import {
   UsersRepository,
 } from '@entities/users.repository';
 import {
+  ConsoleLogger,
   Injectable,
-  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ExtractJwt } from 'passport-jwt';
-import { clientCache } from '../auth0/auth0.client';
+import { Auth0Client } from '../auth0/auth0.client';
 
 const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
 
 @Injectable()
 export class IdentifyService {
-  private readonly logger = new Logger(IdentifyService.name);
-
-  constructor(private readonly usersRepo: UsersRepository) {}
+  constructor(
+    private readonly usersRepo: UsersRepository,
+    private readonly auth0Client: Auth0Client,
+    private readonly logger: ConsoleLogger,
+  ) {
+    logger.setContext(IdentifyService.name);
+  }
 
   async identifyUser(request: Request): Promise<User> {
     const accessToken = extractAccessToken(request);
@@ -28,7 +32,7 @@ export class IdentifyService {
     }
 
     try {
-      const authInfo = await clientCache.getProfile(accessToken);
+      const authInfo = await this.auth0Client.getProfile(accessToken);
       try {
         const existingUser = await this.usersRepo.getUser(
           `user:${authInfo.sub}`,

@@ -7,6 +7,7 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 import { Role } from '@entities/auth';
 import { UnauthorizedException } from '@nestjs/common';
 import { Dispatcher } from '@entities/message.entity';
+import { AppLogger } from '@app/app.logger';
 
 describe('RenameRoomUseCase', () => {
   let rename: RenameRoomUseCase;
@@ -25,7 +26,7 @@ describe('RenameRoomUseCase', () => {
     rooms = new TestRoomsRepository();
     rooms.setData([room]);
 
-    auth = new TestAuthService();
+    auth = new TestAuthService(new AppLogger());
     auth.stubPermission({ user: owner, subject: room, action: Role.Manage });
 
     dispatcher = mock<Dispatcher>();

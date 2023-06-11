@@ -33,7 +33,7 @@
     "@aws-sdk/lib-dynamodb": "3.238.0",
     "@casl/ability": "6.3.3",
     "@faker-js/faker": "7.6.0",
-    "@nestjs/common": "^9.0.0",
+    "@nestjs/common": "9.4.2",
     "@nestjs/config": "2.2.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/mapped-types": "*",
