@@ -6,7 +6,6 @@ export class AppLogger extends ConsoleLogger {
     messages: unknown[],
     context = '',
     logLevel: LogLevel = 'log',
-    writeStreamType?: 'stdout' | 'stderr',
   ): void {
     messages.forEach((message) => {
       const pidMessage = this.formatPid(process.pid);

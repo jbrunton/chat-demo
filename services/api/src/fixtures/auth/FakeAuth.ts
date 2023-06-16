@@ -5,7 +5,7 @@ import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
 import { User } from '@entities/user.entity';
 import { userParamsFromAuth } from '@entities/users.repository';
 import { ExecutionContext } from '@nestjs/common';
-import { IdentifyService } from '@app/auth/identity/identify.service';
+import { IdentifyService } from '@app/auth/auth0/identify.service';
 import { ModuleRef } from '@nestjs/core';
 import { ExtractJwt } from 'passport-jwt';
 

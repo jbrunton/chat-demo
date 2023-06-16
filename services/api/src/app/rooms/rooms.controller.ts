@@ -1,5 +1,5 @@
 import { Auth } from '@app/auth/auth.decorator';
-import { Identify } from '@app/auth/identity/identify.decorator';
+import { Identify } from '@app/auth/auth0/identify.decorator';
 import { ConsoleLogger, Controller, Get, Param, Post } from '@nestjs/common';
 import { User } from '@entities/user.entity';
 import { CreateRoomUseCase } from '@usecases/rooms/create';

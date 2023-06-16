@@ -1,5 +1,5 @@
 import { AuthInfo } from '@entities/auth';
-import { ConsoleLogger, Injectable, Logger } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { AuthenticationClient } from 'auth0';
 import { config } from './auth0.config';
 import { createCache, Cache } from 'async-cache-dedupe';
@@ -23,7 +23,7 @@ export class Auth0Client {
 
   constructor(private readonly logger: ConsoleLogger) {
     logger.setContext('Auth0Client');
-    this.profileCache.define('getProfile', this.fetchProfile);
+    this.profileCache.define('getProfile', this.fetchProfile.bind(this));
   }
 
   public getProfile(accessToken: string): Promise<AuthInfo> {
