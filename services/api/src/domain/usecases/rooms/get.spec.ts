@@ -4,6 +4,7 @@ import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { GetRoomUseCase } from './get';
+import { AppLogger } from '@app/app.logger';
 
 describe('GetRoomUseCase', () => {
   let get: GetRoomUseCase;
@@ -16,7 +17,7 @@ describe('GetRoomUseCase', () => {
   beforeEach(() => {
     rooms = new TestRoomsRepository();
     rooms.setData([room]);
-    auth = new TestAuthService();
+    auth = new TestAuthService(new AppLogger());
     get = new GetRoomUseCase(rooms, auth);
   });
 

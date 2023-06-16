@@ -1,4 +1,11 @@
-import { ConsoleLogger, Injectable, LogLevel, Scope } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  Global,
+  Injectable,
+  LogLevel,
+  Module,
+  Scope,
+} from '@nestjs/common';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class AppLogger extends ConsoleLogger {
@@ -26,3 +33,15 @@ export class AppLogger extends ConsoleLogger {
     });
   }
 }
+
+@Global()
+@Module({
+  providers: [
+    {
+      provide: ConsoleLogger,
+      useClass: AppLogger,
+    },
+  ],
+  exports: [ConsoleLogger],
+})
+export class LoggerModule {}

@@ -7,6 +7,7 @@ import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { UnauthorizedException } from '@nestjs/common';
 import { JoinRoomUseCase } from './join';
+import { AppLogger } from '@app/app.logger';
 
 describe('JoinRoomUseCase', () => {
   let join: JoinRoomUseCase;
@@ -21,7 +22,7 @@ describe('JoinRoomUseCase', () => {
   beforeEach(() => {
     rooms = new TestRoomsRepository();
     memberships = new TestMembershipsRepository();
-    auth = new TestAuthService();
+    auth = new TestAuthService(new AppLogger());
     join = new JoinRoomUseCase(rooms, memberships, auth);
     jest.useFakeTimers({ now });
   });
