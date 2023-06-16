@@ -1,4 +1,4 @@
-import { Logger, UnauthorizedException } from '@nestjs/common';
+import { ConsoleLogger, Logger, UnauthorizedException } from '@nestjs/common';
 import { isNil, reject } from 'rambda';
 import { Room } from './room.entity';
 import { User } from './user.entity';
@@ -31,7 +31,7 @@ export type AuthorizeParams = {
 };
 
 export abstract class AuthService {
-  private logger = new Logger(AuthService.name);
+  constructor(private readonly logger: ConsoleLogger) {}
 
   async authorize({ user, subject, action, message }: AuthorizeParams) {
     const hasRole = await this.can({ user, action, subject });

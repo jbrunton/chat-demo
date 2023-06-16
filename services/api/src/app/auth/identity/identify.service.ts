@@ -4,8 +4,8 @@ import {
   UsersRepository,
 } from '@entities/users.repository';
 import {
+  ConsoleLogger,
   Injectable,
-  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -17,9 +17,12 @@ const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
 
 @Injectable()
 export class IdentifyService {
-  private readonly logger = new Logger(IdentifyService.name);
-
-  constructor(private readonly usersRepo: UsersRepository) {}
+  constructor(
+    private readonly usersRepo: UsersRepository,
+    private readonly logger: ConsoleLogger,
+  ) {
+    logger.setContext(IdentifyService.name);
+  }
 
   async identifyUser(request: Request): Promise<User> {
     const accessToken = extractAccessToken(request);

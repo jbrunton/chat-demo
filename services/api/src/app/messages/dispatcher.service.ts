@@ -3,21 +3,21 @@ import { Dispatcher, DraftMessage, isPrivate } from '@entities/message.entity';
 import { MessagesRepository } from '@entities/messages.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
-import { Injectable, Logger } from '@nestjs/common';
+import { ConsoleLogger, Injectable, Logger } from '@nestjs/common';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { EventEmitter } from 'stream';
 
 @Injectable()
 export class DispatcherService extends Dispatcher {
-  private readonly logger = new Logger(DispatcherService.name);
-
   constructor(
     private readonly messagesRepository: MessagesRepository,
     private readonly roomsRepository: RoomsRepository,
     private readonly authService: AuthService,
     private readonly emitter: EventEmitter,
+    private readonly logger: ConsoleLogger,
   ) {
     super();
+    logger.setContext(DispatcherService.name);
   }
 
   async subscribe(roomId: string, user: User): Promise<Observable<unknown>> {

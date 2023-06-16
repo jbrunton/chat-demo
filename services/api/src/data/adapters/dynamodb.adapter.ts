@@ -1,6 +1,6 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import databaseConfig from '@config/database.config';
 import { Dynamo } from 'dynamodb-onetable/Dynamo';
@@ -15,7 +15,6 @@ import {
 
 @Injectable()
 export class DynamoDBAdapter {
-  private logger = new Logger(DynamoDBAdapter.name);
   private readonly client: Dynamo;
 
   readonly tableName: string;
@@ -28,7 +27,9 @@ export class DynamoDBAdapter {
 
   constructor(
     @Inject(databaseConfig.KEY) dbConfig: ConfigType<typeof databaseConfig>,
+    private readonly logger: ConsoleLogger,
   ) {
+    this.logger.setContext(DynamoDBAdapter.name);
     this.logger.log(
       `Creating database adapter with config: ${JSON.stringify(dbConfig)}`,
     );

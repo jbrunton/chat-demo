@@ -10,6 +10,7 @@ const client = new AuthenticationClient({
   clientSecret: config.clientSecret,
 });
 
+// TODO: fix this
 const logger = new Logger('auth0.clientCache');
 
 const getProfile = (accessToken: string): Promise<AuthInfo> => {
