@@ -23,8 +23,8 @@ import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repos
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
 import { MessagesModule } from './messages.module';
-import { LoggerModule } from '@app/app.logger';
 import { Auth0Client } from '@app/auth/auth0/auth0.client';
+import { MockLoggerModule } from '@fixtures/MockLoggerModule';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -42,7 +42,7 @@ describe('MessagesController', () => {
     jest.setSystemTime(1001);
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TestDataModule, MessagesModule, LoggerModule, LoggerModule],
+      imports: [TestDataModule, MessagesModule, MockLoggerModule],
     })
       .overrideGuard(AuthGuard('jwt'))
       .useClass(FakeAuthGuard)

@@ -26,7 +26,7 @@ describe('RenameRoomUseCase', () => {
     rooms = new TestRoomsRepository();
     rooms.setData([room]);
 
-    auth = new TestAuthService(new AppLogger());
+    auth = new TestAuthService(mock<AppLogger>());
     auth.stubPermission({ user: owner, subject: room, action: Role.Manage });
 
     dispatcher = mock<Dispatcher>();

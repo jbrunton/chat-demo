@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { ConsoleLogger, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -13,6 +13,8 @@ import { map, omit } from 'rambda';
 import { Message } from '@entities/message.entity';
 import { MainModule } from '../src/main.module';
 import { Auth0Client } from '@app/auth/auth0/auth0.client';
+import { mock } from 'jest-mock-extended';
+import { AppLogger } from '@app/app.logger';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -28,6 +30,8 @@ describe('AppController (e2e)', () => {
       .useClass(FakeAuthGuard)
       .overrideProvider(Auth0Client)
       .useClass(FakeAuth0Client)
+      .overrideProvider(ConsoleLogger)
+      .useValue(mock<AppLogger>())
       .compile();
 
     app = moduleFixture.createNestApplication();

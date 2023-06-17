@@ -16,7 +16,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', 'test'],
+  ignorePatterns: ['.eslintrc.js'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -142,6 +142,7 @@ module.exports = {
       '**/*.e2e-spec.ts',
       'src/fixtures/**',
       '**/__mocks__/**',
+      'test/**',
     ],
   },
 };

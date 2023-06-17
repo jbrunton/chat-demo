@@ -29,7 +29,7 @@ describe('SendMessageUseCase', () => {
     rooms = new TestRoomsRepository();
     rooms.setData([room]);
 
-    authService = new TestAuthService(new AppLogger());
+    authService = new TestAuthService(mock<AppLogger>());
     dispatcher = mock<Dispatcher>();
 
     sendMessage = new SendMessageUseCase(rooms, dispatcher, authService);

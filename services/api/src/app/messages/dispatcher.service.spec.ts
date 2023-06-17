@@ -37,7 +37,7 @@ describe('DispatcherService', () => {
       rooms,
       auth,
       emitter,
-      new AppLogger(),
+      mock<AppLogger>(),
     );
 
     jest.useFakeTimers({ now });
