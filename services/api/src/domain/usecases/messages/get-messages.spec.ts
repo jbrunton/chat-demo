@@ -2,12 +2,12 @@ import { TestMessagesRepository } from '@fixtures/data/test.messages.repository'
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
-import { Role } from '@entities/auth';
 import { GetMessagesUseCase } from './get-messages';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UnauthorizedException } from '@nestjs/common';
 import { AppLogger } from '@app/app.logger';
+import { Role } from '@usecases/auth.service';
 
 describe('GetMessagesUseCase', () => {
   let getMessages: GetMessagesUseCase;

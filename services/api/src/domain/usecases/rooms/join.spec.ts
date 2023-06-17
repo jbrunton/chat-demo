@@ -1,4 +1,3 @@
-import { Role } from '@entities/auth';
 import { JoinPolicy } from '@entities/room.entity';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
@@ -8,6 +7,7 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 import { UnauthorizedException } from '@nestjs/common';
 import { JoinRoomUseCase } from './join';
 import { AppLogger } from '@app/app.logger';
+import { Role } from '@usecases/auth.service';
 
 describe('JoinRoomUseCase', () => {
   let join: JoinRoomUseCase;

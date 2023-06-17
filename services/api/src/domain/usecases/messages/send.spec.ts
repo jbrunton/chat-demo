@@ -1,13 +1,13 @@
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
-import { Role } from '@entities/auth';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { UnauthorizedException } from '@nestjs/common';
 import { SendMessageUseCase } from './send';
 import { Dispatcher, DraftMessage } from '@entities/message.entity';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { AppLogger } from '@app/app.logger';
+import { Role } from '@usecases/auth.service';
 
 describe('SendMessageUseCase', () => {
   let sendMessage: SendMessageUseCase;

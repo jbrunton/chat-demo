@@ -1,10 +1,10 @@
-import { Role } from '@entities/auth';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { GetRoomUseCase } from './get';
 import { AppLogger } from '@app/app.logger';
+import { Role } from '@usecases/auth.service';
 
 describe('GetRoomUseCase', () => {
   let get: GetRoomUseCase;

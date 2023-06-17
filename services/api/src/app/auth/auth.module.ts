@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from '@entities/auth';
+import { AuthService } from '@usecases/auth.service';
 import { CaslAuthService } from './casl.auth.service';
 import { Auth0Module } from './auth0/auth0.module';
 
