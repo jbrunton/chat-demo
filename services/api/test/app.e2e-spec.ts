@@ -7,10 +7,12 @@ import {
   FakeAuthGuard,
   resetFakeAuthUsers,
   FakeAuth,
+  FakeAuth0Client,
 } from '@fixtures/auth/FakeAuth';
 import { map, omit } from 'rambda';
 import { Message } from '@entities/message.entity';
 import { MainModule } from '../src/main.module';
+import { Auth0Client } from '@app/auth/auth0/auth0.client';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
@@ -24,6 +26,8 @@ describe('AppController (e2e)', () => {
     })
       .overrideGuard(AuthGuard('jwt'))
       .useClass(FakeAuthGuard)
+      .overrideProvider(Auth0Client)
+      .useClass(FakeAuth0Client)
       .compile();
 
     app = moduleFixture.createNestApplication();

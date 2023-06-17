@@ -1,6 +1,6 @@
 import { Auth } from '@app/auth/auth.decorator';
-import { Identify } from '@app/auth/identity/identify.decorator';
-import { Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import { Identify } from '@app/auth/auth0/identify.decorator';
+import { ConsoleLogger, Controller, Get, Param, Post } from '@nestjs/common';
 import { User } from '@entities/user.entity';
 import { CreateRoomUseCase } from '@usecases/rooms/create';
 import { GetRoomUseCase } from '@usecases/rooms/get';
@@ -9,13 +9,14 @@ import { JoinRoomUseCase } from '@usecases/rooms/join';
 @Auth()
 @Controller('rooms')
 export class RoomsController {
-  private readonly logger = new Logger(RoomsController.name);
-
   constructor(
     private readonly create: CreateRoomUseCase,
     private readonly get: GetRoomUseCase,
     private readonly join: JoinRoomUseCase,
-  ) {}
+    private readonly logger: ConsoleLogger,
+  ) {
+    logger.setContext(RoomsController.name);
+  }
 
   @Post('/')
   async createRoom(@Identify() user: User) {

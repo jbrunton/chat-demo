@@ -1,5 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { INestApplicationContext, Logger } from '@nestjs/common';
+import { INestApplicationContext, Logger, Module } from '@nestjs/common';
+import { DataModule } from '@data/data.module';
+import { LoggerModule } from '@app/app.logger';
 
 const logger = new Logger();
 
@@ -20,3 +22,8 @@ export const runWithContext = (params: RunWithContextParams) => {
   };
   run();
 };
+
+@Module({
+  imports: [DataModule, LoggerModule],
+})
+export class RunnableDataModule {}

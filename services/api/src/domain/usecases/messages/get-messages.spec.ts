@@ -7,6 +7,7 @@ import { GetMessagesUseCase } from './get-messages';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UnauthorizedException } from '@nestjs/common';
+import { AppLogger } from '@app/app.logger';
 
 describe('GetMessagesUseCase', () => {
   let getMessages: GetMessagesUseCase;
@@ -28,7 +29,7 @@ describe('GetMessagesUseCase', () => {
     messages = new TestMessagesRepository();
     messages.setData([publicMessage, privateMessage]);
 
-    authService = new TestAuthService();
+    authService = new TestAuthService(new AppLogger());
 
     getMessages = new GetMessagesUseCase(rooms, messages, authService);
   });

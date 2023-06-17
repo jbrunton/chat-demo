@@ -2,10 +2,11 @@ import 'tsconfig-paths/register';
 import { DynamoDBAdapter } from '@data/adapters/dynamodb.adapter';
 import { DataModule } from '@data/data.module';
 import { Test, TestingModule } from '@nestjs/testing';
+import { LoggerModule } from '@app/app.logger';
 
 const setup = async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
-    imports: [DataModule],
+    imports: [DataModule, LoggerModule],
   }).compile();
 
   const db = moduleFixture.get(DynamoDBAdapter);

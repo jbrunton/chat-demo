@@ -1,17 +1,20 @@
 import {
   CanActivate,
+  ConsoleLogger,
   ExecutionContext,
   Injectable,
-  Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
-
-  private readonly logger = new Logger(PermissionsGuard.name);
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly logger: ConsoleLogger,
+  ) {
+    logger.setContext(PermissionsGuard.name);
+  }
 
   canActivate(
     context: ExecutionContext,

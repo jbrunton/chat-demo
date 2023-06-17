@@ -5,7 +5,7 @@ import { passportJwtSecret } from 'jwks-rsa';
 import { config } from './auth0.config';
 import { Request } from 'express';
 import { User } from '@entities/user.entity';
-import { IdentifyService } from '../identity/identify.service';
+import { IdentifyService } from './identify.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

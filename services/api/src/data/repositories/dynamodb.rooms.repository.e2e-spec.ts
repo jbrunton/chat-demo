@@ -4,6 +4,7 @@ import { CreateRoomParams } from '@entities/rooms.repository';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { Test } from '@nestjs/testing';
 import { DataModule } from '../data.module';
+import { LoggerModule } from '@app/app.logger';
 
 type TestCase = {
   name: 'DynamoDBRoomsRepository' | 'TestRoomsRepository';
@@ -22,7 +23,7 @@ describe('RoomsRepository', () => {
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [DataModule],
+      imports: [DataModule, LoggerModule],
       providers: [DynamoDBRoomsRepository],
     }).compile();
 

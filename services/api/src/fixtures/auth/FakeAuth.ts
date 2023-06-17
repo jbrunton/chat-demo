@@ -1,13 +1,19 @@
 import { AuthInfo } from '@entities/auth';
-import { CanActivate, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ConsoleLogger,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
 import { User } from '@entities/user.entity';
 import { userParamsFromAuth } from '@entities/users.repository';
 import { ExecutionContext } from '@nestjs/common';
-import { IdentifyService } from '@app/auth/identity/identify.service';
+import { IdentifyService } from '@app/auth/auth0/identify.service';
 import { ModuleRef } from '@nestjs/core';
 import { ExtractJwt } from 'passport-jwt';
+import { Auth0Client } from '@app/auth/auth0/auth0.client';
 
 export type FakeAuth = {
   accessToken: string;
@@ -63,5 +69,22 @@ export class FakeAuthGuard implements CanActivate {
     }
 
     return false;
+  }
+}
+
+@Injectable()
+export class FakeAuth0Client extends Auth0Client {
+  constructor(logger: ConsoleLogger) {
+    super(logger);
+  }
+
+  public override async getProfile(accessToken: string): Promise<AuthInfo> {
+    const authInfo = getFakeAuthInfo(accessToken);
+
+    if (!authInfo) {
+      throw new UnauthorizedException();
+    }
+
+    return authInfo;
   }
 }

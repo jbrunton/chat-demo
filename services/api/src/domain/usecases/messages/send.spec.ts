@@ -7,6 +7,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { SendMessageUseCase } from './send';
 import { Dispatcher, DraftMessage } from '@entities/message.entity';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { AppLogger } from '@app/app.logger';
 
 describe('SendMessageUseCase', () => {
   let sendMessage: SendMessageUseCase;
@@ -28,7 +29,7 @@ describe('SendMessageUseCase', () => {
     rooms = new TestRoomsRepository();
     rooms.setData([room]);
 
-    authService = new TestAuthService();
+    authService = new TestAuthService(new AppLogger());
     dispatcher = mock<Dispatcher>();
 
     sendMessage = new SendMessageUseCase(rooms, dispatcher, authService);

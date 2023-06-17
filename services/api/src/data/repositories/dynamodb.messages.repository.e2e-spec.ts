@@ -5,6 +5,7 @@ import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
+import { LoggerModule } from '@app/app.logger';
 
 type TestCase = {
   name: 'DynamoDBMessagesRepository' | 'TestMessagesRepository';
@@ -23,7 +24,7 @@ describe('MessagesRepository', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [DataModule],
+      imports: [DataModule, LoggerModule],
       providers: [DynamoDBMessagesRepository],
     }).compile();
 
