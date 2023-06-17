@@ -73,11 +73,13 @@ module.exports = {
             allow: ['@aws-sdk/client-dynamodb', '@nestjs/config', 'assert'],
           },
           {
-            from: ['entities', 'usecases'],
+            from: ['entities'],
+            allow: ['@faker-js/faker'],
+          },
+          {
+            from: ['usecases'],
             allow: [
               '@faker-js/faker',
-              'rxjs',
-              'zod',
               [
                 '@nestjs/common',
                 {
@@ -85,7 +87,7 @@ module.exports = {
                     'Injectable',
                     'UnauthorizedException',
                     'BadRequestException',
-                    'ConsoleLogger',
+                    'Logger',
                   ],
                 },
               ],
@@ -93,7 +95,7 @@ module.exports = {
           },
           {
             from: ['*'],
-            allow: ['rambda'],
+            allow: ['rambda', 'rxjs', 'zod'],
           },
         ],
       },

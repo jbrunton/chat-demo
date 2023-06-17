@@ -1,4 +1,3 @@
-import { AuthInfo } from '@entities/auth';
 import {
   CanActivate,
   ConsoleLogger,
@@ -14,6 +13,7 @@ import { IdentifyService } from '@app/auth/auth0/identify.service';
 import { ModuleRef } from '@nestjs/core';
 import { ExtractJwt } from 'passport-jwt';
 import { Auth0Client } from '@app/auth/auth0/auth0.client';
+import { AuthInfo } from '@entities/auth';
 
 export type FakeAuth = {
   accessToken: string;

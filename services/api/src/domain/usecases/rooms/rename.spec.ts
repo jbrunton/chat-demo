@@ -4,10 +4,10 @@ import { RenameRoomUseCase } from './rename';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
-import { Role } from '@entities/auth';
 import { UnauthorizedException } from '@nestjs/common';
 import { Dispatcher } from '@entities/message.entity';
 import { AppLogger } from '@app/app.logger';
+import { Role } from '@usecases/auth.service';
 
 describe('RenameRoomUseCase', () => {
   let rename: RenameRoomUseCase;

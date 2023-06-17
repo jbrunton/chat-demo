@@ -1,9 +1,9 @@
-import { AuthService, Role } from '@entities/auth';
 import { Dispatcher, DraftMessage, isPrivate } from '@entities/message.entity';
 import { MessagesRepository } from '@entities/messages.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { AuthService, Role } from '@usecases/auth.service';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { EventEmitter } from 'stream';
 

@@ -1,8 +1,8 @@
-import { AuthService, Role } from '@entities/auth';
 import { Dispatcher, DraftMessage } from '@entities/message.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
+import { Role, AuthService } from '@usecases/auth.service';
 
 @Injectable()
 export class SendMessageUseCase {

@@ -1,4 +1,4 @@
-import { AuthorizeParams, AuthService } from '@entities/auth';
+import { AuthorizeParams, AuthService } from '@usecases/auth.service';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { defineRolesForUser } from './permissions/roles';

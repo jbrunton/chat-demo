@@ -1,8 +1,8 @@
 import { AbilityBuilder, createMongoAbility } from '@casl/ability';
-import { Role } from '@entities/auth';
 import { Membership, MembershipStatus } from '@entities/membership.entity';
 import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { User } from '@entities/user.entity';
+import { Role } from '@usecases/auth.service';
 import { pluck } from 'rambda';
 
 export const defineRolesForUser = (user: User, memberships: Membership[]) => {
