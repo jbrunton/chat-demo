@@ -3,7 +3,7 @@ import { SaveUserParams } from '@entities/users.repository';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
-import { LoggerModule } from '@app/app.logger';
+import { MockLoggerModule } from '@fixtures/MockLoggerModule';
 
 type TestCase = {
   name: 'DynamoDBUsersRepository' | 'TestUsersRepository';
@@ -22,7 +22,7 @@ describe('RoomsRepository', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [DataModule, LoggerModule],
+      imports: [DataModule, MockLoggerModule],
       providers: [DynamoDBUsersRepository],
     }).compile();
 

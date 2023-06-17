@@ -4,6 +4,7 @@ import { Role } from './auth.service';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UnauthorizedException } from '@nestjs/common';
+import { mock } from 'jest-mock-extended';
 
 describe('AuthService', () => {
   const user = UserFactory.build();
@@ -12,7 +13,7 @@ describe('AuthService', () => {
   let service: TestAuthService;
 
   beforeEach(() => {
-    service = new TestAuthService(new AppLogger());
+    service = new TestAuthService(mock<AppLogger>());
   });
 
   const stubPermission = (action: Role) => {

@@ -8,6 +8,7 @@ import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UnauthorizedException } from '@nestjs/common';
 import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';
+import { mock } from 'jest-mock-extended';
 
 describe('GetMessagesUseCase', () => {
   let getMessages: GetMessagesUseCase;
@@ -29,7 +30,7 @@ describe('GetMessagesUseCase', () => {
     messages = new TestMessagesRepository();
     messages.setData([publicMessage, privateMessage]);
 
-    authService = new TestAuthService(new AppLogger());
+    authService = new TestAuthService(mock<AppLogger>());
 
     getMessages = new GetMessagesUseCase(rooms, messages, authService);
   });

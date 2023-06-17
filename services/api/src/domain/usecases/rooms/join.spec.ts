@@ -8,6 +8,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JoinRoomUseCase } from './join';
 import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';
+import mock from 'jest-mock-extended/lib/Mock';
 
 describe('JoinRoomUseCase', () => {
   let join: JoinRoomUseCase;
@@ -22,7 +23,7 @@ describe('JoinRoomUseCase', () => {
   beforeEach(() => {
     rooms = new TestRoomsRepository();
     memberships = new TestMembershipsRepository();
-    auth = new TestAuthService(new AppLogger());
+    auth = new TestAuthService(mock<AppLogger>());
     join = new JoinRoomUseCase(rooms, memberships, auth);
     jest.useFakeTimers({ now });
   });
