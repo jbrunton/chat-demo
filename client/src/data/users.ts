@@ -2,8 +2,6 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import axios from 'axios'
 import { Room } from './rooms'
 
-const apiUrl = import.meta.env.VITE_API_URL || ''
-
 export type User = {
   id: string
   name: string
@@ -18,12 +16,12 @@ export type UserDetailsResponse = {
 export const userQueryKey = (userId: string) => ['users', userId]
 
 const getUser = async (userId: string): Promise<User> => {
-  const response = await axios.get(`${apiUrl}/users/${userId}`)
+  const response = await axios.get(`/users/${userId}`)
   return response.data
 }
 
 const getSignedInUser = async (): Promise<User> => {
-  const response = await axios.get(`${apiUrl}/users/me`)
+  const response = await axios.get(`/users/me`)
   return response.data
 }
 

@@ -1,7 +1,6 @@
 name: deploy-dev
 
 on:
-  pull_request:
   workflow_dispatch:
 
 concurrency: ${{ github.head_ref }}
