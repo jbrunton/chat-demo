@@ -27,7 +27,10 @@ new pulumiservice.StackTag("stack-tags", {
   value: appConfig.environment,
 });
 
-applyStackConfig(stackConfig);
+const result = applyStackConfig(stackConfig);
 
-export const publicUrl = stackConfig.client.publicUrl;
-export const publicApiUrl = stackConfig.services[0].publicUrl;
+export const webUrl = stackConfig.client.publicUrl;
+export const apiUrl = stackConfig.services[0].publicUrl;
+export const apiTaskDefinitionArn = result.outputs["apiTaskDefinitionArn"];
+export const apiService = result.outputs["apiService"];
+export const cluster = result.outputs["cluster"];

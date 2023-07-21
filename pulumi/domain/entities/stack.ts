@@ -16,6 +16,10 @@ export interface GetStackConfig {
   (inputs: ApplicationInputs): StackConfig;
 }
 
-export interface ApplyStackConfig {
-  (config: StackConfig): void;
+export interface ApplyStackResult<T> {
+  outputs: Record<string, T>;
+}
+
+export interface ApplyStackConfig<T> {
+  (config: StackConfig): ApplyStackResult<T>;
 }

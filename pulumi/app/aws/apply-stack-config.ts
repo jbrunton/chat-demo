@@ -1,4 +1,4 @@
-import { ApplyStackConfig, StackConfig } from "@entities";
+import { ApplyStackConfig, ApplyStackResult, StackConfig } from "@entities";
 import * as aws from "@pulumi/aws";
 import {
   getSharedResources,
@@ -6,14 +6,25 @@ import {
 } from "./usecases/stack/get-shared-resources";
 import { applyClientConfig } from "./apply-client-config";
 import { applyServiceConfig } from "./apply-service-config";
+import { Output } from "@pulumi/pulumi";
 
 const provider = new aws.Provider("aws", { region: "us-east-1" });
 
-export const applyStackConfig: ApplyStackConfig = (config: StackConfig) => {
-  getSharedResources().apply((shared) => createResources(config, shared));
+type Result = ApplyStackResult<Output<unknown>>;
+
+export const applyStackConfig: ApplyStackConfig<Output<unknown>> = (
+  config: StackConfig
+): Result => {
+  const result: Result = getSharedResources().apply((shared) =>
+    createResources(config, shared)
+  );
+  return result;
 };
 
-function createResources(stackConfig: StackConfig, shared: SharedResources) {
+function createResources(
+  stackConfig: StackConfig,
+  shared: SharedResources
+): Result {
   // Pulumi adds `-` + 7 random chars for unique names.
   const shortName = stackConfig.appName.slice(0, 24);
 
@@ -21,7 +32,31 @@ function createResources(stackConfig: StackConfig, shared: SharedResources) {
 
   applyClientConfig(stackConfig, shared);
 
-  stackConfig.services.forEach((serviceConfig) => {
-    applyServiceConfig(stackConfig, serviceConfig, shared, cluster, provider);
-  });
+  const outputs: Record<string, Output<unknown>> = stackConfig.services
+    .map((serviceConfig) => {
+      return [
+        serviceConfig.name,
+        applyServiceConfig(
+          stackConfig,
+          serviceConfig,
+          shared,
+          cluster,
+          provider
+        ),
+      ] as [string, ReturnType<typeof applyServiceConfig>];
+    })
+    .reduce((prev, [name, outputs]) => {
+      return {
+        ...prev,
+        [`${name}TaskDefinitionArn`]: outputs.taskDefinitionArn,
+        [`${name}Service`]: outputs.serviceName,
+      };
+    }, {});
+
+  return {
+    outputs: {
+      ...outputs,
+      cluster: cluster.name,
+    },
+  };
 }
