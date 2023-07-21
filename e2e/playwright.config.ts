@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
-import { authFile } from './tests/config';
+import { user1AuthFile } from './tests/config';
 
 dotenv.config();
 
@@ -41,7 +41,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: authFile,
+        storageState: user1AuthFile,
       },
       dependencies: ['setup'],
     },
@@ -50,7 +50,7 @@ export default defineConfig({
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
-        storageState: authFile,
+        storageState: user1AuthFile,
       },
       dependencies: ['setup'],
     },

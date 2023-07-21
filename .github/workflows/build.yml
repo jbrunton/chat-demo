@@ -81,11 +81,15 @@ jobs:
     - name: Configure environment
       run: |
         touch .env
-        echo "USER_EMAIL=$USER_EMAIL" >> .env
-        echo "USER_PASSWORD=$USER_PASSWORD" >> .env
+        echo "USER1_EMAIL=$USER1_EMAIL" >> .env
+        echo "USER1_PASSWORD=$USER1_PASSWORD" >> .env
+        echo "USER2_EMAIL=$USER2_EMAIL" >> .env
+        echo "USER2_PASSWORD=$USER2_PASSWORD" >> .env
       env:
-        USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
-        USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+        USER1_EMAIL: ${{ secrets.TEST_USER1_EMAIL }}
+        USER1_PASSWORD: ${{ secrets.TEST_USER1_PASSWORD }}
+        USER2_EMAIL: ${{ secrets.TEST_USER2_EMAIL }}
+        USER2_PASSWORD: ${{ secrets.TEST_USER2_PASSWORD }}
     - name: Wait for services
       run: |
         npx --yes wait-on http://localhost:3000
