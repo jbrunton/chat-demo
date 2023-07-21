@@ -21,5 +21,6 @@ export class Menu {
 
   async createRoom() {
     await this.createRoomButton.click();
+    await this.page.getByText('Be the first person to say something').waitFor({ state: 'visible' });
   }
 }

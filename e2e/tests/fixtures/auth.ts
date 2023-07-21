@@ -1,4 +1,4 @@
-import { Browser, BrowserContext, Cookie, Locator, Page, expect } from "@playwright/test";
+import { BrowserContext, Cookie, Locator, Page, expect } from "@playwright/test";
 
 export class AuthPage {
   private emailInput: Locator;
