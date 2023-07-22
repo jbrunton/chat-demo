@@ -42,6 +42,6 @@ export class RenameRoomUseCase {
       updatedEntities: ['room'],
     };
 
-    this.dispatcher.send(message);
+    await this.dispatcher.send(message);
   }
 }

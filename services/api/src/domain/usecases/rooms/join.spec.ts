@@ -8,15 +8,17 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JoinRoomUseCase } from './join';
 import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';
-import mock from 'jest-mock-extended/lib/Mock';
+import mock, { MockProxy } from 'jest-mock-extended/lib/Mock';
+import { Dispatcher } from '@entities/message.entity';
 
 describe('JoinRoomUseCase', () => {
   let join: JoinRoomUseCase;
   let rooms: TestRoomsRepository;
   let memberships: TestMembershipsRepository;
   let auth: TestAuthService;
+  let dispatcher: MockProxy<Dispatcher>;
 
-  const user = UserFactory.build();
+  const user = UserFactory.build({ name: 'Joe Bloggs' });
 
   const now = new Date(1000);
 
@@ -24,7 +26,8 @@ describe('JoinRoomUseCase', () => {
     rooms = new TestRoomsRepository();
     memberships = new TestMembershipsRepository();
     auth = new TestAuthService(mock<AppLogger>());
-    join = new JoinRoomUseCase(rooms, memberships, auth);
+    dispatcher = mock<Dispatcher>();
+    join = new JoinRoomUseCase(rooms, memberships, auth, dispatcher);
     jest.useFakeTimers({ now });
   });
 
@@ -45,6 +48,12 @@ describe('JoinRoomUseCase', () => {
         from: now.getTime(),
       },
     ]);
+
+    expect(dispatcher.send).toHaveBeenCalledWith({
+      content: 'Joe Bloggs joined the room. Welcome!',
+      authorId: 'system',
+      roomId: room.id,
+    });
   });
 
   it('authorizes the user', async () => {
