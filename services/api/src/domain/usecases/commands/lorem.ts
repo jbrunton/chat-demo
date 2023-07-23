@@ -26,7 +26,7 @@ export class LoremCommandUseCase {
 
   async exec(params: LoremParams): Promise<void> {
     const draft = await this.getResponse(params);
-    this.dispatcher.send(draft);
+    await this.dispatcher.send(draft);
   }
 
   private async getResponse(params: LoremParams): Promise<DraftMessage> {
