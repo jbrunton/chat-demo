@@ -1,0 +1,10 @@
+{
+  "room": {
+    "id": "room:123",
+    "name": "Test Room",
+    "ownerId": "user:test-user",
+    "contentPolicy": "private",
+    "joinPolicy": "anyone"
+  },
+  "roles": ["read", "write", "manage", "join"]
+}

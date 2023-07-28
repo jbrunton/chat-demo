@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: ["services/api", "pulumi"]
+        directory: ["services/api", "pulumi", "client"]
     defaults:
       run:
         working-directory: ${{ matrix.directory }}
