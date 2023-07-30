@@ -1,0 +1,16 @@
+[
+  {
+    "id": "message:a1b2c3",
+    "roomId": "room:123",
+    "content": "Hello, World!",
+    "authorId": "system",
+    "time": 1690030739801
+  },
+  {
+    "id": "message:d4e5f6",
+    "roomId": "room:123",
+    "content": "Test message",
+    "authorId": "user:test-user",
+    "time": 1690551939302
+  }
+]
