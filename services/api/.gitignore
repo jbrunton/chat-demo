@@ -36,3 +36,6 @@ lerna-debug.log*
 # stryker temp files
 .stryker-tmp
 reports/mutation
+
+# typedoc
+/docs

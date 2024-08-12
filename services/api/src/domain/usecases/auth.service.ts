@@ -18,9 +18,16 @@ export type AuthorizeParams = {
   message?: string;
 };
 
+/**
+ * Base AuthService.
+ */
 export abstract class AuthService {
   constructor(private readonly logger: Logger) {}
 
+  /**
+   * Authorises a user on a subject with an action.
+   * @param {AuthorizeParams} params The user, subject, action and optionally failure message
+   */
   async authorize({ user, subject, action, message }: AuthorizeParams) {
     const hasRole = await this.can({ user, action, subject });
     if (!hasRole) {
