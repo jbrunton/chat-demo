@@ -1,9 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { isCommand, parseMessage } from './parse-message';
 import { User, systemUser } from '@entities/user.entity';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from '@app/messages/command.service';
+import { isCommand, parseMessage } from '@usecases/messages/parse-message';
 
 @Injectable()
 export class MessagesService {
@@ -16,7 +16,11 @@ export class MessagesService {
     incoming: CreateMessageDto,
     authenticatedUser: User,
   ): Promise<void> {
-    const message = parseMessage(incoming, authenticatedUser);
+    const message = parseMessage({
+      ...incoming,
+      authorId: authenticatedUser.id,
+    });
+
     try {
       if (isCommand(message)) {
         await this.command.exec(message, authenticatedUser);

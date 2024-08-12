@@ -1,7 +1,5 @@
 import { Command } from '@entities/command.entity';
 import { DraftMessage } from '@entities/message.entity';
-import { User } from '@entities/user.entity';
-import { CreateMessageDto } from 'src/app/messages/dto/create-message.dto';
 
 export type ParsedMessage = DraftMessage | Command;
 
@@ -9,12 +7,23 @@ export const isCommand = (message: ParsedMessage): message is Command => {
   return (message as Command).tokens !== undefined;
 };
 
-export const parseMessage = (
-  { content, roomId }: CreateMessageDto,
-  authenticatedUser: User,
-): ParsedMessage => {
+type ParseMessageParams = {
+  content: string;
+  roomId: string;
+  authorId: string;
+};
+
+export const parseMessage = ({
+  content,
+  roomId,
+  authorId,
+}: ParseMessageParams): ParsedMessage => {
   if (content.startsWith('/')) {
-    const tokens = content.slice(1).split(' ');
+    const tokens = content
+      .slice(1)
+      .split(' ')
+      .filter((token) => token.length > 0);
+
     const canonicalInput = `/${tokens.join(' ')}`;
 
     const command: Command = {
@@ -29,7 +38,7 @@ export const parseMessage = (
   const message: ParsedMessage = {
     content,
     roomId,
-    authorId: authenticatedUser.id,
+    authorId,
   };
 
   return message;

@@ -15,7 +15,7 @@ describe("getDomainConfig", () => {
     });
   });
 
-  it("returns staging domain when the environment is production", () => {
+  it("returns staging domain when the environment is staging", () => {
     const config = getDomainConfig({
       environment: "staging",
       stackName: "staging",
