@@ -13,6 +13,6 @@ export class Room {
   id: string;
   ownerId: string;
   name: string;
-  contentPolicy: ContentPolicy.Public | ContentPolicy.Private;
-  joinPolicy: JoinPolicy.Anyone | JoinPolicy.Request | JoinPolicy.Invite;
+  contentPolicy: ContentPolicy;
+  joinPolicy: JoinPolicy;
 }
