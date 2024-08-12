@@ -20,6 +20,7 @@ export type CommandParserParams = {
   signature: string;
   summary: string;
 };
+
 export class CommandParser {
   private readonly matchTokens: string[];
   private readonly schema: CommandSchema;

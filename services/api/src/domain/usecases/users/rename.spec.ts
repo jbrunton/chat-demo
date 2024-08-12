@@ -25,7 +25,7 @@ describe('RenameUserUseCase', () => {
     rename = new RenameUserUseCase(users, dispatcher);
   });
 
-  it('renames the room', async () => {
+  it('renames the user', async () => {
     await rename.exec({
       roomId: room.id,
       authenticatedUser: user,
@@ -44,7 +44,7 @@ describe('RenameUserUseCase', () => {
     });
 
     expect(dispatcher.send).toHaveBeenCalledWith({
-      content: 'User Original User Name renamed to New User Name',
+      content: `User ${originalName} renamed to ${newName}`,
       authorId: 'system',
       roomId: room.id,
       updatedEntities: ['users'],

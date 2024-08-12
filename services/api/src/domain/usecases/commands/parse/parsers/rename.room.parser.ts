@@ -10,7 +10,7 @@ const schema = z
     params: { newName: [name, ...rest].join(' ') },
   }));
 
-export const RenameRoomParser = new CommandParser({
+export const renameRoomParser = new CommandParser({
   matchTokens: ['rename', 'room'],
   schema,
   signature: '/rename room {name}',
