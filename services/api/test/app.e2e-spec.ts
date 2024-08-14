@@ -10,7 +10,7 @@ import {
   FakeAuth0Client,
 } from '@fixtures/auth/FakeAuth';
 import { map, omit } from 'rambda';
-import { Message } from '@entities/messages';
+import { SentMessage } from '@entities/messages';
 import { MainModule } from '../src/main.module';
 import { Auth0Client } from '@app/auth/auth0/auth0.client';
 import { mock } from 'jest-mock-extended';
@@ -77,7 +77,7 @@ describe('AppController (e2e)', () => {
       .set('Authorization', `Bearer ${fakeAuth1.accessToken}`)
       .expect(200);
 
-    const removeIds = (messages: Message[]) =>
+    const removeIds = (messages: SentMessage[]) =>
       map((msg) => omit(['id'], msg), messages);
 
     expect(removeIds(body)).toEqual([
