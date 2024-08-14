@@ -1,6 +1,5 @@
-import { ParsedCommand } from '@entities/command.entity';
 import { z } from 'zod';
-import { CommandParser } from '../command.parser';
+import { CommandParser, ParsedCommand } from '../command.parser';
 
 const schema = z
   .tuple([z.literal('rename'), z.literal('room'), z.string()])

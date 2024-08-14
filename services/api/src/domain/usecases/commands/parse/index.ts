@@ -1,6 +1,7 @@
-import { Command, ParsedCommand } from '@entities/command.entity';
+import { Command } from '@entities/command.entity';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { parsers } from './parsers';
+import { ParsedCommand } from './command.parser';
 
 @Injectable()
 export class ParseCommandUseCase {
