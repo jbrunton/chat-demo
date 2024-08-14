@@ -9,7 +9,7 @@ import { JoinRoomUseCase } from './join';
 import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';
 import mock, { MockProxy } from 'jest-mock-extended/lib/Mock';
-import { Dispatcher } from '@entities/message.entity';
+import { Dispatcher } from '@entities/messages/message';
 
 describe('JoinRoomUseCase', () => {
   let join: JoinRoomUseCase;

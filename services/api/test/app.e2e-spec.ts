@@ -10,7 +10,7 @@ import {
   FakeAuth0Client,
 } from '@fixtures/auth/FakeAuth';
 import { map, omit } from 'rambda';
-import { Message } from '@entities/message.entity';
+import { Message } from '@entities/messages';
 import { MainModule } from '../src/main.module';
 import { Auth0Client } from '@app/auth/auth0/auth0.client';
 import { mock } from 'jest-mock-extended';

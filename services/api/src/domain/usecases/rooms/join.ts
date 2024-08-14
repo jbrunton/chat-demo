@@ -4,7 +4,7 @@ import { MembershipsRepository } from '@entities/memberships.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
-import { Dispatcher, DraftMessage } from '@entities/message.entity';
+import { Dispatcher, DraftMessage } from '@entities/messages/message';
 
 @Injectable()
 export class JoinRoomUseCase {

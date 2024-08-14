@@ -1,5 +1,5 @@
 import { MembershipsRepository } from '@entities/memberships.repository';
-import { MessagesRepository } from '@entities/messages.repository';
+import { MessagesRepository } from '@entities/messages';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { UsersRepository } from '@entities/users.repository';
 import { Global, Module } from '@nestjs/common';

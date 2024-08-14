@@ -1,19 +1,22 @@
-import { MessagesRepository } from '@entities/messages.repository';
+import {
+  DraftMessage,
+  MessagesRepository,
+  SentMessage,
+} from '@entities/messages';
 import * as R from 'rambda';
-import { DraftMessage, Message } from 'src/domain/entities/message.entity';
 
 export class TestMessagesRepository extends MessagesRepository {
-  private messages: Message[] = [];
+  private messages: SentMessage[] = [];
 
   getData() {
     return this.messages;
   }
 
-  setData(messages: Message[]) {
+  setData(messages: SentMessage[]) {
     this.messages = messages;
   }
 
-  override async saveMessage(params: DraftMessage): Promise<Message> {
+  override async saveMessage(params: DraftMessage): Promise<SentMessage> {
     const time = new Date().getTime();
     const id = `message:${time}`;
     const message = {
@@ -35,11 +38,11 @@ export class TestMessagesRepository extends MessagesRepository {
     return message;
   }
 
-  override async getMessagesForRoom(roomId: string): Promise<Message[]> {
+  override async getMessagesForRoom(roomId: string): Promise<SentMessage[]> {
     return R.filter((msg) => msg.roomId === roomId, this.messages);
   }
 
-  override async getAuthorHistory(authorId: string): Promise<Message[]> {
+  override async getAuthorHistory(authorId: string): Promise<SentMessage[]> {
     return R.filter((msg) => msg.authorId === authorId, this.messages).sort(
       (msg) => -msg.time,
     );

@@ -2,7 +2,7 @@ import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { DispatcherService } from './dispatcher.service';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
-import { DraftMessage, Message } from '@entities/message.entity';
+import { DraftMessage, Message } from '@entities/messages';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { MockProxy, mock } from 'jest-mock-extended';

@@ -1,5 +1,5 @@
 import { AuthService, Role } from '@usecases/auth.service';
-import { Dispatcher, DraftMessage } from '@entities/message.entity';
+import { Dispatcher, DraftMessage } from '@entities/messages';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
