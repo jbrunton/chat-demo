@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { Message } from '@entities/message.entity';
+import { SentMessage } from '@entities/messages';
 import { RoomFactory } from './room.factory';
 import { UserFactory } from './user.factory';
 import { mergeAll } from 'rambda';
 
 export const MessageFactory = {
-  build: (overrides?: Partial<Message>): Message => {
+  build: (overrides?: Partial<SentMessage>): SentMessage => {
     const time = overrides?.time ?? new Date().getTime();
     return mergeAll([
       {

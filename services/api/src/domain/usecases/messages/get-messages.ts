@@ -1,10 +1,9 @@
 import { Role, AuthService } from '@usecases/auth.service';
-import { isPrivate, Message } from '@entities/message.entity';
-import { MessagesRepository } from '@entities/messages.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { pipe, reject } from 'rambda';
+import { MessagesRepository, SentMessage, isPrivate } from '@entities/messages';
 
 @Injectable()
 export class GetMessagesUseCase {
@@ -14,7 +13,7 @@ export class GetMessagesUseCase {
     private readonly authService: AuthService,
   ) {}
 
-  async exec(roomId: string, user: User): Promise<Message[]> {
+  async exec(roomId: string, user: User): Promise<SentMessage[]> {
     const room = await this.rooms.getRoom(roomId);
     await this.authService.authorize({
       user,

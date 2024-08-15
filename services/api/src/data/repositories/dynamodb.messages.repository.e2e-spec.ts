@@ -1,5 +1,5 @@
 import { DynamoDBMessagesRepository } from '@data/repositories/dynamodb.messages.repository';
-import { DraftMessage } from '@entities/message.entity';
+import { DraftMessage } from '@entities/messages';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';

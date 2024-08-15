@@ -10,7 +10,7 @@ import {
 } from '@fixtures/auth/FakeAuth';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UsersRepository } from '@entities/users.repository';
-import { MessagesRepository } from '@entities/messages.repository';
+import { MessagesRepository } from '@entities/messages';
 import { TestDataModule } from '@fixtures/data/test.data.module';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';

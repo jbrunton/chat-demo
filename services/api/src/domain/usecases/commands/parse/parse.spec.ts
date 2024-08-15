@@ -1,6 +1,7 @@
-import { Command, ParsedCommand } from '@entities/command.entity';
+import { Command } from '@entities/command.entity';
 import { BadRequestException } from '@nestjs/common';
-import { ParseCommandUseCase } from './parse';
+import { ParseCommandUseCase } from '.';
+import { ParsedCommand } from './command.parser';
 
 describe('ParseCommandUseCase', () => {
   let parse: ParseCommandUseCase;
@@ -9,7 +10,7 @@ describe('ParseCommandUseCase', () => {
     parse = new ParseCommandUseCase();
   });
 
-  const expectCommand = (command: string) => {
+  const withMessage = (command: string) => {
     const tokens = command.slice(1).split(' ');
     const parsedCommand: Command = {
       roomId: 'my-room',
@@ -18,12 +19,12 @@ describe('ParseCommandUseCase', () => {
     };
     const parse = new ParseCommandUseCase();
     return {
-      toReturn: (expected: ParsedCommand) => {
+      expectCommand: (expected: ParsedCommand) => {
         const result = parse.exec(parsedCommand);
         expect(result).toEqual(expected);
       },
 
-      toErrorWith: (...expectedMessage: string[]) => {
+      expectError: (...expectedMessage: string[]) => {
         expect(() => parse.exec(parsedCommand)).toThrow(
           new BadRequestException(expectedMessage.join('\n')),
         );
@@ -33,14 +34,14 @@ describe('ParseCommandUseCase', () => {
 
   describe('/help', () => {
     it('parses the command', () => {
-      expectCommand('/help').toReturn({
+      withMessage('/help').expectCommand({
         tag: 'help',
         params: null,
       });
     });
 
     it('validates the number of arguments', () => {
-      expectCommand('/help me').toErrorWith(
+      withMessage('/help me').expectError(
         'Error in command `/help me`:',
         '* Received too many arguments. Expected: `/help`',
       );
@@ -49,7 +50,7 @@ describe('ParseCommandUseCase', () => {
 
   describe('/lorem', () => {
     it('parses valid commands', () => {
-      expectCommand('/lorem 3 words').toReturn({
+      withMessage('/lorem 3 words').expectCommand({
         tag: 'lorem',
         params: {
           count: 3,
@@ -59,22 +60,22 @@ describe('ParseCommandUseCase', () => {
     });
 
     it('validates the number of arguments', () => {
-      expectCommand('/lorem').toErrorWith(
+      withMessage('/lorem').expectError(
         'Error in command `/lorem`:',
         `* Received too few arguments. Expected: \`/lorem {count} {'words' | 'paragraphs'}\``,
       );
-      expectCommand('/lorem 3 words paragraphs').toErrorWith(
+      withMessage('/lorem 3 words paragraphs').expectError(
         'Error in command `/lorem 3 words paragraphs`:',
         `* Received too many arguments. Expected: \`/lorem {count} {'words' | 'paragraphs'}\``,
       );
     });
 
     it('validates the arguments', () => {
-      expectCommand('/lorem three words').toErrorWith(
+      withMessage('/lorem three words').expectError(
         'Error in command `/lorem three words`:',
         '* Argument 1 (`three`): Expected number, received nan',
       );
-      expectCommand('/lorem 3 chars').toErrorWith(
+      withMessage('/lorem 3 chars').expectError(
         'Error in command `/lorem 3 chars`:',
         `* Argument 2 (\`chars\`): Invalid enum value. Expected 'words' | 'paragraphs', received 'chars'`,
       );
@@ -83,7 +84,7 @@ describe('ParseCommandUseCase', () => {
 
   describe('/rename room', () => {
     it('parses valid commands', () => {
-      expectCommand('/rename room My Room').toReturn({
+      withMessage('/rename room My Room').expectCommand({
         tag: 'renameRoom',
         params: {
           newName: 'My Room',
@@ -92,7 +93,7 @@ describe('ParseCommandUseCase', () => {
     });
 
     it('validates the number of arguments', () => {
-      expectCommand('/rename room').toErrorWith(
+      withMessage('/rename room').expectError(
         'Error in command `/rename room`:',
         `* Received too few arguments. Expected: \`/rename room {name}\``,
       );
@@ -101,7 +102,7 @@ describe('ParseCommandUseCase', () => {
 
   describe('/rename user', () => {
     it('parses valid commands', () => {
-      expectCommand('/rename user My User').toReturn({
+      withMessage('/rename user My User').expectCommand({
         tag: 'renameUser',
         params: {
           newName: 'My User',
@@ -110,7 +111,7 @@ describe('ParseCommandUseCase', () => {
     });
 
     it('validates the number of arguments', () => {
-      expectCommand('/rename user').toErrorWith(
+      withMessage('/rename user').expectError(
         'Error in command `/rename user`:',
         `* Received too few arguments. Expected: \`/rename user {name}\``,
       );

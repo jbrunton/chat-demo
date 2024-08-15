@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MessagesRepository } from '@entities/messages.repository';
+import { MessagesRepository } from '@entities/messages';
 import databaseConfig from '@config/database.config';
 import { DynamoDBMessagesRepository } from './repositories/dynamodb.messages.repository';
 import { RoomsRepository } from '@entities/rooms.repository';

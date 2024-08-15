@@ -1,7 +1,16 @@
-import { Command, ParsedCommand } from '@entities/command.entity';
+import { Command } from '@entities/command.entity';
 import { BadRequestException } from '@nestjs/common';
 import { equals } from 'rambda';
 import { z, ZodIssue, ZodType } from 'zod';
+
+export type ParsedCommand =
+  | { tag: 'help'; params: null }
+  | { tag: 'renameRoom'; params: { newName: string } }
+  | { tag: 'renameUser'; params: { newName: string } }
+  | {
+      tag: 'lorem';
+      params: { count: number; typeToken: 'words' | 'paragraphs' };
+    };
 
 export type ParseResult =
   | {

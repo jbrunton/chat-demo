@@ -4,7 +4,7 @@ import { RoomFactory } from '@fixtures/messages/room.factory';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { UnauthorizedException } from '@nestjs/common';
 import { SendMessageUseCase } from './send';
-import { Dispatcher, DraftMessage } from '@entities/message.entity';
+import { Dispatcher, DraftMessage } from '@entities/messages';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';

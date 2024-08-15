@@ -1,5 +1,5 @@
-import { DraftMessage, Message } from '@entities/message.entity';
-import { MessagesRepository } from '@entities/messages.repository';
+import { DraftMessage, SentMessage } from '@entities/messages';
+import { MessagesRepository } from '@entities/messages';
 import { Injectable } from '@nestjs/common';
 import { pick } from 'rambda';
 import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';
@@ -11,7 +11,7 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
     super();
   }
 
-  override async saveMessage(params: DraftMessage): Promise<Message> {
+  override async saveMessage(params: DraftMessage): Promise<SentMessage> {
     const message = await this.adapter.Message.create(
       {
         ...params,
@@ -22,7 +22,7 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
     return messageFromRecord(message);
   }
 
-  override async getMessagesForRoom(roomId: string): Promise<Message[]> {
+  override async getMessagesForRoom(roomId: string): Promise<SentMessage[]> {
     const messages = await this.adapter.Message.find(
       { Id: roomId },
       { hidden: true },
@@ -30,7 +30,7 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
     return messages.map(messageFromRecord);
   }
 
-  override async getAuthorHistory(authorId: string): Promise<Message[]> {
+  override async getAuthorHistory(authorId: string): Promise<SentMessage[]> {
     const messages = await this.adapter.Message.scan(
       {},
       {
@@ -45,7 +45,7 @@ export class DynamoDBMessagesRepository extends MessagesRepository {
   }
 }
 
-const messageFromRecord = (record: DbMessage): Message => ({
+const messageFromRecord = (record: DbMessage): SentMessage => ({
   id: record.Sort,
   ...pick(
     ['roomId', 'content', 'authorId', 'recipientId', 'time', 'updatedEntities'],

@@ -1,4 +1,4 @@
-import { Dispatcher, DraftMessage } from '@entities/message.entity';
+import { Dispatcher, DraftMessage } from '@entities/messages';
 import { User } from '@entities/user.entity';
 import { Injectable } from '@nestjs/common';
 
