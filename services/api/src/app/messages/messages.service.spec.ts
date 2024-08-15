@@ -1,5 +1,5 @@
 import { MessagesService } from './messages.service';
-import { CreateMessageDto } from './dto/create-message.dto';
+import { CreateMessageDto } from './dto/messages';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { User } from '@entities/users';

@@ -1,4 +1,4 @@
-import { Dispatcher, DraftMessage } from '@entities/messages';
+import { Dispatcher, DraftMessage, UpdatedEntity } from '@entities/messages';
 import { User } from '@entities/users';
 import { UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
@@ -28,7 +28,7 @@ export class RenameUserUseCase {
       content: `User ${authenticatedUser.name} renamed to ${newName}`,
       roomId,
       authorId: 'system',
-      updatedEntities: ['users'],
+      updatedEntities: [UpdatedEntity.Users],
     };
 
     this.dispatcher.send(message);
