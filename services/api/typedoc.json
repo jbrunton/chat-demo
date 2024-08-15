@@ -1,0 +1,7 @@
+{
+  // Comments are supported, like tsconfig.json
+  "entryPoints": ["src/**"],
+  "exclude": ["src/**/*.spec.ts"],
+  "entryPointStrategy": "resolve",
+  "out": "docs"
+}

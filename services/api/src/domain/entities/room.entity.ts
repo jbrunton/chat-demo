@@ -9,6 +9,9 @@ export enum JoinPolicy {
   Invite = 'invite',
 }
 
+/**
+ * Represents a chat room.
+ */
 export class Room {
   id: string;
   ownerId: string;

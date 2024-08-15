@@ -7,12 +7,17 @@ export const isCommand = (message: ParsedMessage): message is Command => {
   return (message as Command).tokens !== undefined;
 };
 
-type ParseMessageParams = {
+export type ParseMessageParams = {
   content: string;
   roomId: string;
   authorId: string;
 };
 
+/**
+ *
+ * @param params Details of the message to parse
+ * @returns The parsed message
+ */
 export const parseMessage = ({
   content,
   roomId,
