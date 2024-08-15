@@ -5,11 +5,11 @@
 
 This project is an exercise in developing good clean architecture and CI/CD practices. It includes (or will include):
 
-* Infrastructure as Code with [Pulumi](https://www.pulumi.com/), including automatic provisioning of preview environments for each PR.
-* CI including linting, unit, integration and mutation tests.
-  * [ ] TODO: Eventually end to end tests with Playwright.
+* Infrastructure as Code with [Pulumi](https://www.pulumi.com/), including staging and ephemeral dev environments (with automatic dev environment cleanup).
+* CI including linting, unit, integration and mutation tests, and automated end to end tests with [Playwright](https://playwright.dev/).
 * A clean architecture, including dependency inversion enforced through linting rules with [eslint-plugin-boundaries](https://github.com/javierbrea/eslint-plugin-boundaries).
-* Continuous delivery practices, including automatic deployments to staging and production environments.
+* Continuous deployment pipelines to staging and production environments.
+* Automatic documentation with [TypeDoc](https://typedoc.org/) deployed using GitHub Pages to [jbrunton.github.io/chat-demo](https://jbrunton.github.io/chat-demo/).
 * [ ] TODO: Automatic dependency updates (including automerging for minor version changes) with Renovate.
 
 ## The demo application
