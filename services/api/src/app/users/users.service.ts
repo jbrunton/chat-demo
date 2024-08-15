@@ -2,8 +2,8 @@ import { MembershipStatus } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/user.entity';
-import { UsersRepository } from '@entities/users.repository';
+import { User } from '@entities/users';
+import { UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 import { filter, pluck, uniq } from 'rambda';
 

@@ -1,5 +1,5 @@
 import { Dispatcher, DraftMessage } from '@entities/messages';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 
 export type LoremType = 'words' | 'paragraphs';

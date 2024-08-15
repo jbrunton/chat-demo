@@ -1,7 +1,7 @@
 import { find, reject } from 'rambda';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { AuthInfo } from '@entities/auth';
-import { UpdateUserParams, UsersRepository } from '@entities/users.repository';
+import { UpdateUserParams, UsersRepository } from '@entities/users';
 import { NotFoundException } from '@nestjs/common';
 
 export class TestUsersRepository extends UsersRepository {

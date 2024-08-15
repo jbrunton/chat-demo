@@ -4,7 +4,7 @@ import { MessagesRepository } from '@entities/messages';
 import databaseConfig from '@config/database.config';
 import { DynamoDBMessagesRepository } from './repositories/dynamodb.messages.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { UsersRepository } from '@entities/users.repository';
+import { UsersRepository } from '@entities/users';
 import { DynamoDBUsersRepository } from './repositories/dynamodb.users.repository';
 import { DynamoDBAdapter } from './adapters/dynamodb.adapter';
 import { DynamoDBRoomsRepository } from './repositories/dynamodb.rooms.repository';

@@ -1,7 +1,7 @@
 import { AbilityBuilder, createMongoAbility } from '@casl/ability';
 import { Membership, MembershipStatus } from '@entities/membership.entity';
 import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { Role } from '@usecases/auth.service';
 import { pluck } from 'rambda';
 

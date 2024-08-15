@@ -1,6 +1,6 @@
 import { Dispatcher, DraftMessage } from '@entities/messages';
-import { User } from '@entities/user.entity';
-import { UsersRepository } from '@entities/users.repository';
+import { User } from '@entities/users';
+import { UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 
 export type RenameUserParams = {

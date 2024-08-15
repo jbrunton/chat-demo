@@ -1,9 +1,9 @@
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import {
   SaveUserParams,
   UpdateUserParams,
   UsersRepository,
-} from '@entities/users.repository';
+} from '@entities/users';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { pick } from 'rambda';
 import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';

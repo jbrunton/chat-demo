@@ -1,7 +1,7 @@
 import { LoremCommandUseCase, LoremGenerator, LoremParams } from './lorem';
 import { MockProxy, mock } from 'jest-mock-extended';
 import { Dispatcher } from '@entities/messages';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 

@@ -1,6 +1,6 @@
 import { Role, AuthService } from '@usecases/auth.service';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 import { pipe, reject } from 'rambda';
 import { MessagesRepository, SentMessage, isPrivate } from '@entities/messages';
