@@ -1,4 +1,4 @@
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { Logger } from './logger';
 import { UnauthorizedException } from '@nestjs/common';
 import { isNil, reject } from 'rambda';

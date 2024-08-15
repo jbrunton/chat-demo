@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { User } from '../user.entity';
+import { User } from '../users/user.entity';
 
 export type SentMessage = {
   id: string;

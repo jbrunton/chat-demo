@@ -2,7 +2,7 @@ import { MembershipStatus } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { ContentPolicy, JoinPolicy, Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 

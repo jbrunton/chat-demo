@@ -1,4 +1,4 @@
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { faker } from '@faker-js/faker';
 
 export const UserFactory = {

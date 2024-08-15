@@ -1,7 +1,7 @@
 import { AuthService, Role } from '@usecases/auth.service';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 
 export type RoomDetails = {

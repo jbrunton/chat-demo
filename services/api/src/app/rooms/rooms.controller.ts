@@ -1,7 +1,7 @@
 import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/auth0/identify.decorator';
 import { ConsoleLogger, Controller, Get, Param, Post } from '@nestjs/common';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { CreateRoomUseCase } from '@usecases/rooms/create';
 import { GetRoomUseCase } from '@usecases/rooms/get';
 import { JoinRoomUseCase } from '@usecases/rooms/join';

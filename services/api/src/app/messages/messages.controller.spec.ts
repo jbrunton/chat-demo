@@ -9,7 +9,7 @@ import {
   resetFakeAuthUsers,
 } from '@fixtures/auth/FakeAuth';
 import { MessageFactory } from '@fixtures/messages/message.factory';
-import { UsersRepository } from '@entities/users.repository';
+import { UsersRepository } from '@entities/users';
 import { MessagesRepository } from '@entities/messages';
 import { TestDataModule } from '@fixtures/data/test.data.module';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';

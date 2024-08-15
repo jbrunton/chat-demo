@@ -1,5 +1,5 @@
 import { DynamoDBUsersRepository } from '@data/repositories/dynamodb.users.repository';
-import { SaveUserParams } from '@entities/users.repository';
+import { SaveUserParams } from '@entities/users';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';

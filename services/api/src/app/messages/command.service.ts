@@ -1,5 +1,5 @@
 import { Command } from '@entities/command.entity';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 import { HelpCommandUseCase } from '@usecases/commands/help';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';

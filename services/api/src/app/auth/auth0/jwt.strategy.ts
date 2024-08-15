@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 import { config } from './auth0.config';
 import { Request } from 'express';
-import { User } from '@entities/user.entity';
+import { User } from '@entities/users';
 import { IdentifyService } from './identify.service';
 
 @Injectable()
