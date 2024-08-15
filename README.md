@@ -2,6 +2,7 @@
 
 [![build](https://github.com/jbrunton/chat-demo/actions/workflows/build.yml/badge.svg?query=branch%3Amain)](https://github.com/jbrunton/chat-demo/actions/workflows/build.yml?query=branch%3Amain)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fjbrunton%2Fchat-demo%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/jbrunton/chat-demo/main)
+<a href="https://jbrunton.github.io/chat-demo/"><img src="https://img.shields.io/badge/Docs-TypeDoc-blue.svg"/></a>
 
 This project is an exercise in developing good clean architecture and CI/CD practices. It includes (or will include):
 
@@ -12,6 +13,7 @@ This project is an exercise in developing good clean architecture and CI/CD prac
 * Continuous deployment pipelines to staging and production environments.
 * Automatic documentation with [TypeDoc](https://typedoc.org/) deployed using GitHub Pages to [jbrunton.github.io/chat-demo](https://jbrunton.github.io/chat-demo/).
 * [ ] TODO: Automatic dependency updates (including automerging for minor version changes) with Renovate.
+* [ ] TODO: OpenAPI Docs
 
 ## The demo application
 
