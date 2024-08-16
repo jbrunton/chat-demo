@@ -30,6 +30,8 @@
     "docs:serve": "http-server docs"
   },
   "dependencies": {
+    "@anatine/zod-nestjs": "2.0.9",
+    "@anatine/zod-openapi": "2.2.6",
     "@aws-sdk/client-dynamodb": "3.238.0",
     "@aws-sdk/credential-provider-node": "3.238.0",
     "@aws-sdk/lib-dynamodb": "3.238.0",
@@ -41,6 +43,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "7.4.0",
     "async-cache-dedupe": "1.8.0",
     "auth0": "3.0.1",
     "cache-manager": "5.1.4",
@@ -48,6 +51,7 @@
     "express-jwt": "7.7.7",
     "jwks-rsa": "3.0.0",
     "node-fetch": "2.6.7",
+    "openapi3-ts": "4.3.3",
     "passport": "0.6.0",
     "passport-jwt": "4.0.0",
     "rambda": "7.4.0",

@@ -1,5 +1,5 @@
 import { AuthService, Role } from '@usecases/auth.service';
-import { Dispatcher, DraftMessage } from '@entities/messages';
+import { Dispatcher, DraftMessage, UpdatedEntity } from '@entities/messages';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/users';
 import { Injectable } from '@nestjs/common';
@@ -39,7 +39,7 @@ export class RenameRoomUseCase {
       content: `Room renamed to ${updatedRoom.name}`,
       roomId: room.id,
       authorId: 'system',
-      updatedEntities: ['room'],
+      updatedEntities: [UpdatedEntity.Room],
     };
 
     await this.dispatcher.send(message);

@@ -18,7 +18,7 @@ import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
-import { CreateMessageDto } from './dto/create-message.dto';
+import { CreateMessageDto } from './dto/messages';
 import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';

@@ -1,7 +1,10 @@
 import { Observable } from 'rxjs';
 import { User } from '../users/user.entity';
 
-type UpdatedEntity = 'room' | 'users';
+export enum UpdatedEntity {
+  Room = 'room',
+  Users = 'users',
+}
 
 /**
  * A message that has been sent by a user and is stored in the system.
