@@ -7,28 +7,40 @@ import { useUserDetails } from '../../../data/users'
 
 export type ChatBoxProps = {
   roomId: string
+  canJoin: boolean
 }
 
-const JoinAlert = ({ roomId }: ChatBoxProps) => {
+const JoinAlert = ({ roomId, canJoin }: ChatBoxProps) => {
   const { mutate: joinRoom, isLoading, isSuccess: isJoined } = useJoinRoom(roomId)
+
   useEffect(() => {
     if (isJoined) {
       window.location.reload()
     }
   }, [isJoined])
+
+  if (canJoin) {
+    return (
+      <Alert status='info' variant='top-accent'>
+        <AlertIcon />
+        You need to join this room to chat.
+        <Spacer />
+        <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
+          Join
+        </Button>
+      </Alert>
+    )
+  }
+
   return (
     <Alert status='info' variant='top-accent'>
       <AlertIcon />
-      You need to join this room to chat.
-      <Spacer />
-      <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
-        Join
-      </Button>
+      You need an invite to join.
     </Alert>
   )
 }
 
-export const ChatBox: React.FC<ChatBoxProps> = ({ roomId }: ChatBoxProps) => {
+export const ChatBox: React.FC<ChatBoxProps> = ({ roomId, canJoin }: ChatBoxProps) => {
   const [content, setContent] = useState<string>('')
   const { data: user, isLoading } = useUserDetails()
   const joined = user?.rooms.some((room) => room.id === roomId)
@@ -55,7 +67,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ roomId }: ChatBoxProps) => {
   }
 
   if (!isLoading && !joined) {
-    return <JoinAlert roomId={roomId} />
+    return <JoinAlert roomId={roomId} canJoin={canJoin} />
   }
 
   return (

@@ -12,6 +12,7 @@ import { HelpCommandUseCase } from '@usecases/commands/help';
 import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
 import { FakerLoremGenerator } from './faker.lorem.generator';
 import { DispatcherModule } from '../dispatcher/dispatcher.module';
+import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
 
 @Module({
   imports: [AuthModule, DispatcherModule],
@@ -28,6 +29,7 @@ import { DispatcherModule } from '../dispatcher/dispatcher.module';
     CommandService,
     RenameRoomUseCase,
     RenameUserUseCase,
+    ChangeRoomJoinPolicyUseCase,
     LoremCommandUseCase,
     HelpCommandUseCase,
   ],

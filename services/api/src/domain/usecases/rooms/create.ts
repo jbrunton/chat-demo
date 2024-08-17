@@ -19,7 +19,7 @@ export class CreateRoomUseCase {
       ownerId: owner.id,
       name: titleCase(name),
       contentPolicy: ContentPolicy.Private,
-      joinPolicy: JoinPolicy.Anyone,
+      joinPolicy: JoinPolicy.Invite,
     });
     await this.memberships.createMembership({
       userId: owner.id,
