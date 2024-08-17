@@ -25,7 +25,7 @@ describe('CreateRoomUseCase', () => {
     expect(room).toMatchObject({
       ownerId: owner.id,
       contentPolicy: ContentPolicy.Private,
-      joinPolicy: JoinPolicy.Invite,
+      joinPolicy: JoinPolicy.Anyone,
     });
   });
 
