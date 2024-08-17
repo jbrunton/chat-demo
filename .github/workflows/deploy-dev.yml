@@ -3,10 +3,9 @@ name: deploy-dev
 on:
   workflow_dispatch:
 
-concurrency: ${{ github.head_ref }}
+concurrency: ${{ github.head_ref || github.ref_name }}
 
 jobs:
-
   build-api:
     uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
     with:
@@ -22,14 +21,14 @@ jobs:
   deploy-app:
     environment:
       name: Development
-      url: https://chat-demo-${{ github.head_ref }}.dev.jbrunton-aws.com
+      url: https://chat-demo-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
     needs: [build-api]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Build Client
         env:
-          VITE_API_URL: https://chat-demo-api-${{ github.head_ref }}.dev.jbrunton-aws.com
+          VITE_API_URL: https://chat-demo-api-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
         run: |
           npm ci
           npm run build
@@ -39,7 +38,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: up
-          stack-name: ${{ github.head_ref }}
+          stack-name: ${{ github.head_ref || github.ref_name }}
           upsert: true
           work-dir: pulumi
           comment-on-pr: true
