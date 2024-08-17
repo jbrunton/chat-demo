@@ -2,7 +2,7 @@ name: cleanup-stacks
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
@@ -19,9 +19,19 @@ jobs:
             policies:
               dev:
                 match:
-                  name: '!production'
+                  name: '!(staging|production)'
                 ttl:
                   hours: 6
+              staging:
+                match:
+                  name: staging
+                ttl:
+                  hours: 24
+              production:
+                match:
+                  name: production
+                ttl:
+                  hours: 24
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
