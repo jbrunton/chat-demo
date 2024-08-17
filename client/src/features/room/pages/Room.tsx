@@ -14,19 +14,20 @@ type Params = {
 
 export const RoomPage = () => {
   const { roomId } = useParams() as Params
-  const { data: roomResponse, isLoading: isLoadingRoom } = useRoom(roomId)
+  const { data: roomResponse } = useRoom(roomId)
 
   const canRead = can('read', roomResponse)
+  const canJoin = can('join', roomResponse)
 
   const { data: messages, isLoading: isLoadingMessages } = useMessages(roomId, { enabled: canRead })
   useMessagesSubscription(roomId, { enabled: canRead })
 
-  if ((canRead && isLoadingMessages) || isLoadingRoom) return <LoadingIndicator />
+  if ((canRead && isLoadingMessages) || !roomResponse) return <LoadingIndicator />
 
   return (
     <Box display='flex' flexFlow='column' height='100%' flex='1'>
       {<MessagesList messages={messages ?? [restrictedMessage(roomId)]} />}
-      <ChatBox roomId={roomId} />
+      <ChatBox roomId={roomId} canJoin={canJoin} />
     </Box>
   )
 }

@@ -2,6 +2,7 @@ import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repos
 import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { CreateRoomUseCase } from './create';
+import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 
 describe('CreateRoomUseCase', () => {
   let create: CreateRoomUseCase;
@@ -23,8 +24,8 @@ describe('CreateRoomUseCase', () => {
     const room = await create.exec(owner);
     expect(room).toMatchObject({
       ownerId: owner.id,
-      contentPolicy: 'private',
-      joinPolicy: 'anyone',
+      contentPolicy: ContentPolicy.Private,
+      joinPolicy: JoinPolicy.Anyone,
     });
   });
 

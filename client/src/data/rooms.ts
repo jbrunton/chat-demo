@@ -6,6 +6,7 @@ export type Room = {
   id: string
   ownerId: string
   name: string
+  joinPolicy: string
 }
 
 export type RoomResponse = {

@@ -45,6 +45,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       audience='https://chat-demo-api.jbrunton-aws.com'
       scope='openid profile email'
       redirectUri={`${window.location.origin}/callback`}
+      useRefreshTokens
+      cacheLocation='localstorage'
     >
       <AuthProvider>
         <QueryClientProvider client={queryClient}>

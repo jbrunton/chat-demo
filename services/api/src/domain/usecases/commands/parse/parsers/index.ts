@@ -1,4 +1,5 @@
 import { CommandParser } from '../command.parser';
+import { changeRoomJoinPolicyParser } from './change-room-join-policy-parser';
 import { helpParser } from './help.parser';
 import { loremParser } from './lorem.parser';
 import { renameRoomParser } from './rename.room.parser';
@@ -9,4 +10,5 @@ export const parsers: CommandParser[] = [
   loremParser,
   renameRoomParser,
   renameUserParser,
+  changeRoomJoinPolicyParser,
 ];

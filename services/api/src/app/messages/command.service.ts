@@ -7,6 +7,7 @@ import { RenameUserUseCase } from '@usecases/users/rename';
 import { Dispatcher } from '@entities/messages';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
 import { ParseCommandUseCase } from '@usecases/commands/parse';
+import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
 
 @Injectable()
 export class CommandService {
@@ -16,6 +17,7 @@ export class CommandService {
     private readonly lorem: LoremCommandUseCase,
     private readonly help: HelpCommandUseCase,
     private readonly parse: ParseCommandUseCase,
+    private readonly changeRoomJoinPolicy: ChangeRoomJoinPolicyUseCase,
     readonly dispatcher: Dispatcher,
   ) {}
 
@@ -35,6 +37,12 @@ export class CommandService {
       case 'lorem':
         await this.lorem.exec({ ...params, roomId, authenticatedUser });
         break;
+      case 'changeRoomJoinPolicy':
+        await this.changeRoomJoinPolicy.exec({
+          ...params,
+          roomId,
+          authenticatedUser,
+        });
     }
   }
 }
