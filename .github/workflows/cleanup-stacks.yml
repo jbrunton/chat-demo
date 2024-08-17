@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: jbrunton/cleanup-pulumi-stacks@v1
+      - uses: jbrunton/cleanup-pulumi-stacks@v2
         with:
           working-directory: pulumi
           verbose: true
