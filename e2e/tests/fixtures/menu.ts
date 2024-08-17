@@ -6,9 +6,9 @@ export class Menu {
   private signInButton: Locator;
 
   constructor(private readonly page: Page) {
-    this.openMenuButton = page.getByLabel('Open Menu');
-    this.createRoomButton = page.getByText('New Room');
-    this.signInButton = page.getByText('Sign In');
+    this.openMenuButton = page.getByLabel("Open Menu");
+    this.createRoomButton = page.getByText("New Room");
+    this.signInButton = page.getByText("Sign In");
   }
 
   async open() {
@@ -21,6 +21,8 @@ export class Menu {
 
   async createRoom() {
     await this.createRoomButton.click();
-    await this.page.getByText('Be the first person to say something').waitFor({ state: 'visible' });
+    await this.page
+      .getByText("Be the first person to say something")
+      .waitFor({ state: "visible" });
   }
 }
