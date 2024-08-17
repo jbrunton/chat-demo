@@ -2,11 +2,15 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, useState } from 'react'
 
 export const useAccessToken = (): { accessToken: string | undefined; isLoading: boolean } => {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+  const { isAuthenticated, getAccessTokenSilently, isLoading: isLoadingAuth } = useAuth0()
   const [accessToken, setAccessToken] = useState<string>()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    if (isLoadingAuth) {
+      return
+    }
+
     if (isAuthenticated) {
       const getAccessToken = async () => {
         const accessToken = await getAccessTokenSilently({
@@ -17,8 +21,10 @@ export const useAccessToken = (): { accessToken: string | undefined; isLoading: 
         setIsLoading(false)
       }
       getAccessToken()
+    } else {
+      setIsLoading(false)
     }
-  }, [isAuthenticated, isLoading])
+  }, [isAuthenticated, isLoading, isLoadingAuth])
 
   return { accessToken, isLoading }
 }
