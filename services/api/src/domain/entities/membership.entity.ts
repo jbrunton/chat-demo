@@ -1,3 +1,5 @@
+import { isNil } from 'rambda';
+
 /**
  * The status of a user's membership to a room.
  */
@@ -59,3 +61,32 @@ export type Membership = {
    */
   until?: number;
 };
+
+export const isCurrent =
+  (status: MembershipStatus) => (roomId: string) => (membership: Membership) =>
+    isNil(membership.until) &&
+    membership.status === status &&
+    membership.roomId === roomId;
+
+export const isActive = isCurrent(MembershipStatus.Joined);
+
+export const isMemberOf = (roomId: string, memberships: Membership[]) =>
+  memberships.some(isActive(roomId));
+
+export const hasInviteTo = (roomId: string, memberships: Membership[]) =>
+  memberships.some(isCurrent(MembershipStatus.PendingInvite)(roomId));
+
+// export const isCurrent = (
+//   membership: Membership,
+//   status?: MembershipStatus,
+//   roomId?: string,
+// ) =>
+//   isNil(membership.until) &&
+//   (isNil(status) || membership.status === status) &&
+//   (isNil(roomId) || membership.roomId == roomId);
+
+// export const isActive = (membership: Membership, roomId?: string) =>
+//   isCurrent(membership, MembershipStatus.Joined, roomId);
+
+// export const isMemberOf = (roomId: string, memberships: Membership[]) =>
+//   memberships.some((membership) => isActive(membership, roomId));

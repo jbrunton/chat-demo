@@ -11,5 +11,6 @@ export abstract class MembershipsRepository {
   abstract createMembership(
     params: CreateMembershipParams,
   ): Promise<Membership>;
+
   abstract getMemberships(userId: string): Promise<Membership[]>;
 }

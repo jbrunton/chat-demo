@@ -2,15 +2,15 @@ import { z } from 'zod';
 import { CommandParser, ParsedCommand } from '../command.parser';
 
 const schema = z
-  .tuple([z.literal('invite'), z.literal('user'), z.string()])
-  .transform<ParsedCommand>(([, , email]) => ({
+  .tuple([z.literal('invite'), z.string()])
+  .transform<ParsedCommand>(([, email]) => ({
     tag: 'inviteUser',
     params: { email },
   }));
 
-export const changeRoomJoinPolicyParser = new CommandParser({
-  matchTokens: ['invite', 'user'],
+export const inviteParser = new CommandParser({
+  matchTokens: ['invite'],
   schema,
-  signature: `/invite user {email}`,
+  signature: `/invite {email}`,
   summary: 'invite a user to the room',
 });

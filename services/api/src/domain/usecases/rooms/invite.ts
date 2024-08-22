@@ -1,5 +1,10 @@
 import { AuthService, Role } from '@usecases/auth.service';
-import { MembershipStatus } from '@entities/membership.entity';
+import {
+  MembershipStatus,
+  hasInviteTo,
+  isActive,
+  isMemberOf,
+} from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User, UsersRepository } from '@entities/users';
@@ -36,6 +41,31 @@ export class InviteUseCase {
     });
 
     const invitedUser = await this.users.findUser(email);
+
+    const existingMemberships = await this.memberships.getMemberships(
+      invitedUser.id,
+    );
+    if (isMemberOf(roomId, existingMemberships)) {
+      const message: DraftMessage = {
+        content: `${invitedUser.name} is already a member of this room`,
+        roomId: room.id,
+        authorId: 'system',
+        recipientId: authenticatedUser.id,
+      };
+
+      await this.dispatcher.send(message);
+      return;
+    } else if (hasInviteTo(roomId, existingMemberships)) {
+      const message: DraftMessage = {
+        content: `${invitedUser.name} already has an invite to this room`,
+        roomId: room.id,
+        authorId: 'system',
+        recipientId: authenticatedUser.id,
+      };
+
+      await this.dispatcher.send(message);
+      return;
+    }
 
     await this.memberships.createMembership({
       userId: invitedUser.id,
