@@ -12,25 +12,33 @@ export const defineRolesForUser = (user: User, memberships: Membership[]) => {
     (membership) =>
       !membership.until && membership.status === MembershipStatus.Joined,
   );
-  const roomIds = pluck('roomId', activeMemberships);
+  const joinedRoomIds = pluck('roomId', activeMemberships);
+
+  const pendingInvitations = memberships.filter(
+    (membership) => !membership.until && MembershipStatus.PendingInvite,
+  );
+  const pendingInviteRoomIds = pluck('roomId', pendingInvitations);
 
   can(Role.Manage, 'Room', {
     ownerId: user.id,
   });
 
   can(Role.Write, 'Room', {
-    id: { $in: roomIds },
+    id: { $in: joinedRoomIds },
   });
 
   can(Role.Read, 'Room', {
     contentPolicy: ContentPolicy.Public,
   });
   can(Role.Read, 'Room', {
-    id: { $in: roomIds },
+    id: { $in: joinedRoomIds },
   });
 
   can(Role.Join, 'Room', {
     joinPolicy: JoinPolicy.Anyone,
+  });
+  can(Role.Join, 'Room', {
+    id: { $in: pendingInviteRoomIds },
   });
 
   return build();

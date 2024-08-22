@@ -37,6 +37,7 @@ describe('RoomsRepository', () => {
 
     const params: SaveUserParams = {
       sub: 'google_123',
+      email: 'some.user@example.com',
       name: 'Some User',
     };
 
@@ -45,10 +46,12 @@ describe('RoomsRepository', () => {
 
     expect(user).toMatchObject({
       id: 'user:google_123',
+      email: 'some.user@example.com',
       name: 'Some User',
     });
     expect(found).toMatchObject({
       id: 'user:google_123',
+      email: 'some.user@example.com',
       name: 'Some User',
     });
   });
@@ -57,6 +60,7 @@ describe('RoomsRepository', () => {
     const repo = repos[name];
     const params: SaveUserParams = {
       name: 'Some User',
+      email: 'some.user@example.com',
       sub: 'user:google_123',
     };
     const user = await repo.saveUser(params);

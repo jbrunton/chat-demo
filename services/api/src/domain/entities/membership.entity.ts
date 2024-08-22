@@ -13,6 +13,12 @@ export enum MembershipStatus {
   Joined = 'Joined',
 
   /**
+   * The user has been invited by an admin but has not accepted.
+   */
+
+  PendingInvite = 'PendingInvite',
+
+  /**
    * The user has requested to join a room but is pending approval.
    */
   PendingApproval = 'PendingApproval',

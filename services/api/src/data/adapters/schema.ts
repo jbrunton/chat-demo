@@ -14,6 +14,7 @@ export const DbSchema = {
       Sort: { type: String, value: 'user', required: true },
       sub: { type: String, required: true },
       name: { type: String, required: true },
+      email: { type: String, required: true, unique: true },
       picture: { type: String },
     },
     Message: {
