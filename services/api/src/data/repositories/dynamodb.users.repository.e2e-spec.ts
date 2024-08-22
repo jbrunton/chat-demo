@@ -59,8 +59,8 @@ describe('RoomsRepository', () => {
   test.each(testCases)('[$name] updates users', async ({ name }) => {
     const repo = repos[name];
     const params: SaveUserParams = {
-      name: 'Some User',
-      email: 'some.user@example.com',
+      name: 'Other User',
+      email: 'other.user@example.com',
       sub: 'user:google_123',
     };
     const user = await repo.saveUser(params);
