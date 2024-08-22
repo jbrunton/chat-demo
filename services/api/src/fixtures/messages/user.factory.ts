@@ -6,6 +6,7 @@ export const UserFactory = {
   build: (overrides?: Partial<User>): User => ({
     id: overrides?.id ?? UserFactory.id(),
     name: overrides?.name ?? faker.name.fullName(),
+    email: overrides?.email ?? faker.internet.email(),
     picture: overrides?.picture ?? faker.internet.avatar(),
   }),
 };

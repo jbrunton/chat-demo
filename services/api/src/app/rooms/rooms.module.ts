@@ -6,17 +6,11 @@ import { JoinRoomUseCase } from '@usecases/rooms/join';
 import { RoomsController } from './rooms.controller';
 import { MessagesModule } from '@app/messages/messages.module';
 import { DispatcherModule } from '@app/dispatcher/dispatcher.module';
-import { InviteUseCase } from '@usecases/rooms/invite';
 
 @Module({
   imports: [AuthModule, DispatcherModule, MessagesModule],
   controllers: [RoomsController],
-  providers: [
-    CreateRoomUseCase,
-    GetRoomUseCase,
-    JoinRoomUseCase,
-    InviteUseCase,
-  ],
+  providers: [CreateRoomUseCase, GetRoomUseCase, JoinRoomUseCase],
   exports: [],
 })
 export class RoomsModule {}

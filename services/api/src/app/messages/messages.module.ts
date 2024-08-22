@@ -13,6 +13,7 @@ import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
 import { FakerLoremGenerator } from './faker.lorem.generator';
 import { DispatcherModule } from '../dispatcher/dispatcher.module';
 import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
+import { InviteUseCase } from '@usecases/rooms/invite';
 
 @Module({
   imports: [AuthModule, DispatcherModule],
@@ -30,6 +31,7 @@ import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-po
     RenameRoomUseCase,
     RenameUserUseCase,
     ChangeRoomJoinPolicyUseCase,
+    InviteUseCase,
     LoremCommandUseCase,
     HelpCommandUseCase,
   ],

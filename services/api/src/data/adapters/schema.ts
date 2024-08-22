@@ -59,6 +59,7 @@ export const DbSchema = {
         enum: [
           MembershipStatus.None,
           MembershipStatus.Joined,
+          MembershipStatus.PendingInvite,
           MembershipStatus.PendingApproval,
           MembershipStatus.Revoked,
         ],

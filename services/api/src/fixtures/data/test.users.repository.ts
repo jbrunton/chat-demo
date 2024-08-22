@@ -16,9 +16,13 @@ export class TestUsersRepository extends UsersRepository {
   }
 
   override async saveUser(params: AuthInfo): Promise<User> {
+    if (!params.email) {
+      throw new Error('Requires email');
+    }
     const user = {
       id: `user:${params.sub}`,
       name: params.name ?? 'Anon',
+      email: params.email,
       picture: params.picture,
     };
     this.users.push(user);
@@ -29,6 +33,14 @@ export class TestUsersRepository extends UsersRepository {
     const user = find((user) => userId === user.id, this.users);
     if (!user) {
       throw new NotFoundException(`User ${userId} does not exist`);
+    }
+    return user;
+  }
+
+  override async findUser(email: string): Promise<User> {
+    const user = find((user) => email === user.email, this.users);
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} does not exist`);
     }
     return user;
   }

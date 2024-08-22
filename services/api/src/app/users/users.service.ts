@@ -2,7 +2,7 @@ import { MembershipStatus } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users';
+import { User, systemUser } from '@entities/users';
 import { UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 import { filter, pluck, uniq } from 'rambda';
@@ -17,10 +17,7 @@ export class UsersService {
 
   async getUser(userId: string): Promise<User> {
     if (userId === 'system') {
-      return {
-        id: 'system',
-        name: 'System',
-      };
+      return systemUser;
     }
     return await this.usersRepo.getUser(userId);
   }
