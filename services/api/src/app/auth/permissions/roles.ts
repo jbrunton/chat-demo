@@ -20,8 +20,6 @@ export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   );
   const pendingInviteRoomIds = pluck('roomId', pendingInvitations);
 
-  console.info({ memberships, joinedRoomIds, pendingInviteRoomIds });
-
   can(Role.Manage, 'Room', {
     ownerId: user.id,
   });
