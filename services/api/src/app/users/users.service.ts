@@ -1,11 +1,11 @@
-import { MembershipStatus } from '@entities/membership.entity';
+import { isActive } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User, systemUser } from '@entities/users';
 import { UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
-import { filter, pluck, uniq } from 'rambda';
+import { filter, map, prop, pipe } from 'remeda';
 
 @Injectable()
 export class UsersService {
@@ -24,11 +24,7 @@ export class UsersService {
 
   async getUserRooms(userId: string): Promise<Room[]> {
     const memberships = await this.membershipsRepo.getMemberships(userId);
-    const activeMemberships = filter(
-      (m) => !m.until && m.status === MembershipStatus.Joined,
-      memberships,
-    );
-    const roomIds = uniq(pluck('roomId', activeMemberships));
+    const roomIds = pipe(memberships, filter(isActive), map(prop('roomId')));
     const rooms = await Promise.all(
       roomIds.map((roomId) => this.roomsRepo.getRoom(roomId)),
     );

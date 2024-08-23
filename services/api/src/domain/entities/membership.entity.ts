@@ -1,4 +1,5 @@
 import { isNil } from 'rambda';
+import { allPass, filter, pipe } from 'remeda';
 
 /**
  * The status of a user's membership to a room.
@@ -62,32 +63,27 @@ export type Membership = {
   until?: number;
 };
 
-export const isCurrent =
-  (status: MembershipStatus) => (roomId: string) => (membership: Membership) =>
-    isNil(membership.until) &&
-    membership.status === status &&
-    membership.roomId === roomId;
+export const isCurrent = (membership: Membership) => isNil(membership.until);
 
-export const isActive = isCurrent(MembershipStatus.Joined);
-export const isPendingInvite = isCurrent(MembershipStatus.PendingInvite);
+export const withStatus =
+  (status: MembershipStatus) => (membership: Membership) =>
+    membership.status === status;
+
+export const forRoom = (roomId: string) => (membership: Membership) =>
+  membership.roomId === roomId;
+
+export const isActive = allPass([
+  isCurrent,
+  withStatus(MembershipStatus.Joined),
+]);
+
+export const isPendingInvite = allPass([
+  isCurrent,
+  withStatus(MembershipStatus.PendingInvite),
+]);
 
 export const isMemberOf = (roomId: string, memberships: Membership[]) =>
-  memberships.some(isActive(roomId));
+  memberships.some(allPass([isActive, forRoom(roomId)]));
 
 export const hasInviteTo = (roomId: string, memberships: Membership[]) =>
-  memberships.some(isPendingInvite(roomId));
-
-// export const isCurrent = (
-//   membership: Membership,
-//   status?: MembershipStatus,
-//   roomId?: string,
-// ) =>
-//   isNil(membership.until) &&
-//   (isNil(status) || membership.status === status) &&
-//   (isNil(roomId) || membership.roomId == roomId);
-
-// export const isActive = (membership: Membership, roomId?: string) =>
-//   isCurrent(membership, MembershipStatus.Joined, roomId);
-
-// export const isMemberOf = (roomId: string, memberships: Membership[]) =>
-//   memberships.some((membership) => isActive(membership, roomId));
+  memberships.some(allPass([isPendingInvite, forRoom(roomId)]));
