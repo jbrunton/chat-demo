@@ -1,5 +1,5 @@
 import { isNil } from 'rambda';
-import { allPass, filter, pipe } from 'remeda';
+import { allPass } from 'remeda';
 
 /**
  * The status of a user's membership to a room.

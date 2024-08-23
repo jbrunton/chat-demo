@@ -32,7 +32,9 @@ describe('HelpCommandUseCase', () => {
         "* `/lorem {count} {'words' | 'paragraphs'}`: generate lorem text",
         '* `/rename room {name}`: change the room name',
         '* `/rename user {name}`: change your display name',
+        '* `/leave`: leave room',
         "* `/set room join policy {'anyone', 'invite'}`: set the room join policy",
+        '* `/invite {email}`: invite a user to the room',
       ].join('\n'),
     });
   });
