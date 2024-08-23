@@ -15,9 +15,12 @@ export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   const joinedRoomIds = pluck('roomId', activeMemberships);
 
   const pendingInvitations = memberships.filter(
-    (membership) => !membership.until && MembershipStatus.PendingInvite,
+    (membership) =>
+      !membership.until && membership.status === MembershipStatus.PendingInvite,
   );
   const pendingInviteRoomIds = pluck('roomId', pendingInvitations);
+
+  console.info({ memberships, joinedRoomIds, pendingInviteRoomIds });
 
   can(Role.Manage, 'Room', {
     ownerId: user.id,

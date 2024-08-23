@@ -69,12 +69,13 @@ export const isCurrent =
     membership.roomId === roomId;
 
 export const isActive = isCurrent(MembershipStatus.Joined);
+export const isPendingInvite = isCurrent(MembershipStatus.PendingInvite);
 
 export const isMemberOf = (roomId: string, memberships: Membership[]) =>
   memberships.some(isActive(roomId));
 
 export const hasInviteTo = (roomId: string, memberships: Membership[]) =>
-  memberships.some(isCurrent(MembershipStatus.PendingInvite)(roomId));
+  memberships.some(isPendingInvite(roomId));
 
 // export const isCurrent = (
 //   membership: Membership,

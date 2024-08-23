@@ -23,7 +23,7 @@ const JoinAlert = ({ roomId, canJoin }: ChatBoxProps) => {
     return (
       <Alert status='info' variant='top-accent'>
         <AlertIcon />
-        You need to join this room to chat.
+        Join this room to chat.
         <Spacer />
         <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
           Join

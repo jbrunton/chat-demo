@@ -2,7 +2,6 @@ import { AuthService, Role } from '@usecases/auth.service';
 import {
   MembershipStatus,
   hasInviteTo,
-  isActive,
   isMemberOf,
 } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
