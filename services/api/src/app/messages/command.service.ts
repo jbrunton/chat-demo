@@ -9,10 +9,10 @@ import { LoremCommandUseCase } from '@usecases/commands/lorem';
 import { ParseCommandUseCase } from '@usecases/commands/parse';
 import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
 import { P, match } from 'ts-pattern';
-import { InviteUseCase } from '@usecases/rooms/invite';
-import { LeaveRoomUseCase } from '@usecases/rooms/leave';
+import { InviteUseCase } from '@usecases/memberships/invite';
+import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
-import { ApproveRequestUseCase } from '@usecases/rooms/approve-request';
+import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
 
 @Injectable()
 export class CommandService {

@@ -13,10 +13,10 @@ import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
 import { FakerLoremGenerator } from './faker.lorem.generator';
 import { DispatcherModule } from '../dispatcher/dispatcher.module';
 import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
-import { InviteUseCase } from '@usecases/rooms/invite';
-import { LeaveRoomUseCase } from '@usecases/rooms/leave';
+import { InviteUseCase } from '@usecases/memberships/invite';
+import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
-import { ApproveRequestUseCase } from '@usecases/rooms/approve-request';
+import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
 
 @Module({
   imports: [AuthModule, DispatcherModule],
