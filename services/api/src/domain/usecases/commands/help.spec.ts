@@ -34,6 +34,7 @@ describe('HelpCommandUseCase', () => {
         '* `/rename user {name}`: change your display name',
         '* `/leave`: leave room',
         "* `/set room join policy {'anyone', 'invite'}`: set the room join policy",
+        '* `/about room`: about room (including policies)',
         '* `/invite {email}`: invite a user to the room',
       ].join('\n'),
     });

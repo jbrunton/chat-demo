@@ -11,6 +11,7 @@ import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-po
 import { P, match } from 'ts-pattern';
 import { InviteUseCase } from '@usecases/rooms/invite';
 import { LeaveRoomUseCase } from '@usecases/rooms/leave';
+import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 
 @Injectable()
 export class CommandService {
@@ -22,6 +23,7 @@ export class CommandService {
     private readonly leave: LeaveRoomUseCase,
     private readonly parse: ParseCommandUseCase,
     private readonly changeRoomJoinPolicy: ChangeRoomJoinPolicyUseCase,
+    private readonly aboutRoom: AboutRoomUseCase,
     private readonly invite: InviteUseCase,
     readonly dispatcher: Dispatcher,
   ) {}
@@ -51,6 +53,12 @@ export class CommandService {
       )
       .with({ tag: 'leave' }, () =>
         this.leave.exec({
+          roomId,
+          authenticatedUser,
+        }),
+      )
+      .with({ tag: 'aboutRoom' }, () =>
+        this.aboutRoom.exec({
           roomId,
           authenticatedUser,
         }),
