@@ -15,6 +15,7 @@ import { DispatcherModule } from '../dispatcher/dispatcher.module';
 import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
 import { InviteUseCase } from '@usecases/rooms/invite';
 import { LeaveRoomUseCase } from '@usecases/rooms/leave';
+import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 
 @Module({
   imports: [AuthModule, DispatcherModule],
@@ -35,6 +36,7 @@ import { LeaveRoomUseCase } from '@usecases/rooms/leave';
     InviteUseCase,
     LeaveRoomUseCase,
     LoremCommandUseCase,
+    AboutRoomUseCase,
     HelpCommandUseCase,
   ],
   exports: [MessagesService],

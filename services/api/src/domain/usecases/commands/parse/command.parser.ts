@@ -10,6 +10,7 @@ export type ParsedCommand =
   | { tag: 'renameUser'; params: { newName: string } }
   | { tag: 'inviteUser'; params: { email: string } }
   | { tag: 'leave'; params: null }
+  | { tag: 'aboutRoom'; params: null }
   | { tag: 'changeRoomJoinPolicy'; params: { newJoinPolicy: JoinPolicy } }
   | {
       tag: 'lorem';
