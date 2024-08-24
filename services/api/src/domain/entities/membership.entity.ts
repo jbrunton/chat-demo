@@ -82,8 +82,18 @@ export const isPendingInvite = allPass([
   withStatus(MembershipStatus.PendingInvite),
 ]);
 
+export const isPendingApproval = allPass([
+  isCurrent,
+  withStatus(MembershipStatus.PendingApproval),
+]);
+
 export const isMemberOf = (roomId: string, memberships: Membership[]) =>
   memberships.some(allPass([isActive, forRoom(roomId)]));
 
-export const hasInviteTo = (roomId: string, memberships: Membership[]) =>
+export const hasPendingInviteTo = (roomId: string, memberships: Membership[]) =>
   memberships.some(allPass([isPendingInvite, forRoom(roomId)]));
+
+export const hasPendingRequestTo = (
+  roomId: string,
+  memberships: Membership[],
+) => memberships.some(allPass([isPendingApproval, forRoom(roomId)]));

@@ -18,7 +18,10 @@ describe('JoinRoomUseCase', () => {
   let auth: TestAuthService;
   let dispatcher: MockProxy<Dispatcher>;
 
-  const user = UserFactory.build({ name: 'Joe Bloggs' });
+  const user = UserFactory.build({
+    name: 'Joe Bloggs',
+    email: 'joe.bloggs@example.com',
+  });
 
   const now = new Date(1000);
 
@@ -31,7 +34,7 @@ describe('JoinRoomUseCase', () => {
     jest.useFakeTimers({ now });
   });
 
-  it('assigns a membership to the user', async () => {
+  it('assigns a membership with status = "Joined" when the join policy is "anyone"', async () => {
     const room = RoomFactory.build({
       joinPolicy: JoinPolicy.Anyone,
     });
@@ -53,6 +56,33 @@ describe('JoinRoomUseCase', () => {
       content: 'Joe Bloggs joined the room. Welcome!',
       authorId: 'system',
       roomId: room.id,
+    });
+  });
+
+  it('assigns a membership with status = "PendingApproval" when the join policy is "request"', async () => {
+    const room = RoomFactory.build({
+      joinPolicy: JoinPolicy.Request,
+    });
+    rooms.setData([room]);
+    auth.stubPermission({ user, subject: room, action: Role.Join });
+
+    await join.exec(room.id, user);
+
+    expect(memberships.getData()).toEqual([
+      {
+        userId: user.id,
+        roomId: room.id,
+        status: 'PendingApproval',
+        from: now.getTime(),
+      },
+    ]);
+
+    expect(dispatcher.send).toHaveBeenCalledWith({
+      content:
+        'Joe Bloggs (joe.bloggs@example.com) requested approval to join the room',
+      authorId: 'system',
+      roomId: room.id,
+      recipientId: room.ownerId,
     });
   });
 

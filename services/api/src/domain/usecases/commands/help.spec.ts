@@ -33,9 +33,10 @@ describe('HelpCommandUseCase', () => {
         '* `/rename room {name}`: change the room name',
         '* `/rename user {name}`: change your display name',
         '* `/leave`: leave room',
-        "* `/set room join policy {'anyone', 'invite'}`: set the room join policy",
+        "* `/set room join policy {'anyone', 'request', 'invite'}`: set the room join policy",
         '* `/about room`: about room (including policies)',
         '* `/invite {email}`: invite a user to the room',
+        '* `/approve request {email}`: approve pending request to join the room',
       ].join('\n'),
     });
   });

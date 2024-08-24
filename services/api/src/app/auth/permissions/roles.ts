@@ -40,7 +40,7 @@ export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   });
 
   can(Role.Join, 'Room', {
-    joinPolicy: JoinPolicy.Anyone,
+    joinPolicy: { $in: [JoinPolicy.Anyone, JoinPolicy.Request] },
   });
   can(Role.Join, 'Room', {
     id: { $in: pendingInviteRoomIds },

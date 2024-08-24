@@ -1,42 +1,42 @@
-import { AuthService, Role } from '@usecases/auth.service';
 import {
   MembershipStatus,
-  hasPendingInviteTo,
+  hasPendingRequestTo,
   isMemberOf,
 } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
+import { Dispatcher, DraftMessage } from '@entities/messages';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User, UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
-import { Dispatcher, DraftMessage } from '@entities/messages/message';
+import { AuthService, Role } from '@usecases/auth.service';
 
-export type InviteParams = {
-  roomId: string;
+export type ApproveRequestParams = {
   authenticatedUser: User;
+  roomId: string;
   email: string;
 };
 
 @Injectable()
-export class InviteUseCase {
+export class ApproveRequestUseCase {
   constructor(
     private readonly rooms: RoomsRepository,
     private readonly users: UsersRepository,
     private readonly memberships: MembershipsRepository,
-    private readonly authService: AuthService,
+    private readonly auth: AuthService,
     private readonly dispatcher: Dispatcher,
   ) {}
 
   async exec({
-    roomId,
     authenticatedUser,
+    roomId,
     email,
-  }: InviteParams): Promise<void> {
+  }: ApproveRequestParams): Promise<void> {
     const room = await this.rooms.getRoom(roomId);
 
-    await this.authService.authorize({
+    await this.auth.authorize({
       user: authenticatedUser,
-      action: Role.Manage,
       subject: room,
+      action: Role.Manage,
     });
 
     const invitedUser = await this.users.findUser(email);
@@ -66,9 +66,9 @@ export class InviteUseCase {
 
       await this.dispatcher.send(message);
       return;
-    } else if (hasPendingInviteTo(roomId, existingMemberships)) {
+    } else if (!hasPendingRequestTo(roomId, existingMemberships)) {
       const message: DraftMessage = {
-        content: `${invitedUser.name} already has an invite to this room`,
+        content: `${invitedUser.name} does not have a pending request to join this room`,
         roomId: room.id,
         authorId: 'system',
         recipientId: authenticatedUser.id,
@@ -81,11 +81,11 @@ export class InviteUseCase {
     await this.memberships.createMembership({
       userId: invitedUser.id,
       roomId,
-      status: MembershipStatus.PendingInvite,
+      status: MembershipStatus.Joined,
     });
 
     const message: DraftMessage = {
-      content: `${authenticatedUser.name} invited ${invitedUser.name} to join the room`,
+      content: `${authenticatedUser.name} approved ${invitedUser.name} to join the room`,
       roomId: room.id,
       authorId: 'system',
     };

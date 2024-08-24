@@ -12,6 +12,7 @@ import { P, match } from 'ts-pattern';
 import { InviteUseCase } from '@usecases/rooms/invite';
 import { LeaveRoomUseCase } from '@usecases/rooms/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
+import { ApproveRequestUseCase } from '@usecases/rooms/approve-request';
 
 @Injectable()
 export class CommandService {
@@ -22,6 +23,7 @@ export class CommandService {
     private readonly help: HelpCommandUseCase,
     private readonly leave: LeaveRoomUseCase,
     private readonly parse: ParseCommandUseCase,
+    private readonly approveRequest: ApproveRequestUseCase,
     private readonly changeRoomJoinPolicy: ChangeRoomJoinPolicyUseCase,
     private readonly aboutRoom: AboutRoomUseCase,
     private readonly invite: InviteUseCase,
@@ -53,6 +55,13 @@ export class CommandService {
       )
       .with({ tag: 'leave' }, () =>
         this.leave.exec({
+          roomId,
+          authenticatedUser,
+        }),
+      )
+      .with({ tag: 'approveRequest', params: P.select() }, (params) =>
+        this.approveRequest.exec({
+          ...params,
           roomId,
           authenticatedUser,
         }),

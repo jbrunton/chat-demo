@@ -2,15 +2,21 @@ import { Button, Icon, Textarea, Spinner, VStack, Alert, AlertIcon, Spacer } fro
 import React, { useState, KeyboardEventHandler, useRef, useEffect, ReactElement } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { usePostMessage } from '../../../data/messages'
-import { useJoinRoom } from '../../../data/rooms'
+import { RoomResponse, useJoinRoom } from '../../../data/rooms'
 import { useUserDetails } from '../../../data/users'
+import { can } from '../../../data/lib'
 
 export type ChatBoxProps = {
-  roomId: string
-  canJoin: boolean
+  roomResponse: RoomResponse
 }
 
-const JoinAlert = ({ roomId, canJoin }: ChatBoxProps) => {
+const JoinAlert = ({ roomResponse }: ChatBoxProps): ReactElement => {
+  const roomId = roomResponse.room.id
+
+  const canJoin = can('join', roomResponse)
+  const requiresApproval = roomResponse.room.joinPolicy === 'request'
+  const awaitingApproval = roomResponse.membership?.status === 'PendingApproval'
+
   const { mutate: joinRoom, isLoading, isSuccess: isJoined } = useJoinRoom(roomId)
 
   useEffect(() => {
@@ -20,13 +26,22 @@ const JoinAlert = ({ roomId, canJoin }: ChatBoxProps) => {
   }, [isJoined])
 
   if (canJoin) {
+    if (requiresApproval && awaitingApproval) {
+      return (
+        <Alert status='info' variant='top-accent'>
+          <AlertIcon />
+          Awaiting approval from owner.
+          <Spacer />
+        </Alert>
+      )
+    }
     return (
       <Alert status='info' variant='top-accent'>
         <AlertIcon />
         Join this room to chat.
         <Spacer />
         <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
-          Join
+          {requiresApproval ? 'Request to Join' : 'Join'}
         </Button>
       </Alert>
     )
@@ -40,7 +55,9 @@ const JoinAlert = ({ roomId, canJoin }: ChatBoxProps) => {
   )
 }
 
-export const ChatBox: React.FC<ChatBoxProps> = ({ roomId, canJoin }: ChatBoxProps): ReactElement => {
+export const ChatBox: React.FC<ChatBoxProps> = ({ roomResponse }: ChatBoxProps): ReactElement => {
+  const roomId = roomResponse.room.id
+
   const [content, setContent] = useState<string>('')
   const { data: user, isLoading } = useUserDetails()
   const joined = user?.rooms.some((room) => room.id === roomId)
@@ -67,7 +84,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ roomId, canJoin }: ChatBoxProp
   }
 
   if (!isLoading && !joined) {
-    return <JoinAlert roomId={roomId} canJoin={canJoin} />
+    return <JoinAlert roomResponse={roomResponse} />
   }
 
   return (

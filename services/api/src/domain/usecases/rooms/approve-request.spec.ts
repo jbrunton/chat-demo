@@ -9,12 +9,12 @@ import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';
 import mock, { MockProxy } from 'jest-mock-extended/lib/Mock';
 import { Dispatcher } from '@entities/messages/message';
-import { InviteUseCase } from './invite';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
-import { MembershipStatus } from '@entities/membership.entity';
+import { MembershipStatus, isCurrent } from '@entities/membership.entity';
+import { ApproveRequestUseCase } from './approve-request';
 
-describe('InviteUseCase', () => {
-  let invite: InviteUseCase;
+describe('ApproveRequestUseCase', () => {
+  let approveRequest: ApproveRequestUseCase;
   let rooms: TestRoomsRepository;
   let users: TestUsersRepository;
   let memberships: TestMembershipsRepository;
@@ -41,29 +41,44 @@ describe('InviteUseCase', () => {
 
     dispatcher = mock<Dispatcher>();
 
-    invite = new InviteUseCase(rooms, users, memberships, auth, dispatcher);
+    approveRequest = new ApproveRequestUseCase(
+      rooms,
+      users,
+      memberships,
+      auth,
+      dispatcher,
+    );
 
     jest.useFakeTimers({ now });
   });
 
-  it('invites a user to the room', async () => {
-    await invite.exec({
+  it('approves pending requests', async () => {
+    memberships.setData([
+      {
+        userId: otherUser.id,
+        roomId: room.id,
+        status: MembershipStatus.PendingApproval,
+        from: 0,
+      },
+    ]);
+
+    await approveRequest.exec({
       authenticatedUser: owner,
       roomId: room.id,
       email: otherUser.email,
     });
 
-    expect(memberships.getData()).toEqual([
+    expect(memberships.getData().filter(isCurrent)).toEqual([
       {
         userId: otherUser.id,
         roomId: room.id,
-        status: MembershipStatus.PendingInvite,
+        status: MembershipStatus.Joined,
         from: now.getTime(),
       },
     ]);
 
     expect(dispatcher.send).toHaveBeenCalledWith({
-      content: 'Alice invited Bob to join the room',
+      content: 'Alice approved Bob to join the room',
       authorId: 'system',
       roomId: room.id,
     });
@@ -71,7 +86,7 @@ describe('InviteUseCase', () => {
 
   it('authorizes the user', async () => {
     await expect(
-      invite.exec({
+      approveRequest.exec({
         authenticatedUser: otherUser,
         roomId: room.id,
         email: otherUser.email,
@@ -84,7 +99,7 @@ describe('InviteUseCase', () => {
   });
 
   it('checks the user exists', async () => {
-    await invite.exec({
+    await approveRequest.exec({
       authenticatedUser: owner,
       roomId: room.id,
       email: 'not-a-user@example.com',
@@ -108,7 +123,7 @@ describe('InviteUseCase', () => {
       },
     ]);
 
-    await invite.exec({
+    await approveRequest.exec({
       authenticatedUser: owner,
       roomId: room.id,
       email: otherUser.email,
@@ -122,24 +137,15 @@ describe('InviteUseCase', () => {
     });
   });
 
-  it('checks the user does not already have an invite', async () => {
-    await memberships.setData([
-      {
-        from: 0,
-        roomId: room.id,
-        userId: otherUser.id,
-        status: MembershipStatus.PendingInvite,
-      },
-    ]);
-
-    await invite.exec({
+  it('checks the user has a pending invite', async () => {
+    await approveRequest.exec({
       authenticatedUser: owner,
       roomId: room.id,
       email: otherUser.email,
     });
 
     expect(dispatcher.send).toHaveBeenCalledWith({
-      content: 'Bob already has an invite to this room',
+      content: 'Bob does not have a pending request to join this room',
       authorId: 'system',
       roomId: room.id,
       recipientId: owner.id,
