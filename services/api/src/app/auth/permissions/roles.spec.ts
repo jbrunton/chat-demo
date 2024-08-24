@@ -1,8 +1,9 @@
 import { Membership, MembershipStatus } from '@entities/membership.entity';
-import { ContentPolicy } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { defineRolesForUser } from './roles';
+import { Role } from '@usecases/auth.service';
 
 describe('defineRolesForUser', () => {
   const user = UserFactory.build();
@@ -14,8 +15,8 @@ describe('defineRolesForUser', () => {
     const userAbility = defineRolesForUser(user, []);
     const otherUserAbility = defineRolesForUser(otherUser, []);
 
-    expect(userAbility.can('manage', room)).toEqual(true);
-    expect(otherUserAbility.can('manage', room)).toEqual(false);
+    expect(userAbility.can(Role.Manage, room)).toEqual(true);
+    expect(otherUserAbility.can(Role.Manage, room)).toEqual(false);
   });
 
   it('grants read and write permissions for joined rooms', () => {
@@ -34,13 +35,13 @@ describe('defineRolesForUser', () => {
     const userAbility = defineRolesForUser(user, memberships);
     const otherUserAbility = defineRolesForUser(otherUser, []);
 
-    expect(userAbility.can('read', room)).toEqual(true);
-    expect(userAbility.can('write', room)).toEqual(true);
-    expect(userAbility.can('manage', room)).toEqual(false);
+    expect(userAbility.can(Role.Read, room)).toEqual(true);
+    expect(userAbility.can(Role.Write, room)).toEqual(true);
+    expect(userAbility.can(Role.Manage, room)).toEqual(false);
 
-    expect(otherUserAbility.can('read', room)).toEqual(false);
-    expect(otherUserAbility.can('write', room)).toEqual(false);
-    expect(otherUserAbility.can('manage', room)).toEqual(false);
+    expect(otherUserAbility.can(Role.Read, room)).toEqual(false);
+    expect(otherUserAbility.can(Role.Write, room)).toEqual(false);
+    expect(otherUserAbility.can(Role.Manage, room)).toEqual(false);
   });
 
   it('grants read permissions for public rooms', () => {
@@ -50,8 +51,38 @@ describe('defineRolesForUser', () => {
 
     const userAbility = defineRolesForUser(user, []);
 
-    expect(userAbility.can('read', room)).toEqual(true);
-    expect(userAbility.can('write', room)).toEqual(false);
-    expect(userAbility.can('manage', room)).toEqual(false);
+    expect(userAbility.can(Role.Read, room)).toEqual(true);
+    expect(userAbility.can(Role.Write, room)).toEqual(false);
+    expect(userAbility.can(Role.Manage, room)).toEqual(false);
+  });
+
+  it('grants join permissions for rooms with a public join policy', () => {
+    const room = RoomFactory.build({
+      joinPolicy: JoinPolicy.Anyone,
+    });
+
+    const userAbility = defineRolesForUser(user, []);
+
+    expect(userAbility.can(Role.Join, room)).toEqual(true);
+  });
+
+  it('grants join permissions for invited users', () => {
+    const room = RoomFactory.build({
+      joinPolicy: JoinPolicy.Invite,
+    });
+    const memberships: Membership[] = [
+      {
+        userId: user.id,
+        roomId: room.id,
+        status: MembershipStatus.PendingInvite,
+        from: 1000,
+      },
+    ];
+
+    const userAbility = defineRolesForUser(user, memberships);
+    const otherUserAbility = defineRolesForUser(otherUser, []);
+
+    expect(userAbility.can(Role.Join, room)).toEqual(true);
+    expect(otherUserAbility.can(Role.Join, room)).toEqual(false);
   });
 });

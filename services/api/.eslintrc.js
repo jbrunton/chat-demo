@@ -95,7 +95,7 @@ module.exports = {
           },
           {
             from: ['*'],
-            allow: ['rambda', 'rxjs', 'zod'],
+            allow: ['rambda', 'remeda', 'rxjs', 'zod'],
           },
         ],
       },

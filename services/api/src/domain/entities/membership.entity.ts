@@ -1,3 +1,6 @@
+import { isNil } from 'rambda';
+import { allPass } from 'remeda';
+
 /**
  * The status of a user's membership to a room.
  */
@@ -11,6 +14,12 @@ export enum MembershipStatus {
    * The user has joined the room.
    */
   Joined = 'Joined',
+
+  /**
+   * The user has been invited by an admin but has not accepted.
+   */
+
+  PendingInvite = 'PendingInvite',
 
   /**
    * The user has requested to join a room but is pending approval.
@@ -53,3 +62,28 @@ export type Membership = {
    */
   until?: number;
 };
+
+export const isCurrent = (membership: Membership) => isNil(membership.until);
+
+export const withStatus =
+  (status: MembershipStatus) => (membership: Membership) =>
+    membership.status === status;
+
+export const forRoom = (roomId: string) => (membership: Membership) =>
+  membership.roomId === roomId;
+
+export const isActive = allPass([
+  isCurrent,
+  withStatus(MembershipStatus.Joined),
+]);
+
+export const isPendingInvite = allPass([
+  isCurrent,
+  withStatus(MembershipStatus.PendingInvite),
+]);
+
+export const isMemberOf = (roomId: string, memberships: Membership[]) =>
+  memberships.some(allPass([isActive, forRoom(roomId)]));
+
+export const hasInviteTo = (roomId: string, memberships: Membership[]) =>
+  memberships.some(allPass([isPendingInvite, forRoom(roomId)]));

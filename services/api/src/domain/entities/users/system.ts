@@ -1,8 +1,10 @@
 import { SentMessage, DraftMessage } from '../messages/message';
+import { User } from './user.entity';
 
-export const systemUser = Object.freeze({
+export const systemUser: User = Object.freeze({
   id: 'system',
   name: 'System',
+  email: 'system@example.com',
 });
 
 export const isSystemMessage = (message: SentMessage): boolean => {

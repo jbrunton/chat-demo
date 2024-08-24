@@ -8,6 +8,8 @@ export type ParsedCommand =
   | { tag: 'help'; params: null }
   | { tag: 'renameRoom'; params: { newName: string } }
   | { tag: 'renameUser'; params: { newName: string } }
+  | { tag: 'inviteUser'; params: { email: string } }
+  | { tag: 'leave'; params: null }
   | { tag: 'changeRoomJoinPolicy'; params: { newJoinPolicy: JoinPolicy } }
   | {
       tag: 'lorem';

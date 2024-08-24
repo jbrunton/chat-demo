@@ -8,6 +8,9 @@ import { Dispatcher } from '@entities/messages';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
 import { ParseCommandUseCase } from '@usecases/commands/parse';
 import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
+import { P, match } from 'ts-pattern';
+import { InviteUseCase } from '@usecases/rooms/invite';
+import { LeaveRoomUseCase } from '@usecases/rooms/leave';
 
 @Injectable()
 export class CommandService {
@@ -16,33 +19,45 @@ export class CommandService {
     private readonly renameRoom: RenameRoomUseCase,
     private readonly lorem: LoremCommandUseCase,
     private readonly help: HelpCommandUseCase,
+    private readonly leave: LeaveRoomUseCase,
     private readonly parse: ParseCommandUseCase,
     private readonly changeRoomJoinPolicy: ChangeRoomJoinPolicyUseCase,
+    private readonly invite: InviteUseCase,
     readonly dispatcher: Dispatcher,
   ) {}
 
   async exec(command: Command, authenticatedUser: User): Promise<void> {
     const { roomId } = command;
-    const { tag, params } = await this.parse.exec(command);
-    switch (tag) {
-      case 'help':
-        await this.help.exec({ roomId, authenticatedUser });
-        break;
-      case 'renameRoom':
-        await this.renameRoom.exec({ ...params, roomId, authenticatedUser });
-        break;
-      case 'renameUser':
-        await this.renameUser.exec({ ...params, roomId, authenticatedUser });
-        break;
-      case 'lorem':
-        await this.lorem.exec({ ...params, roomId, authenticatedUser });
-        break;
-      case 'changeRoomJoinPolicy':
-        await this.changeRoomJoinPolicy.exec({
+    const parsedCommand = await this.parse.exec(command);
+    return match(parsedCommand)
+      .with({ tag: 'help' }, () =>
+        this.help.exec({ roomId, authenticatedUser }),
+      )
+      .with({ tag: 'renameRoom', params: P.select() }, (params) =>
+        this.renameRoom.exec({ ...params, roomId, authenticatedUser }),
+      )
+      .with({ tag: 'renameUser', params: P.select() }, (params) =>
+        this.renameUser.exec({ ...params, roomId, authenticatedUser }),
+      )
+      .with({ tag: 'lorem', params: P.select() }, (params) =>
+        this.lorem.exec({ ...params, roomId, authenticatedUser }),
+      )
+      .with({ tag: 'changeRoomJoinPolicy', params: P.select() }, (params) =>
+        this.changeRoomJoinPolicy.exec({
           ...params,
           roomId,
           authenticatedUser,
-        });
-    }
+        }),
+      )
+      .with({ tag: 'leave' }, () =>
+        this.leave.exec({
+          roomId,
+          authenticatedUser,
+        }),
+      )
+      .with({ tag: 'inviteUser', params: P.select() }, (params) => {
+        this.invite.exec({ ...params, roomId, authenticatedUser });
+      })
+      .exhaustive();
   }
 }

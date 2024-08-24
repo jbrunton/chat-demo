@@ -55,6 +55,7 @@ export const useMessagesSubscription = (roomId?: string, opts: QueryOptions = De
       }
       if (message.updatedEntities?.includes('users')) {
         queryClient.invalidateQueries({ queryKey: ['users'] })
+        queryClient.invalidateQueries({ queryKey: ['me'] })
       }
       queryClient.setQueryData(['messages', message.roomId], (messages: Message[] | undefined) => {
         if (!messages) return

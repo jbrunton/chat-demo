@@ -1,5 +1,5 @@
 import { Button, Icon, Textarea, Spinner, VStack, Alert, AlertIcon, Spacer } from '@chakra-ui/react'
-import React, { useState, KeyboardEventHandler, useRef, useEffect } from 'react'
+import React, { useState, KeyboardEventHandler, useRef, useEffect, ReactElement } from 'react'
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { usePostMessage } from '../../../data/messages'
 import { useJoinRoom } from '../../../data/rooms'
@@ -23,7 +23,7 @@ const JoinAlert = ({ roomId, canJoin }: ChatBoxProps) => {
     return (
       <Alert status='info' variant='top-accent'>
         <AlertIcon />
-        You need to join this room to chat.
+        Join this room to chat.
         <Spacer />
         <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
           Join
@@ -40,7 +40,7 @@ const JoinAlert = ({ roomId, canJoin }: ChatBoxProps) => {
   )
 }
 
-export const ChatBox: React.FC<ChatBoxProps> = ({ roomId, canJoin }: ChatBoxProps) => {
+export const ChatBox: React.FC<ChatBoxProps> = ({ roomId, canJoin }: ChatBoxProps): ReactElement => {
   const [content, setContent] = useState<string>('')
   const { data: user, isLoading } = useUserDetails()
   const joined = user?.rooms.some((room) => room.id === roomId)

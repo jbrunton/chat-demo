@@ -32,6 +32,7 @@ export const fakeAuthUser = (
   const user: User = {
     id: `user:${userParams.sub}`,
     name: userParams.name,
+    email: userParams.email,
     picture: userParams.picture,
   };
   const fakeAuth = {

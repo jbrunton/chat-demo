@@ -2,6 +2,7 @@ import { Command } from '@entities/command.entity';
 import { BadRequestException } from '@nestjs/common';
 import { ParseCommandUseCase } from '.';
 import { ParsedCommand } from './command.parser';
+import { JoinPolicy } from '@entities/room.entity';
 
 describe('ParseCommandUseCase', () => {
   let parse: ParseCommandUseCase;
@@ -114,6 +115,76 @@ describe('ParseCommandUseCase', () => {
       withMessage('/rename user').expectError(
         'Error in command `/rename user`:',
         `* Received too few arguments. Expected: \`/rename user {name}\``,
+      );
+    });
+  });
+
+  describe('/rename user', () => {
+    it('parses valid commands', () => {
+      withMessage('/rename user My User').expectCommand({
+        tag: 'renameUser',
+        params: {
+          newName: 'My User',
+        },
+      });
+    });
+
+    it('validates the number of arguments', () => {
+      withMessage('/rename user').expectError(
+        'Error in command `/rename user`:',
+        `* Received too few arguments. Expected: \`/rename user {name}\``,
+      );
+    });
+  });
+
+  describe('/leave', () => {
+    it('parses valid commands', () => {
+      withMessage('/leave').expectCommand({
+        tag: 'leave',
+        params: null,
+      });
+    });
+  });
+
+  describe('/set room join policy', () => {
+    it('parses valid commands', () => {
+      withMessage('/set room join policy anyone').expectCommand({
+        tag: 'changeRoomJoinPolicy',
+        params: {
+          newJoinPolicy: JoinPolicy.Anyone,
+        },
+      });
+    });
+
+    it('validates the number of arguments', () => {
+      withMessage('/set room join policy').expectError(
+        'Error in command `/set room join policy`:',
+        `* Received too few arguments. Expected: \`/set room join policy {'anyone', 'invite'}\``,
+      );
+    });
+  });
+
+  describe('/invite', () => {
+    it('parses valid commands', () => {
+      withMessage('/invite joe.bloggs@example.com').expectCommand({
+        tag: 'inviteUser',
+        params: {
+          email: 'joe.bloggs@example.com',
+        },
+      });
+    });
+
+    it('validates the number of arguments', () => {
+      withMessage('/invite').expectError(
+        'Error in command `/invite`:',
+        `* Received too few arguments. Expected: \`/invite {email}\``,
+      );
+    });
+
+    it('validates the email', () => {
+      withMessage('/invite not-an-email').expectError(
+        'Error in command `/invite not-an-email`:',
+        `* Argument 1 (\`not-an-email\`): Invalid email`,
       );
     });
   });
