@@ -5,6 +5,7 @@ import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 import { Dispatcher, DraftMessage } from '@entities/messages/message';
+import { JoinPolicy } from '@entities/room.entity';
 
 @Injectable()
 export class JoinRoomUseCase {
@@ -24,16 +25,30 @@ export class JoinRoomUseCase {
       subject: room,
     });
 
+    const status =
+      room.joinPolicy === JoinPolicy.Request
+        ? MembershipStatus.PendingApproval
+        : MembershipStatus.Joined;
+
     await this.memberships.createMembership({
       userId: user.id,
       roomId,
-      status: MembershipStatus.Joined,
+      status,
     });
 
+    const messageContent =
+      room.joinPolicy === JoinPolicy.Request
+        ? `${user.name} (${user.email}) requested approval to join the room`
+        : `${user.name} joined the room. Welcome!`;
+
+    const recipientId =
+      room.joinPolicy === JoinPolicy.Request ? room.ownerId : undefined;
+
     const message: DraftMessage = {
-      content: `${user.name} joined the room. Welcome!`,
+      content: messageContent,
       roomId: room.id,
       authorId: 'system',
+      recipientId,
     };
 
     await this.dispatcher.send(message);

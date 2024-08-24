@@ -16,6 +16,7 @@ import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-po
 import { InviteUseCase } from '@usecases/rooms/invite';
 import { LeaveRoomUseCase } from '@usecases/rooms/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
+import { ApproveRequestUseCase } from '@usecases/rooms/approve-request';
 
 @Module({
   imports: [AuthModule, DispatcherModule],
@@ -37,6 +38,7 @@ import { AboutRoomUseCase } from '@usecases/rooms/about-room';
     LeaveRoomUseCase,
     LoremCommandUseCase,
     AboutRoomUseCase,
+    ApproveRequestUseCase,
     HelpCommandUseCase,
   ],
   exports: [MessagesService],

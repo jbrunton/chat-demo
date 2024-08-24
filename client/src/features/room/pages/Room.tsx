@@ -17,7 +17,6 @@ export const RoomPage = () => {
   const { data: roomResponse } = useRoom(roomId)
 
   const canRead = can('read', roomResponse)
-  const canJoin = can('join', roomResponse)
 
   const { data: messages, isLoading: isLoadingMessages } = useMessages(roomId, { enabled: canRead })
   useMessagesSubscription(roomId, { enabled: canRead })
@@ -27,7 +26,7 @@ export const RoomPage = () => {
   return (
     <Box display='flex' flexFlow='column' height='100%' flex='1'>
       {<MessagesList messages={messages ?? [restrictedMessage(roomId)]} />}
-      <ChatBox roomId={roomId} canJoin={canJoin} />
+      <ChatBox roomResponse={roomResponse} />
     </Box>
   )
 }

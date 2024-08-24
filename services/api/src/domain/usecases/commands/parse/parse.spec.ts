@@ -159,7 +159,7 @@ describe('ParseCommandUseCase', () => {
     it('validates the number of arguments', () => {
       withMessage('/set room join policy').expectError(
         'Error in command `/set room join policy`:',
-        `* Received too few arguments. Expected: \`/set room join policy {'anyone', 'invite'}\``,
+        `* Received too few arguments. Expected: \`/set room join policy {'anyone', 'request', 'invite'}\``,
       );
     });
   });
@@ -185,6 +185,31 @@ describe('ParseCommandUseCase', () => {
       withMessage('/invite not-an-email').expectError(
         'Error in command `/invite not-an-email`:',
         `* Argument 1 (\`not-an-email\`): Invalid email`,
+      );
+    });
+  });
+
+  describe('/approve request', () => {
+    it('parses valid commands', () => {
+      withMessage('/approve request joe.bloggs@example.com').expectCommand({
+        tag: 'approveRequest',
+        params: {
+          email: 'joe.bloggs@example.com',
+        },
+      });
+    });
+
+    it('validates the number of arguments', () => {
+      withMessage('/approve request').expectError(
+        'Error in command `/approve request`:',
+        `* Received too few arguments. Expected: \`/approve request {email}\``,
+      );
+    });
+
+    it('validates the email', () => {
+      withMessage('/approve request not-an-email').expectError(
+        'Error in command `/approve request not-an-email`:',
+        `* Argument 2 (\`not-an-email\`): Invalid email`,
       );
     });
   });
