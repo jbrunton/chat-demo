@@ -56,6 +56,27 @@ describe('RoomsRepository', () => {
     });
   });
 
+  test.each(testCases)('[$name] finds users by email', async ({ name }) => {
+    const repo = repos[name];
+
+    const params: SaveUserParams = {
+      sub: 'google_123',
+      email: 'some.user@example.com',
+      name: 'Some User',
+    };
+
+    await repo.saveUser(params);
+    const found = await repo.findUser('some.user@example.com');
+
+    expect(found).toMatchObject({
+      id: 'user:google_123',
+      email: 'some.user@example.com',
+      name: 'Some User',
+    });
+
+    expect(await repo.findUser('not-a-user@example.com')).toBeNull();
+  });
+
   test.each(testCases)('[$name] updates users', async ({ name }) => {
     const repo = repos[name];
     const params: SaveUserParams = {

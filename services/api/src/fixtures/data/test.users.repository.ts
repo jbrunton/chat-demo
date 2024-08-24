@@ -37,12 +37,8 @@ export class TestUsersRepository extends UsersRepository {
     return user;
   }
 
-  override async findUser(email: string): Promise<User> {
-    const user = find((user) => email === user.email, this.users);
-    if (!user) {
-      throw new NotFoundException(`User with email ${email} does not exist`);
-    }
-    return user;
+  override async findUser(email: string): Promise<User | null> {
+    return find((user) => email === user.email, this.users) ?? null;
   }
 
   override async updateUser(params: UpdateUserParams): Promise<User> {

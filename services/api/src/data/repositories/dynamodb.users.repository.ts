@@ -34,7 +34,7 @@ export class DynamoDBUsersRepository extends UsersRepository {
     return userFromRecord(user);
   }
 
-  override async findUser(email: string): Promise<User> {
+  override async findUser(email: string): Promise<User | null> {
     const [user] = await this.adapter.User.scan(
       {},
       {
@@ -45,10 +45,7 @@ export class DynamoDBUsersRepository extends UsersRepository {
         hidden: true,
       },
     );
-    if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
-    }
-    return userFromRecord(user);
+    return user ? userFromRecord(user) : null;
   }
 
   override async updateUser(params: UpdateUserParams): Promise<User> {

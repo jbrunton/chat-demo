@@ -41,6 +41,18 @@ export class InviteUseCase {
 
     const invitedUser = await this.users.findUser(email);
 
+    if (!invitedUser) {
+      const message: DraftMessage = {
+        content: `No user exists with email ${email}`,
+        roomId: room.id,
+        authorId: 'system',
+        recipientId: authenticatedUser.id,
+      };
+
+      await this.dispatcher.send(message);
+      return;
+    }
+
     const existingMemberships = await this.memberships.getMemberships(
       invitedUser.id,
     );

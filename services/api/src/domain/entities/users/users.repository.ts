@@ -12,7 +12,7 @@ export type UpdateUserParams = Partial<Pick<User, 'name'>> & Pick<User, 'id'>;
 export abstract class UsersRepository {
   abstract saveUser(params: SaveUserParams): Promise<User>;
   abstract getUser(id: string): Promise<User>;
-  abstract findUser(email: string): Promise<User>;
+  abstract findUser(email: string): Promise<User | null>;
   abstract updateUser(params: UpdateUserParams): Promise<User>;
 }
 
