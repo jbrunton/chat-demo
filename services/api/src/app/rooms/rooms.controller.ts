@@ -4,7 +4,7 @@ import { ConsoleLogger, Controller, Get, Param, Post } from '@nestjs/common';
 import { User } from '@entities/users';
 import { CreateRoomUseCase } from '@usecases/rooms/create';
 import { GetRoomUseCase } from '@usecases/rooms/get';
-import { JoinRoomUseCase } from '@usecases/rooms/join';
+import { JoinRoomUseCase } from '@usecases/memberships/join';
 
 @Auth()
 @Controller('rooms')
