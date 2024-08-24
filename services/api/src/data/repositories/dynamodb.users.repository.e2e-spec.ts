@@ -1,9 +1,11 @@
 import { DynamoDBUsersRepository } from '@data/repositories/dynamodb.users.repository';
-import { SaveUserParams } from '@entities/users';
+import { userParamsFromAuth } from '@entities/users';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
 import { MockLoggerModule } from '@fixtures/MockLoggerModule';
+import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
+import { omit } from 'remeda';
 
 type TestCase = {
   name: 'DynamoDBUsersRepository' | 'TestUsersRepository';
@@ -35,55 +37,31 @@ describe('RoomsRepository', () => {
   test.each(testCases)('[$name] stores and finds users', async ({ name }) => {
     const repo = repos[name];
 
-    const params: SaveUserParams = {
-      sub: 'google_123',
-      email: 'some.user@example.com',
-      name: 'Some User',
-    };
+    const params = userParamsFromAuth(AuthInfoFactory.build());
 
     const user = await repo.saveUser(params);
-    const found = await repo.getUser('user:google_123');
+    const found = await repo.getUser(user.id);
 
-    expect(user).toMatchObject({
-      id: 'user:google_123',
-      email: 'some.user@example.com',
-      name: 'Some User',
-    });
-    expect(found).toMatchObject({
-      id: 'user:google_123',
-      email: 'some.user@example.com',
-      name: 'Some User',
-    });
+    expect(user).toMatchObject(omit(params, ['sub']));
+    expect(found).toMatchObject(user);
   });
 
   test.each(testCases)('[$name] finds users by email', async ({ name }) => {
     const repo = repos[name];
 
-    const params: SaveUserParams = {
-      sub: 'google_123',
-      email: 'some.user@example.com',
-      name: 'Some User',
-    };
+    const params = userParamsFromAuth(AuthInfoFactory.build());
 
-    await repo.saveUser(params);
-    const found = await repo.findUser('some.user@example.com');
+    const user = await repo.saveUser(params);
+    const found = await repo.findUser(params.email);
 
-    expect(found).toMatchObject({
-      id: 'user:google_123',
-      email: 'some.user@example.com',
-      name: 'Some User',
-    });
+    expect(found).toMatchObject(user);
 
     expect(await repo.findUser('not-a-user@example.com')).toBeNull();
   });
 
   test.each(testCases)('[$name] updates users', async ({ name }) => {
     const repo = repos[name];
-    const params: SaveUserParams = {
-      name: 'Other User',
-      email: 'other.user@example.com',
-      sub: 'user:google_123',
-    };
+    const params = userParamsFromAuth(AuthInfoFactory.build());
     const user = await repo.saveUser(params);
 
     const updated = await repo.updateUser({
