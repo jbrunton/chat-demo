@@ -79,6 +79,7 @@ jobs:
           USER1_PASSWORD: ${{ secrets.TEST_USER1_PASSWORD }}
           USER2_EMAIL: ${{ secrets.TEST_USER2_EMAIL }}
           USER2_PASSWORD: ${{ secrets.TEST_USER2_PASSWORD }}
+        working-directory: e2e
       - name: Wait for services
         run: |
           npx --yes wait-on http://localhost:3000
