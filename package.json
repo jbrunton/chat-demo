@@ -8,6 +8,7 @@
     "prepare": "husky install",
     "lint": "turbo lint",
     "test": "turbo test",
+    "test:int": "turbo test:int",
     "build": "turbo build",
     "dev": "turbo dev"
   },
