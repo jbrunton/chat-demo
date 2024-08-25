@@ -6,6 +6,7 @@ const config = {
   packageManager: 'npm',
   reporters: ['html', 'dashboard'],
   testRunner: 'jest',
+  plugins: ['@stryker-mutator/jest-runner'],
   testRunner_comment:
     'Take a look at https://stryker-mutator.io/docs/stryker-js/jest-runner for information about the jest plugin.',
   coverageAnalysis: 'perTest',
