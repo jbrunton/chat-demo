@@ -7,7 +7,7 @@ import { MembershipsRepository } from '@entities/memberships.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User, UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
-import { Dispatcher, DraftMessage } from '@entities/messages/message';
+import { Dispatcher, DraftMessage } from '@entities/messages';
 
 export type InviteParams = {
   roomId: string;

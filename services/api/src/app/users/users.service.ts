@@ -5,7 +5,6 @@ import { RoomsRepository } from '@entities/rooms.repository';
 import { User, systemUser } from '@entities/users';
 import { UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
-import { filter, map, prop, pipe } from 'remeda';
 
 @Injectable()
 export class UsersService {
