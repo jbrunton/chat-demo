@@ -2,13 +2,19 @@
   "engines": {
     "node": "18.x"
   },
+  "name": "chat-demo",
   "packageManager": "pnpm@9.8.0",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "build": "turbo build",
+    "dev": "turbo dev"
   },
   "devDependencies": {
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
-    "prettier": "^2.8.1"
+    "prettier": "^2.8.1",
+    "turbo": "2.0.14"
   }
 }
