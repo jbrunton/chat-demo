@@ -21,7 +21,7 @@ jobs:
       - run: pnpm run test
 
   pulumi:
-    runs-on: ubuntu-lists
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: pulumi
@@ -50,7 +50,7 @@ jobs:
       - run: pnpm run test:e2e
 
   playwright:
-    needs: [lint, test, e2e-test]
+    needs: [lint, test, e2e-test, pulumi]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -72,7 +72,7 @@ jobs:
         run: |
           pnpm install
           pnpm run --filter api db:init
-          pnpm run dev
+          pnpm run dev &
         working-directory: .
         env:
           VITE_API_URL: http://localhost:3000
