@@ -7,6 +7,7 @@
     },
     "lint": {},
     "test": {},
+    "test:int": {},
     "dev": {
       "cache": false,
       "persistent": true
