@@ -144,10 +144,9 @@ jobs:
         env:
           VITE_API_URL: https://chat-demo-api.staging.jbrunton-aws.com
         run: |
-          pnpm install
-          pnpm run build
-        working-directory: client
-      - run: pnpm install
+          pnpm --filter client install
+          pnpm --filter client run build
+      - run: pnpm install --ignore-workspace
         working-directory: pulumi
       - uses: pulumi/actions@v3
         with:
@@ -180,10 +179,9 @@ jobs:
         env:
           VITE_API_URL: https://chat-demo-api.jbrunton-aws.com
         run: |
-          pnpm install
-          pnpm run build
-        working-directory: client
-      - run: pnpm install
+          pnpm --filter client install
+          pnpm --filter client run build
+      - run: pnpm install --ignore-workspace
         working-directory: pulumi
       - uses: pulumi/actions@v3
         with:
