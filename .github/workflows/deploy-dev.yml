@@ -26,14 +26,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
       - name: Build Client
         env:
           VITE_API_URL: https://chat-demo-api-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
         run: |
-          npm ci
-          npm run build
+          pnpm install
+          pnpm run build
         working-directory: client
-      - run: npm ci
+      - run: pnpm install
         working-directory: pulumi
       - uses: pulumi/actions@v3
         with:
