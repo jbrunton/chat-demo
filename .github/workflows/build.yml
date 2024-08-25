@@ -4,7 +4,6 @@ on:
   push:
 
 jobs:
-
   lint:
     runs-on: ubuntu-latest
     strategy:
@@ -15,8 +14,9 @@ jobs:
         working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run lint
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install
+      - run: pnpm run lint
 
   test:
     runs-on: ubuntu-latest
@@ -28,8 +28,9 @@ jobs:
         working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run test
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install
+      - run: pnpm run test
 
   e2e-test:
     runs-on: ubuntu-latest
@@ -41,11 +42,12 @@ jobs:
         working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
       - uses: rrainn/dynamodb-action@v2.0.1
         with:
           port: 8001
-      - run: npm ci
-      - run: npm run test:e2e
+      - run: pnpm install
+      - run: pnpm run test:e2e
 
   playwright:
     needs: [lint, test, e2e-test]
@@ -54,56 +56,57 @@ jobs:
       run:
         working-directory: e2e
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - uses: rrainn/dynamodb-action@v2.0.1
-      with:
-        port: 8000
-    - name: Start API
-      working-directory: services/api
-      run: |
-        npm ci
-        npm run db:init
-        npm run start:dev &
-    - name: Start Client
-      working-directory: client
-      run: |
-        npm ci
-        npm run dev &
-      env:
-        VITE_API_URL: http://localhost:3000
-    - name: Configure environment
-      run: |
-        touch .env
-        echo "USER1_EMAIL=$USER1_EMAIL" >> .env
-        echo "USER1_PASSWORD=$USER1_PASSWORD" >> .env
-        echo "USER2_EMAIL=$USER2_EMAIL" >> .env
-        echo "USER2_PASSWORD=$USER2_PASSWORD" >> .env
-      env:
-        USER1_EMAIL: ${{ secrets.TEST_USER1_EMAIL }}
-        USER1_PASSWORD: ${{ secrets.TEST_USER1_PASSWORD }}
-        USER2_EMAIL: ${{ secrets.TEST_USER2_EMAIL }}
-        USER2_PASSWORD: ${{ secrets.TEST_USER2_PASSWORD }}
-    - name: Wait for services
-      run: |
-        npx --yes wait-on http://localhost:3000
-        # Note: wait-on doesn't work with Vite when sending a head request
-        # https://github.com/jeffbski/wait-on/issues/78
-        npx --yes wait-on tcp:5173
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: playwright-report
-        path: e2e/playwright-report/
-        retention-days: 1
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - uses: rrainn/dynamodb-action@v2.0.1
+        with:
+          port: 8000
+      - name: Start API
+        working-directory: services/api
+        run: |
+          pnpm install
+          pnpm run db:init
+          pnpm run start:dev &
+      - name: Start Client
+        working-directory: client
+        run: |
+          pnpm install
+          pnpm run dev &
+        env:
+          VITE_API_URL: http://localhost:3000
+      - name: Configure environment
+        run: |
+          touch .env
+          echo "USER1_EMAIL=$USER1_EMAIL" >> .env
+          echo "USER1_PASSWORD=$USER1_PASSWORD" >> .env
+          echo "USER2_EMAIL=$USER2_EMAIL" >> .env
+          echo "USER2_PASSWORD=$USER2_PASSWORD" >> .env
+        env:
+          USER1_EMAIL: ${{ secrets.TEST_USER1_EMAIL }}
+          USER1_PASSWORD: ${{ secrets.TEST_USER1_PASSWORD }}
+          USER2_EMAIL: ${{ secrets.TEST_USER2_EMAIL }}
+          USER2_PASSWORD: ${{ secrets.TEST_USER2_PASSWORD }}
+      - name: Wait for services
+        run: |
+          npx --yes wait-on http://localhost:3000
+          # Note: wait-on doesn't work with Vite when sending a head request
+          # https://github.com/jeffbski/wait-on/issues/78
+          npx --yes wait-on tcp:5173
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 1
 
   mutation-test:
     runs-on: ubuntu-latest
@@ -116,8 +119,9 @@ jobs:
         working-directory: services/api
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run test:mutate
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install
+      - run: pnpm run test:mutate
 
   build-api:
     needs: [playwright]
@@ -143,14 +147,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
       - name: Build Client
         env:
-            VITE_API_URL: https://chat-demo-api.staging.jbrunton-aws.com
+          VITE_API_URL: https://chat-demo-api.staging.jbrunton-aws.com
         run: |
-          npm ci
-          npm run build
+          pnpm install
+          pnpm run build
         working-directory: client
-      - run: npm ci
+      - run: pnpm install
         working-directory: pulumi
       - uses: pulumi/actions@v3
         with:
@@ -178,14 +183,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
       - name: build
         env:
           VITE_API_URL: https://chat-demo-api.jbrunton-aws.com
         run: |
-          npm ci
-          npm run build
+          pnpm install
+          pnpm run build
         working-directory: client
-      - run: npm ci
+      - run: pnpm install
         working-directory: pulumi
       - uses: pulumi/actions@v3
         with:
