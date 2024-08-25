@@ -44,7 +44,7 @@ jobs:
       - run: pnpm run test:int
 
   test-e2e:
-    needs: [lint, test, test-int, pulumi]
+    # needs: [lint, test, test-int, pulumi]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -55,7 +55,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
+        working-directory: e2e
       - uses: rrainn/dynamodb-action@v2.0.1
         with:
           port: 8000
