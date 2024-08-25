@@ -28,14 +28,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "services/api"
     steps:
       - uses: pnpm/action-setup@v4
       - uses: actions/checkout@v4
-      - run: pnpm install
-      - run: pnpm run docs:generate
+      - run: pnpm --filter api install
+      - run: pnpm --filter api run docs:generate
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

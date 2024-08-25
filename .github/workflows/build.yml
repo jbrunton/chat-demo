@@ -6,12 +6,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        directory: ["client", "services/api", "pulumi"]
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v4
@@ -20,16 +14,22 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        directory: ["services/api", "pulumi", "client"]
-    defaults:
-      run:
-        working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v4
       - run: pnpm install
+      - run: pnpm run test
+
+  pulumi:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pulumi
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --ignore-workspace
+      - run: pnpm run lint
       - run: pnpm run test
 
   e2e-test:
@@ -50,7 +50,7 @@ jobs:
       - run: pnpm run test:e2e
 
   playwright:
-    needs: [lint, test, e2e-test]
+    needs: [lint, test, e2e-test, pulumi]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -62,23 +62,18 @@ jobs:
         with:
           node-version: 18
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --ignore-workspace
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - uses: rrainn/dynamodb-action@v2.0.1
         with:
           port: 8000
-      - name: Start API
-        working-directory: services/api
+      - name: Start services
         run: |
           pnpm install
-          pnpm run db:init
-          pnpm run start:dev &
-      - name: Start Client
-        working-directory: client
-        run: |
-          pnpm install
+          pnpm run --filter api db:init
           pnpm run dev &
+        working-directory: .
         env:
           VITE_API_URL: http://localhost:3000
       - name: Configure environment
@@ -114,14 +109,11 @@ jobs:
     if: github.ref == 'refs/heads/main'
     env:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-    defaults:
-      run:
-        working-directory: services/api
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v4
-      - run: pnpm install
-      - run: pnpm run test:mutate
+      - run: pnpm --filter api install
+      - run: pnpm --filter api run test:mutate
 
   build-api:
     needs: [playwright]
