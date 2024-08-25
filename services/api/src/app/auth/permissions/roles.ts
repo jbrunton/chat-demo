@@ -1,27 +1,24 @@
 import { AbilityBuilder, createMongoAbility } from '@casl/ability';
 import {
   Membership,
-  isActive,
-  isPendingInvite,
+  MembershipStatus,
+  getRoomsWithStatus,
 } from '@entities/membership.entity';
 import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { User } from '@entities/users';
 import { Role } from '@usecases/auth.service';
-import { filter, pipe, map, prop } from 'remeda';
 
 export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   const { can, build } = new AbilityBuilder(createMongoAbility);
 
-  const joinedRoomIds = pipe(
+  const joinedRoomIds = getRoomsWithStatus(
+    MembershipStatus.Joined,
     memberships,
-    filter(isActive),
-    map(prop('roomId')),
   );
 
-  const pendingInviteRoomIds = pipe(
+  const pendingInviteRoomIds = getRoomsWithStatus(
+    MembershipStatus.PendingInvite,
     memberships,
-    filter(isPendingInvite),
-    map(prop('roomId')),
   );
 
   can(Role.Manage, 'Room', {

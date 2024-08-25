@@ -15,7 +15,7 @@ const JoinAlert = ({ roomResponse }: ChatBoxProps): ReactElement => {
 
   const canJoin = can('join', roomResponse)
   const requiresApproval = roomResponse.room.joinPolicy === 'request'
-  const awaitingApproval = roomResponse.membership?.status === 'PendingApproval'
+  const awaitingApproval = roomResponse.status === 'PendingApproval'
 
   const { mutate: joinRoom, isLoading, isSuccess: isJoined } = useJoinRoom(roomId)
 

@@ -4,12 +4,15 @@ import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/users';
 import { Injectable } from '@nestjs/common';
 import { MembershipsRepository } from '@entities/memberships.repository';
-import { Membership, forRoom, isCurrent } from '@entities/membership.entity';
+import {
+  MembershipStatus,
+  getMembershipStatus,
+} from '@entities/membership.entity';
 
 export type RoomDetails = {
   room: Room;
   roles: Role[];
-  membership?: Membership;
+  status: MembershipStatus;
 };
 
 @Injectable()
@@ -29,10 +32,8 @@ export class GetRoomUseCase {
     });
 
     const memberships = await this.memberships.getMemberships(user.id);
-    const [currentMembership] = memberships
-      .filter(forRoom(roomId))
-      .filter(isCurrent);
+    const status = getMembershipStatus(roomId, memberships);
 
-    return { room, roles, membership: currentMembership };
+    return { room, roles, status };
   }
 }

@@ -39,7 +39,7 @@ describe('GetRoomUseCase', () => {
     expect(details.roles).toEqual([Role.Read]);
   });
 
-  it('returns the current membership for the authenticated user', async () => {
+  it('returns the current membership status for the authenticated user', async () => {
     const currentMembership = {
       roomId: room.id,
       userId: user.id,
@@ -50,6 +50,6 @@ describe('GetRoomUseCase', () => {
 
     const details = await get.exec(room.id, user);
 
-    expect(details.membership).toEqual(currentMembership);
+    expect(details.status).toEqual(MembershipStatus.Joined);
   });
 });

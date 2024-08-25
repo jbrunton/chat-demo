@@ -9,15 +9,10 @@ export type Room = {
   joinPolicy: string
 }
 
-export type Membership = {
-  roomId: string
-  status: string
-}
-
 export type RoomResponse = {
   room: Room
   roles: string[]
-  membership?: Membership
+  status: string
 }
 
 const getRoom = async (roomId?: string): Promise<RoomResponse> => {

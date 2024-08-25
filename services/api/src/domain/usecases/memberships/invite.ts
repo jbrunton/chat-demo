@@ -1,8 +1,7 @@
 import { AuthService, Role } from '@usecases/auth.service';
 import {
   MembershipStatus,
-  hasPendingInviteTo,
-  isMemberOf,
+  getMembershipStatus,
 } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
@@ -53,10 +52,10 @@ export class InviteUseCase {
       return;
     }
 
-    const existingMemberships = await this.memberships.getMemberships(
-      invitedUser.id,
-    );
-    if (isMemberOf(roomId, existingMemberships)) {
+    const memberships = await this.memberships.getMemberships(invitedUser.id);
+    const status = getMembershipStatus(roomId, memberships);
+
+    if (status === MembershipStatus.Joined) {
       const message: DraftMessage = {
         content: `${invitedUser.name} is already a member of this room`,
         roomId: room.id,
@@ -66,7 +65,7 @@ export class InviteUseCase {
 
       await this.dispatcher.send(message);
       return;
-    } else if (hasPendingInviteTo(roomId, existingMemberships)) {
+    } else if (status === MembershipStatus.PendingInvite) {
       const message: DraftMessage = {
         content: `${invitedUser.name} already has an invite to this room`,
         roomId: room.id,
