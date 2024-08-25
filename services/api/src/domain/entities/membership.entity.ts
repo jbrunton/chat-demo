@@ -1,5 +1,5 @@
 import { isNil } from 'rambda';
-import { allPass } from 'remeda';
+import { allPass, filter, first, map, pipe, prop, unique } from 'remeda';
 
 /**
  * The status of a user's membership to a room.
@@ -34,6 +34,12 @@ export enum MembershipStatus {
 
 /**
  * Record representing the membership status of a user in a room for a specific period.
+ *
+ * A user will have a history of zero or more non-overlapping `Membership` records for each room.
+ *
+ * There are a number of predicates available to assist with filtering: {@link isCurrent}, {@link isActive}, {@link forRoom}, etc.
+ *
+ * There are also convenience functions to determine the membership
  */
 export type Membership = {
   /**
@@ -68,77 +74,68 @@ export type Membership = {
  * @param membership The membership record
  * @returns true if the record is current
  */
-export const isCurrent = (membership: Membership) => isNil(membership.until);
+const isCurrent = (membership: Membership) => isNil(membership.until);
 
 /**
  * Returns a predicate for filtering membership records according to the given status.
  * @param status The status to filter on
  * @returns A predicate for filtering membership records
  */
-export const withStatus =
-  (status: MembershipStatus) => (membership: Membership) =>
-    membership.status === status;
-
-/**
- * Returns a predicate for filtering membership records to the given room.
- * @param roomId The roomId to filter on
- * @returns A predicate for filtering membership records
- */
-export const forRoom = (roomId: string) => (membership: Membership) =>
-  membership.roomId === roomId;
+const withStatus = (status: MembershipStatus) => (membership: Membership) =>
+  membership.status === status;
 
 /**
  * Predicate to filter for active membership records, i.e. current and where the status is `Joined`.
  * @param data The membership record
  */
-export const isActive = allPass([
-  isCurrent,
-  withStatus(MembershipStatus.Joined),
-]);
+const isActive = allPass([isCurrent, withStatus(MembershipStatus.Joined)]);
 
 /**
- * Predicate to filter for pending invitation records, i.e. current and where the status is `PendingInvite`.
- * @param data The membership record
+ * Returns a predicate for filtering membership records to the given room.
+ * @param roomId The room ID to filter on
+ * @returns A predicate for filtering membership records
  */
-export const isPendingInvite = allPass([
-  isCurrent,
-  withStatus(MembershipStatus.PendingInvite),
-]);
+const forRoom = (roomId: string) => (membership: Membership) =>
+  membership.roomId === roomId;
 
 /**
- * Predicate to filter for pending request records, i.e. current and where the status is `PendingRequest`.
- * @param data The membership record
+ * Returns the membership status of a user in a given room.
+ * @param roomId The room ID
+ * @param memberships The user's membership history
+ * @returns The status of the current membership record for the room (and None if no current record exists)
  */
-export const isPendingApproval = allPass([
-  isCurrent,
-  withStatus(MembershipStatus.PendingApproval),
-]);
-
-/**
- * Returns true if the user is a member of the given room.
- * @param roomId The roomId
- * @param memberships The user's membership records
- * @returns `true` if the user has an active membership record for the room
- */
-export const isMemberOf = (roomId: string, memberships: Membership[]) =>
-  memberships.some(allPass([isActive, forRoom(roomId)]));
-
-/**
- * Returns true if the user has a pending invite to the given room.
- * @param roomId The roomId
- * @param memberships The user's membership records
- * @returns `true` if the user has a pending invite to the room
- */
-export const hasPendingInviteTo = (roomId: string, memberships: Membership[]) =>
-  memberships.some(allPass([isPendingInvite, forRoom(roomId)]));
-
-/**
- * Returns true if the user has a pending request to the given room.
- * @param roomId The roomId
- * @param memberships The user's membership records
- * @returns `true` if the user has a pending request to the room
- */
-export const hasPendingRequestTo = (
+export const getMembershipStatus = (
   roomId: string,
   memberships: Membership[],
-) => memberships.some(allPass([isPendingApproval, forRoom(roomId)]));
+): MembershipStatus =>
+  pipe(
+    memberships,
+    filter(allPass([isCurrent, forRoom(roomId)])),
+    map(prop('status')),
+    first(),
+  ) ?? MembershipStatus.None;
+
+/**
+ * Identifies the rooms the user is a current member of.
+ * @param memberships The user's membership history
+ * @returns Array of room IDs.
+ */
+export const getActiveRooms = (memberships: Membership[]): string[] => {
+  return pipe(memberships, filter(isActive), map(prop('roomId')), unique());
+};
+
+/**
+ * Identifies the rooms which the user has a current membership of matching the given status
+ * @param status The status to match on
+ * @param memberships The user's membership history
+ * @returns Array of room IDs
+ */
+export const getRoomsWithStatus = (
+  status: MembershipStatus,
+  memberships: Membership[],
+): string[] =>
+  pipe(
+    memberships,
+    filter(allPass([isCurrent, withStatus(status)])),
+    map(prop('roomId')),
+  );

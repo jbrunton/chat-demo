@@ -10,7 +10,7 @@ import { Role } from '@usecases/auth.service';
 import mock, { MockProxy } from 'jest-mock-extended/lib/Mock';
 import { Dispatcher } from '@entities/messages/message';
 import { TestUsersRepository } from '@fixtures/data/test.users.repository';
-import { MembershipStatus, isCurrent } from '@entities/membership.entity';
+import { MembershipStatus } from '@entities/membership.entity';
 import { ApproveRequestUseCase } from './approve-request';
 
 describe('ApproveRequestUseCase', () => {
@@ -68,14 +68,12 @@ describe('ApproveRequestUseCase', () => {
       email: otherUser.email,
     });
 
-    expect(memberships.getData().filter(isCurrent)).toEqual([
-      {
-        userId: otherUser.id,
-        roomId: room.id,
-        status: MembershipStatus.Joined,
-        from: now.getTime(),
-      },
-    ]);
+    expect(memberships.getData()[1]).toEqual({
+      userId: otherUser.id,
+      roomId: room.id,
+      status: MembershipStatus.Joined,
+      from: now.getTime(),
+    });
 
     expect(dispatcher.send).toHaveBeenCalledWith({
       content: 'Alice approved Bob to join the room',

@@ -1,7 +1,6 @@
 import {
   MembershipStatus,
-  hasPendingRequestTo,
-  isMemberOf,
+  getMembershipStatus,
 } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { Dispatcher, DraftMessage } from '@entities/messages';
@@ -53,10 +52,10 @@ export class ApproveRequestUseCase {
       return;
     }
 
-    const existingMemberships = await this.memberships.getMemberships(
-      invitedUser.id,
-    );
-    if (isMemberOf(roomId, existingMemberships)) {
+    const memberships = await this.memberships.getMemberships(invitedUser.id);
+    const status = getMembershipStatus(roomId, memberships);
+
+    if (status === MembershipStatus.Joined) {
       const message: DraftMessage = {
         content: `${invitedUser.name} is already a member of this room`,
         roomId: room.id,
@@ -66,7 +65,7 @@ export class ApproveRequestUseCase {
 
       await this.dispatcher.send(message);
       return;
-    } else if (!hasPendingRequestTo(roomId, existingMemberships)) {
+    } else if (status !== MembershipStatus.PendingApproval) {
       const message: DraftMessage = {
         content: `${invitedUser.name} does not have a pending request to join this room`,
         roomId: room.id,
