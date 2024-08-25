@@ -8,7 +8,6 @@
     "lint": {},
     "test": {},
     "test:int": {},
-    "test:e2e": {},
     "dev": {
       "cache": false,
       "persistent": true
