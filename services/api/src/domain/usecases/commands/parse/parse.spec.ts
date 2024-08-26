@@ -2,7 +2,7 @@ import { Command } from '@entities/command.entity';
 import { BadRequestException } from '@nestjs/common';
 import { ParseCommandUseCase } from '.';
 import { ParsedCommand } from './command.parser';
-import { JoinPolicy } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 
 describe('ParseCommandUseCase', () => {
   let parse: ParseCommandUseCase;
@@ -149,7 +149,7 @@ describe('ParseCommandUseCase', () => {
   describe('/set room join policy', () => {
     it('parses valid commands', () => {
       withMessage('/set room join policy anyone').expectCommand({
-        tag: 'changeRoomJoinPolicy',
+        tag: 'setRoomJoinPolicy',
         params: {
           newJoinPolicy: JoinPolicy.Anyone,
         },
@@ -160,6 +160,24 @@ describe('ParseCommandUseCase', () => {
       withMessage('/set room join policy').expectError(
         'Error in command `/set room join policy`:',
         `* Received too few arguments. Expected: \`/set room join policy {'anyone', 'request', 'invite'}\``,
+      );
+    });
+  });
+
+  describe('/set room content policy', () => {
+    it('parses valid commands', () => {
+      withMessage('/set room content policy public').expectCommand({
+        tag: 'setRoomContentPolicy',
+        params: {
+          newContentPolicy: ContentPolicy.Public,
+        },
+      });
+    });
+
+    it('validates the number of arguments', () => {
+      withMessage('/set room content policy').expectError(
+        'Error in command `/set room content policy`:',
+        `* Received too few arguments. Expected: \`/set room content policy {'public', 'private'}\``,
       );
     });
   });

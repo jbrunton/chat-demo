@@ -7,7 +7,7 @@ import { RenameUserUseCase } from '@usecases/users/rename';
 import { Dispatcher } from '@entities/messages';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
 import { ParseCommandUseCase } from '@usecases/commands/parse';
-import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
+import { ConfigureRoomUseCase } from '@usecases/rooms/configure-room';
 import { P, match } from 'ts-pattern';
 import { InviteUseCase } from '@usecases/memberships/invite';
 import { LeaveRoomUseCase } from '@usecases/memberships/leave';
@@ -24,7 +24,7 @@ export class CommandService {
     private readonly leave: LeaveRoomUseCase,
     private readonly parse: ParseCommandUseCase,
     private readonly approveRequest: ApproveRequestUseCase,
-    private readonly changeRoomJoinPolicy: ChangeRoomJoinPolicyUseCase,
+    private readonly changeRoomJoinPolicy: ConfigureRoomUseCase,
     private readonly aboutRoom: AboutRoomUseCase,
     private readonly invite: InviteUseCase,
     readonly dispatcher: Dispatcher,
@@ -46,7 +46,14 @@ export class CommandService {
       .with({ tag: 'lorem', params: P.select() }, (params) =>
         this.lorem.exec({ ...params, roomId, authenticatedUser }),
       )
-      .with({ tag: 'changeRoomJoinPolicy', params: P.select() }, (params) =>
+      .with({ tag: 'setRoomJoinPolicy', params: P.select() }, (params) =>
+        this.changeRoomJoinPolicy.exec({
+          ...params,
+          roomId,
+          authenticatedUser,
+        }),
+      )
+      .with({ tag: 'setRoomContentPolicy', params: P.select() }, (params) =>
         this.changeRoomJoinPolicy.exec({
           ...params,
           roomId,

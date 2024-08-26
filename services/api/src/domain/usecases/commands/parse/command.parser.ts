@@ -1,5 +1,5 @@
 import { Command } from '@entities/command.entity';
-import { JoinPolicy } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { BadRequestException } from '@nestjs/common';
 import { equals } from 'rambda';
 import { z, ZodIssue, ZodType } from 'zod';
@@ -12,7 +12,8 @@ export type ParsedCommand =
   | { tag: 'approveRequest'; params: { email: string } }
   | { tag: 'leave'; params: null }
   | { tag: 'aboutRoom'; params: null }
-  | { tag: 'changeRoomJoinPolicy'; params: { newJoinPolicy: JoinPolicy } }
+  | { tag: 'setRoomJoinPolicy'; params: { newJoinPolicy: JoinPolicy } }
+  | { tag: 'setRoomContentPolicy'; params: { newContentPolicy: ContentPolicy } }
   | {
       tag: 'lorem';
       params: { count: number; typeToken: 'words' | 'paragraphs' };
