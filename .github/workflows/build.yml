@@ -95,7 +95,7 @@ jobs:
           path: e2e/playwright-report/
           retention-days: 1
 
-  test-mutation:
+  test-mutate:
     runs-on: ubuntu-latest
     needs: [test-e2e]
     # if: github.ref == 'refs/heads/main'
@@ -106,6 +106,22 @@ jobs:
       - uses: pnpm/action-setup@v4
       - run: pnpm --filter api install
       - run: pnpm --filter api run test:mutate
+
+  test-mutate-data:
+    runs-on: ubuntu-latest
+    needs: [test-e2e]
+    # if: github.ref == 'refs/heads/main'
+    env:
+      STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v4
+      - uses: rrainn/dynamodb-action@v2.0.1
+        with:
+          port: 8000
+      - run: pnpm --filter api install
+      - run: pnpm run --filter api db:init
+      - run: pnpm --filter api run test:mutate:data
 
   build-api:
     needs: [test-e2e]

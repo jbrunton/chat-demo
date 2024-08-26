@@ -8,15 +8,15 @@ const config = {
   testRunner: 'jest',
   plugins: ['@stryker-mutator/jest-runner'],
   ignoreStatic: true,
-  mutate: ['src/data/**.ts', '!src/**/*.spec.ts', '!src/**/*.e2e-spec.ts'],
+  mutate: ['src/data/**/*.ts', '!src/**/*.spec.ts', '!src/**/*.e2e-spec.ts'],
   testRunner_comment:
     'Take a look at https://stryker-mutator.io/docs/stryker-js/jest-runner for information about the jest plugin.',
   coverageAnalysis: 'perTest',
   dashboard: {
     module: 'data',
   },
-  commandRunner: {
-    command: 'pnpm test:int',
+  jest: {
+    configFile: 'test/jest-e2e.config.cjs',
   },
 };
 export default config;
