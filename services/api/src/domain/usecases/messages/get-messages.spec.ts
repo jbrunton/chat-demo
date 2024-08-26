@@ -1,6 +1,6 @@
-import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
+import { TestMessagesRepository } from '@data/repositories/test/test.messages.repository';
 import { UserFactory } from '@fixtures/messages/user.factory';
-import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
+import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { GetMessagesUseCase } from './get-messages';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';

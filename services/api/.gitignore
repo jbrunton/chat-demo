@@ -39,3 +39,5 @@ reports/mutation
 
 # typedoc
 /docs
+
+/coverage

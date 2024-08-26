@@ -2,7 +2,7 @@ import { RenameUserUseCase } from './rename';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
-import { TestUsersRepository } from '@fixtures/data/test.users.repository';
+import { TestUsersRepository } from '@data/repositories/test/test.users.repository';
 import { Dispatcher } from '@entities/messages';
 
 describe('RenameUserUseCase', () => {

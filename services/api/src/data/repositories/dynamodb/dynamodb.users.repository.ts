@@ -6,8 +6,8 @@ import {
 } from '@entities/users';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { pick } from 'rambda';
-import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';
-import { DbUser } from '../adapters/schema';
+import { DynamoDBAdapter } from '../../adapters/dynamodb/dynamodb.adapter';
+import { DbUser } from '../../adapters/dynamodb/schema';
 
 @Injectable()
 export class DynamoDBUsersRepository extends UsersRepository {

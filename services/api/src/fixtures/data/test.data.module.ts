@@ -3,10 +3,10 @@ import { MessagesRepository } from '@entities/messages';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { UsersRepository } from '@entities/users';
 import { Global, Module } from '@nestjs/common';
-import { TestMembershipsRepository } from './test.memberships.repository';
-import { TestMessagesRepository } from './test.messages.repository';
-import { TestRoomsRepository } from './test.rooms.repository';
-import { TestUsersRepository } from './test.users.repository';
+import { TestMembershipsRepository } from '../../data/repositories/test/test.memberships.repository';
+import { TestMessagesRepository } from '../../data/repositories/test/test.messages.repository';
+import { TestRoomsRepository } from '../../data/repositories/test/test.rooms.repository';
+import { TestUsersRepository } from '../../data/repositories/test/test.users.repository';
 
 @Global()
 @Module({
