@@ -11,8 +11,9 @@ const config = {
   mutate: [
     'src/**/*.ts',
     '!src/**/*.spec.ts',
+    '!src/**/*.e2e-spec.ts',
     '!src/fixtures/**/*.ts',
-    '!src/data/**/*.ts',
+    // '!src/data/**/*.ts',
   ],
   testRunner_comment:
     'Take a look at https://stryker-mutator.io/docs/stryker-js/jest-runner for information about the jest plugin.',
