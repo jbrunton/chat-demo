@@ -1,6 +1,6 @@
-import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
+import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { DispatcherService } from './dispatcher.service';
-import { TestMessagesRepository } from '@fixtures/data/test.messages.repository';
+import { TestMessagesRepository } from '@data/repositories/test/test.messages.repository';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { DraftMessage, SentMessage } from '@entities/messages';
 import { RoomFactory } from '@fixtures/messages/room.factory';

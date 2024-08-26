@@ -1,7 +1,7 @@
 import { JoinPolicy } from '@entities/room.entity';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
-import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
+import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { UnauthorizedException } from '@nestjs/common';

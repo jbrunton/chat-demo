@@ -1,12 +1,12 @@
 import { MembershipStatus } from '@entities/membership.entity';
 import { CreateMembershipParams } from '@entities/memberships.repository';
-import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
+import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
-import { DynamoDBMembershipsRepository } from './dynamodb.memberships.repository';
 import { MockLoggerModule } from '@fixtures/MockLoggerModule';
+import { DynamoDBMembershipsRepository } from './dynamodb/dynamodb.memberships.repository';
 
 type TestCase = {
   name: 'DynamoDBMembershipsRepository' | 'TestMembershipsRepository';

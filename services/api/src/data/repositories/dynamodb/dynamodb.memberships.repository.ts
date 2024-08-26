@@ -5,8 +5,8 @@ import {
 } from '@entities/memberships.repository';
 import { Injectable } from '@nestjs/common';
 import { pick } from 'rambda';
-import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';
-import { DbMembership } from '../adapters/schema';
+import { DynamoDBAdapter } from '../../adapters/dynamodb.adapter';
+import { DbMembership } from '../../adapters/schema';
 
 @Injectable()
 export class DynamoDBMembershipsRepository extends MembershipsRepository {

@@ -1,5 +1,5 @@
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
-import { TestRoomsRepository } from '@fixtures/data/test.rooms.repository';
+import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { RenameRoomUseCase } from './rename';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { RoomFactory } from '@fixtures/messages/room.factory';

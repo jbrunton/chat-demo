@@ -1,6 +1,6 @@
-import { DynamoDBUsersRepository } from '@data/repositories/dynamodb.users.repository';
+import { DynamoDBUsersRepository } from '@data/repositories/dynamodb/dynamodb.users.repository';
 import { userParamsFromAuth } from '@entities/users';
-import { TestUsersRepository } from '@fixtures/data/test.users.repository';
+import { TestUsersRepository } from '@data/repositories/test/test.users.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataModule } from '../data.module';
 import { MockLoggerModule } from '@fixtures/MockLoggerModule';

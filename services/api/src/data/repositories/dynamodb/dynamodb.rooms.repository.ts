@@ -7,8 +7,8 @@ import {
 } from '@entities/rooms.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { pick } from 'rambda';
-import { DynamoDBAdapter } from '../adapters/dynamodb.adapter';
-import { DbRoom } from '../adapters/schema';
+import { DynamoDBAdapter } from '../../adapters/dynamodb.adapter';
+import { DbRoom } from '../../adapters/schema';
 
 @Injectable()
 export class DynamoDBRoomsRepository extends RoomsRepository {
