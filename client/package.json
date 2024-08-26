@@ -14,7 +14,8 @@
     "lint": "eslint --max-warnings 0 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint --max-warnings 0 --fix 'src/**/*.{ts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,tsx,css,md}' --config ./.prettierrc",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@auth0/auth0-react": "1.12.0",
