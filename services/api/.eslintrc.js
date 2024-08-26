@@ -149,6 +149,7 @@ module.exports = {
       'src/fixtures/**',
       '**/__mocks__/**',
       'test/**',
+      'scripts/**',
     ],
   },
 };
