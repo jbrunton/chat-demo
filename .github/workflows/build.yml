@@ -120,7 +120,7 @@ jobs:
         with:
           port: 8001
       - run: pnpm --filter api install
-      - run: pnpm run --filter api db:init
+      - run: pnpm run --filter api db:test:init
       - run: pnpm --filter api run test:mutate:data
 
   build-api:
