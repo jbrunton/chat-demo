@@ -109,8 +109,8 @@ jobs:
 
   test-mutate-data:
     runs-on: ubuntu-latest
-    needs: [test-e2e]
-    if: github.ref == 'refs/heads/main'
+    # needs: [test-e2e]
+    # if: github.ref == 'refs/heads/main'
     env:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
     steps:
