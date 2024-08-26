@@ -25,7 +25,7 @@ export const RoomPage = () => {
 
   return (
     <Box display='flex' flexFlow='column' height='100%' flex='1'>
-      {<MessagesList messages={messages ?? [restrictedMessage(roomId)]} />}
+      {<MessagesList messages={canRead ? messages ?? [] : [restrictedMessage(roomId)]} />}
       <ChatBox roomResponse={roomResponse} />
     </Box>
   )

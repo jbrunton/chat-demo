@@ -11,7 +11,7 @@ export type ChatBoxProps = {
   roomResponse: RoomResponse
 }
 
-const JoinAlert = ({ roomResponse }: ChatBoxProps): ReactElement => {
+export const JoinAlert = ({ roomResponse }: ChatBoxProps): ReactElement => {
   const roomId = roomResponse.room.id
 
   const canJoin = can('join', roomResponse)
