@@ -119,8 +119,10 @@ jobs:
       - uses: rrainn/dynamodb-action@v2.0.1
         with:
           port: 8001
-      - run: pnpm --filter api install
-      - run: pnpm --filter api run test:mutate:data
+      - run: |
+          pnpm --filter api install
+          pnpm --filter api db:test:init
+      - run: SKIP_SETUP=true pnpm --filter api run test:mutate:data
 
   build-api:
     needs: [test-e2e]
