@@ -1,4 +1,4 @@
-import { DynamoDBAdapter } from '@data/adapters/dynamodb.adapter';
+import { DynamoDBAdapter } from '@data/adapters/dynamodb/dynamodb.adapter';
 import { RunnableDataModule, runWithContext } from '../runWithContext';
 
 runWithContext({

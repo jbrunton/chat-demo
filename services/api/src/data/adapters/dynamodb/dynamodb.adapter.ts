@@ -11,7 +11,7 @@ import {
   DbRoom,
   DbSchema,
   DbUser,
-} from '@data/adapters/schema';
+} from '@data/adapters/dynamodb/schema';
 
 @Injectable()
 export class DynamoDBAdapter {

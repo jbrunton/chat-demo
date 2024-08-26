@@ -6,7 +6,7 @@ import { DynamoDBMessagesRepository } from './repositories/dynamodb/dynamodb.mes
 import { RoomsRepository } from '@entities/rooms.repository';
 import { UsersRepository } from '@entities/users';
 import { DynamoDBUsersRepository } from './repositories/dynamodb/dynamodb.users.repository';
-import { DynamoDBAdapter } from './adapters/dynamodb.adapter';
+import { DynamoDBAdapter } from './adapters/dynamodb/dynamodb.adapter';
 import { DynamoDBRoomsRepository } from './repositories/dynamodb/dynamodb.rooms.repository';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { DynamoDBMembershipsRepository } from './repositories/dynamodb/dynamodb.memberships.repository';

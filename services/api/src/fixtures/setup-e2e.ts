@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register';
-import { DynamoDBAdapter } from '@data/adapters/dynamodb.adapter';
+import { DynamoDBAdapter } from '@data/adapters/dynamodb/dynamodb.adapter';
 import { DataModule } from '@data/data.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerModule } from '@app/app.logger';

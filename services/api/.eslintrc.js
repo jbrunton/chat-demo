@@ -69,6 +69,10 @@ module.exports = {
             ],
           },
           {
+            from: [['data', { adapterType: 'test' }]],
+            allow: ['@faker-js/faker'],
+          },
+          {
             from: ['config'],
             allow: ['@aws-sdk/client-dynamodb', '@nestjs/config', 'assert'],
           },
@@ -121,7 +125,9 @@ module.exports = {
       },
       {
         type: 'data',
-        pattern: 'src/data',
+        pattern: ['src/data/*/*', 'src/data'],
+        mode: 'folder',
+        capture: ['kind', 'adapterType'],
       },
       {
         type: 'config',
