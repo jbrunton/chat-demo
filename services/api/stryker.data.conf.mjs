@@ -13,7 +13,7 @@ const config = {
     'Take a look at https://stryker-mutator.io/docs/stryker-js/jest-runner for information about the jest plugin.',
   coverageAnalysis: 'perTest',
   dashboard: {
-    module: 'data',
+    module: 'api-data',
   },
   jest: {
     configFile: 'test/jest-e2e.config.cjs',
