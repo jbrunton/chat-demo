@@ -5,6 +5,7 @@ import { usePostMessage } from '../../../data/messages'
 import { RoomResponse, useJoinRoom } from '../../../data/rooms'
 import { useUserDetails } from '../../../data/users'
 import { can } from '../../../data/lib'
+import { RoomInfoAlert } from '../atoms/RoomInfoAlert'
 
 export type ChatBoxProps = {
   roomResponse: RoomResponse
@@ -27,32 +28,22 @@ const JoinAlert = ({ roomResponse }: ChatBoxProps): ReactElement => {
 
   if (canJoin) {
     if (requiresApproval && awaitingApproval) {
-      return (
-        <Alert status='info' variant='top-accent'>
-          <AlertIcon />
-          Awaiting approval from owner.
-          <Spacer />
-        </Alert>
-      )
+      return <RoomInfoAlert>Awaiting approval from owner.</RoomInfoAlert>
     }
     return (
-      <Alert status='info' variant='top-accent'>
-        <AlertIcon />
+      <RoomInfoAlert
+        rightButton={
+          <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
+            {requiresApproval ? 'Request to Join' : 'Join'}
+          </Button>
+        }
+      >
         Join this room to chat.
-        <Spacer />
-        <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
-          {requiresApproval ? 'Request to Join' : 'Join'}
-        </Button>
-      </Alert>
+      </RoomInfoAlert>
     )
   }
 
-  return (
-    <Alert status='info' variant='top-accent'>
-      <AlertIcon />
-      You need an invite to join.
-    </Alert>
-  )
+  return <RoomInfoAlert>You need an invite to join.</RoomInfoAlert>
 }
 
 export const ChatBox: React.FC<ChatBoxProps> = ({ roomResponse }: ChatBoxProps): ReactElement => {

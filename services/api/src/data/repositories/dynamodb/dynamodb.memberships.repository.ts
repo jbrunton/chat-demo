@@ -14,6 +14,22 @@ export class DynamoDBMembershipsRepository extends MembershipsRepository {
     super();
   }
 
+  protected async getOpenMembership(
+    params: Pick<CreateMembershipParams, 'roomId' | 'userId'>,
+  ): Promise<Membership | null> {
+    const [openMembership] = await this.adapter.Membership.find(
+      {
+        userId: params.userId,
+        roomId: params.roomId,
+      },
+      {
+        where: 'attribute_not_exists(${until})',
+        hidden: true,
+      },
+    );
+    return openMembership ?? null;
+  }
+
   override async createMembership(
     params: CreateMembershipParams,
   ): Promise<Membership> {
