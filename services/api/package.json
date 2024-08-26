@@ -26,7 +26,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:mutate": "stryker run",
-    "test:mutate:data": "NODE_ENV=test stryker run stryker.data.conf.mjs",
+    "test:mutate:data": "NODE_ENV=test SKIP_DB_SETUP=true stryker run stryker.data.conf.mjs",
     "test:int": "jest --config ./test/jest-e2e.config.cjs",
     "docs:generate": "typedoc",
     "docs:serve": "http-server docs"

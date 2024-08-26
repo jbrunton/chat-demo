@@ -122,7 +122,7 @@ jobs:
       - run: |
           pnpm --filter api install
           pnpm --filter api db:test:init
-      - run: SKIP_SETUP=true pnpm --filter api run test:mutate:data
+      - run: pnpm --filter api run test:mutate:data
 
   build-api:
     needs: [test-e2e]

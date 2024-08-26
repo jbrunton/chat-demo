@@ -6,7 +6,7 @@ import { LoggerModule } from '@app/app.logger';
 
 const setup = async () => {
   // Setup and teardown should be done manually for mutation tests
-  if (process.env.SKIP_SETUP === 'true') {
+  if (process.env.SKIP_DB_SETUP === 'true') {
     return;
   }
 
