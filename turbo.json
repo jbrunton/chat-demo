@@ -8,6 +8,12 @@
     "lint": {},
     "test": {},
     "test:int": {},
+    "dev:setup": {
+      "cache": false
+    },
+    "dev:teardown": {
+      "cache": false
+    },
     "dev": {
       "cache": false,
       "persistent": true

@@ -57,6 +57,13 @@ export class DynamoDBAdapter {
 
   async destroy() {
     this.validateSafeEnv();
+
+    const exists = await this.table.exists();
+    if (!exists) {
+      console.log(`Table ${this.tableName} does not exist, skipping destroy`);
+      return;
+    }
+
     console.log('destroying table:', this.tableName);
     await this.table.deleteTable('DeleteTableForever');
   }
