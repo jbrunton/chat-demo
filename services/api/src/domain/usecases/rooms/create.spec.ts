@@ -1,4 +1,4 @@
-import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
+import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
 import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { CreateRoomUseCase } from './create';

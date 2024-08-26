@@ -11,7 +11,6 @@ import {
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UsersRepository } from '@entities/users';
 import { MessagesRepository } from '@entities/messages';
-import { TestDataModule } from '@fixtures/data/test.data.module';
 import { TestUsersRepository } from '@data/repositories/test/test.users.repository';
 import { TestMessagesRepository } from '@data/repositories/test/test.messages.repository';
 import { Room } from '@entities/room.entity';
@@ -19,12 +18,13 @@ import { RoomsRepository } from '@entities/rooms.repository';
 import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { CreateMessageDto } from './dto/messages';
-import { TestMembershipsRepository } from '@fixtures/data/test.memberships.repository';
+import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MembershipStatus } from '@entities/membership.entity';
 import { MessagesModule } from './messages.module';
 import { Auth0Client } from '@app/auth/auth0/auth0.client';
 import { MockLoggerModule } from '@fixtures/MockLoggerModule';
+import { TestDataModule } from '@fixtures/data/test.data.module';
 
 jest.mock('@app/auth/auth0/auth0.client');
 
