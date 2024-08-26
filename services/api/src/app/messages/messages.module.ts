@@ -12,7 +12,7 @@ import { HelpCommandUseCase } from '@usecases/commands/help';
 import { LoremCommandUseCase, LoremGenerator } from '@usecases/commands/lorem';
 import { FakerLoremGenerator } from './faker.lorem.generator';
 import { DispatcherModule } from '../dispatcher/dispatcher.module';
-import { ChangeRoomJoinPolicyUseCase } from '@usecases/rooms/change-room-join-policy';
+import { ConfigureRoomUseCase } from '@usecases/rooms/configure-room';
 import { InviteUseCase } from '@usecases/memberships/invite';
 import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
@@ -33,7 +33,7 @@ import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
     CommandService,
     RenameRoomUseCase,
     RenameUserUseCase,
-    ChangeRoomJoinPolicyUseCase,
+    ConfigureRoomUseCase,
     InviteUseCase,
     LeaveRoomUseCase,
     LoremCommandUseCase,

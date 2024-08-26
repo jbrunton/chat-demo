@@ -2,7 +2,7 @@ import { Room } from './room.entity';
 
 export type CreateRoomParams = Omit<Room, 'id'>;
 export type UpdateRoomParams = Partial<
-  Pick<Room, 'name' | 'id' | 'joinPolicy'>
+  Pick<Room, 'name' | 'id' | 'joinPolicy' | 'contentPolicy'>
 >;
 
 export abstract class RoomsRepository {

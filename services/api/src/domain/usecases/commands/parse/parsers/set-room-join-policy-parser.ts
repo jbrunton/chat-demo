@@ -12,11 +12,11 @@ const schema = z
   ])
   .rest(z.string())
   .transform<ParsedCommand>(([, , , , joinPolicy]) => ({
-    tag: 'changeRoomJoinPolicy',
+    tag: 'setRoomJoinPolicy',
     params: { newJoinPolicy: joinPolicy },
   }));
 
-export const changeRoomJoinPolicyParser = new CommandParser({
+export const setRoomJoinPolicyParser = new CommandParser({
   matchTokens: ['set', 'room', 'join', 'policy'],
   schema,
   signature: `/set room join policy {'anyone', 'request', 'invite'}`,
