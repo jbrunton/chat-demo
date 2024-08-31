@@ -14,9 +14,9 @@ import {
 import { SignInButton } from '../../../features/auth/organisms/sign-in-button'
 import { useParams } from 'react-router-dom'
 import { useRoom } from '../../../data/rooms'
-import { RoomSelector } from './RoomSelector'
+import { RoomSelector } from './room-selector'
 import { useAuth } from '../../../features/auth'
-import { HeaderTemplate } from '../molecules/HeaderTemplate'
+import { HeaderTemplate } from '../molecules/header-template'
 
 export const Header = () => {
   const { isAuthenticated, isLoading: isLoadingAuth } = useAuth()

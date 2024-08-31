@@ -1,8 +1,8 @@
 import { Alert, Button, Center, Container, Flex } from '@chakra-ui/react'
 import React from 'react'
 import { useAuth } from './auth'
-import { LoadingIndicator } from '../shared/molecules/LoadingIndicator'
-import { RoomSelector } from '../shared/navigation/organisms/RoomSelector'
+import { LoadingIndicator } from '../shared/molecules/loading-indicator'
+import { RoomSelector } from '../shared/navigation/organisms/room-selector'
 
 export const HomePage = () => {
   const { isAuthenticated, isLoading, signIn } = useAuth()

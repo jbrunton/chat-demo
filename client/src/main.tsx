@@ -5,7 +5,7 @@ import { Auth0Provider } from '@auth0/auth0-react'
 import { baseTheme, ChakraProvider, extendTheme, StyleFunctionProps } from '@chakra-ui/react'
 import 'highlight.js/styles/default.css'
 import './main.css'
-import App from './App'
+import App from './app'
 import { AuthProvider } from './features/auth/provider'
 import { configureDefaults } from './data/config'
 

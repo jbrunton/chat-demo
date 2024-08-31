@@ -1,5 +1,5 @@
 import React from 'react'
-import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
+import { LoadingIndicator } from '../../../shared/molecules/loading-indicator'
 import { setRedirectPath } from '../pages/callback'
 import { useAuth } from '..'
 
