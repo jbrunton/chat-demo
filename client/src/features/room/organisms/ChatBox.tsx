@@ -17,7 +17,7 @@ const JoinAlert = ({ roomResponse }: ChatBoxProps): ReactElement => {
   const requiresApproval = roomResponse.room.joinPolicy === 'request'
   const awaitingApproval = roomResponse.status === 'PendingApproval'
 
-  const { mutate: joinRoom, isLoading, isSuccess: isJoined } = useJoinRoom(roomId)
+  const { mutate: joinRoom, isPending, isSuccess: isJoined } = useJoinRoom(roomId)
 
   useEffect(() => {
     if (isJoined) {
@@ -40,7 +40,7 @@ const JoinAlert = ({ roomResponse }: ChatBoxProps): ReactElement => {
         <AlertIcon />
         Join this room to chat.
         <Spacer />
-        <Button rightIcon={isLoading ? <Spinner /> : undefined} onClick={() => joinRoom()}>
+        <Button rightIcon={isPending ? <Spinner /> : undefined} onClick={() => joinRoom()}>
           {requiresApproval ? 'Request to Join' : 'Join'}
         </Button>
       </Alert>
@@ -61,7 +61,7 @@ export const ChatBox: React.FC<ChatBoxProps> = ({ roomResponse }: ChatBoxProps):
   const [content, setContent] = useState<string>('')
   const { data: user, isLoading } = useUserDetails()
   const joined = user?.rooms.some((room) => room.id === roomId)
-  const { mutate: postMessage, isLoading: isSending } = usePostMessage(roomId, content)
+  const { mutate: postMessage, isPending: isSending } = usePostMessage(roomId, content)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
