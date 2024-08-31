@@ -1,6 +1,6 @@
 import React from 'react'
 import { screen, waitFor, within } from '@testing-library/react'
-import { RoomPage } from './Room'
+import { RoomPage } from './room'
 import { render } from '../../../test/fixtures'
 
 describe('RoomPage', () => {
