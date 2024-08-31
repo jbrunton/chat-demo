@@ -14,6 +14,12 @@ export const handlers = [
     const response = loadResponse(`./messages/get/${roomId}.json`)
     return res(ctx.json(response))
   }),
+
+  rest.get('users/:userId', (req, res, ctx) => {
+    const userId = req.params['userId']
+    const response = loadResponse(`./users/get/${userId}.json`)
+    return res(ctx.json(response))
+  }),
 ]
 
 const loadResponse = (relativePath: string): JSON => {

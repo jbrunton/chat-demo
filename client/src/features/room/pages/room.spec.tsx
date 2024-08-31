@@ -6,8 +6,7 @@ import { render } from '../../../test/fixtures'
 describe('RoomPage', () => {
   it('loads messages for the room', async () => {
     render(<RoomPage />, {
-      path: '/room/:roomId',
-      initialEntry: '/room/room:100-can-manage',
+      routes: { path: '/room/:roomId', initialEntry: '/room/room:100-can-manage' },
     })
 
     await waitFor(() => {
@@ -17,8 +16,7 @@ describe('RoomPage', () => {
 
   it('shows a message if the user lacks permissions to read the room', async () => {
     render(<RoomPage />, {
-      path: '/room/:roomId',
-      initialEntry: '/room/room:200-can-join',
+      routes: { path: '/room/:roomId', initialEntry: '/room/room:200-can-join' },
     })
 
     await waitFor(() => {
@@ -28,8 +26,7 @@ describe('RoomPage', () => {
 
   it('shows an alert if the user can join the room', async () => {
     render(<RoomPage />, {
-      path: '/room/:roomId',
-      initialEntry: '/room/room:200-can-join',
+      routes: { path: '/room/:roomId', initialEntry: '/room/room:200-can-join' },
     })
 
     await waitFor(() => {
@@ -41,8 +38,7 @@ describe('RoomPage', () => {
 
   it('shows an alert if the user can request to join', async () => {
     render(<RoomPage />, {
-      path: '/room/:roomId',
-      initialEntry: '/room/room:300-can-request-approval',
+      routes: { path: '/room/:roomId', initialEntry: '/room/room:300-can-request-approval' },
     })
 
     await waitFor(() => {
@@ -54,8 +50,7 @@ describe('RoomPage', () => {
 
   it('shows an alert if the user requires an invite to join', async () => {
     render(<RoomPage />, {
-      path: '/room/:roomId',
-      initialEntry: '/room/room:400-requires-invite',
+      routes: { path: '/room/:roomId', initialEntry: '/room/room:400-requires-invite' },
     })
 
     await waitFor(() => {

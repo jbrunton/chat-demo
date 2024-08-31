@@ -6,6 +6,7 @@ type LoadingState = {
   signIn?: never
   signOut?: never
   token?: never
+  userName?: never
 }
 
 type SignedInState = {
@@ -14,6 +15,7 @@ type SignedInState = {
   signIn?: never
   signOut: () => void
   token: string
+  userName?: string
 }
 
 type SignedOutState = {
@@ -22,6 +24,7 @@ type SignedOutState = {
   signIn: () => void
   signOut?: never
   token?: never
+  userName?: never
 }
 
 export type AuthContextInterface = LoadingState | SignedInState | SignedOutState
@@ -37,11 +40,12 @@ const signedOutState = (signIn: () => void): AuthContextInterface => ({
   signIn,
 })
 
-const signedInState = (token: string, signOut: () => void): AuthContextInterface => ({
+const signedInState = (token: string, userName: string | undefined, signOut: () => void): AuthContextInterface => ({
   isLoading: false,
   isAuthenticated: true,
   signOut,
   token,
+  userName,
 })
 
 export const AuthContext = createContext<AuthContextInterface>(loadingState)
@@ -49,17 +53,18 @@ export const AuthContext = createContext<AuthContextInterface>(loadingState)
 type GetAuthStateParams = {
   isLoading: boolean
   token?: string
+  userName?: string
   signOut: () => void
   signIn: () => void
 }
 
-export const getAuthState = ({ isLoading, token, signIn, signOut }: GetAuthStateParams) => {
+export const getAuthState = ({ isLoading, token, userName, signIn, signOut }: GetAuthStateParams) => {
   if (isLoading) {
     return loadingState
   }
 
   if (token) {
-    return signedInState(token, signOut)
+    return signedInState(token, userName, signOut)
   }
 
   return signedOutState(signIn)
