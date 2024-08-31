@@ -19,9 +19,9 @@ import { useAuth } from '../../../features/auth'
 import { HeaderTemplate } from '../molecules/header-template'
 
 export const Header = () => {
-  const { isAuthenticated, isLoading: isLoadingAuth } = useAuth()
+  const { isAuthenticated } = useAuth()
   const { roomId } = useParams()
-  const { data: roomResponse } = useRoom(roomId, { enabled: !isLoadingAuth })
+  const { data: roomResponse } = useRoom(roomId, { enabled: isAuthenticated })
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 

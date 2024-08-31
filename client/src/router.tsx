@@ -22,20 +22,18 @@ export const router = createBrowserRouter([
         element: <Callback />,
       },
       {
-        path: '/room/new',
-        element: (
-          <RequireAuth>
-            <NewRoomPage />
-          </RequireAuth>
-        ),
-      },
-      {
-        path: '/room/:roomId',
-        element: (
-          <RequireAuth>
-            <RoomPage />
-          </RequireAuth>
-        ),
+        path: '/room',
+        element: <RequireAuth />,
+        children: [
+          {
+            path: 'new',
+            element: <NewRoomPage />,
+          },
+          {
+            path: ':roomId',
+            element: <RoomPage />,
+          },
+        ],
       },
     ],
   },
