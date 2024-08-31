@@ -1,13 +1,7 @@
 import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
-  Icon,
-  Flex,
-  Heading,
-  Spacer,
-  HStack,
   useDisclosure,
-  IconButton,
   DrawerOverlay,
   Drawer,
   DrawerContent,
@@ -20,9 +14,9 @@ import {
 import { SignInButton } from '../../../features/auth/organisms/sign-in-button'
 import { useParams } from 'react-router-dom'
 import { useRoom } from '../../../data/rooms'
-import { AiOutlineMenu } from 'react-icons/ai'
 import { RoomSelector } from './RoomSelector'
 import { useAuth } from '../../../features/auth'
+import { HeaderTemplate } from '../molecules/HeaderTemplate'
 
 export const Header = () => {
   const { isAuthenticated, isLoading: isLoadingAuth } = useAuth()
@@ -40,22 +34,12 @@ export const Header = () => {
 
   return (
     <>
-      <Flex className='header' p='6px' align='center'>
-        <Heading size={{ base: 'sm', lg: 'md' }} noOfLines={1}>
-          {roomResponse?.room.name ?? 'Chat Demo'}
-        </Heading>
-        <Spacer />
-        <HStack align='center'>
-          <IconButton variant='ghost' icon={<DrawerIcon />} aria-label={'Open Menu'} onClick={onOpen} />
-        </HStack>
-      </Flex>
+      <HeaderTemplate title={roomResponse?.room.name ?? 'Chat Demo'} onOpen={onOpen} />
 
       {isOpen ? <DrawerMenu isOpen={isOpen} onClose={onClose} isAuthenticated={isAuthenticated} /> : null}
     </>
   )
 }
-
-const DrawerIcon = () => <Icon as={AiOutlineMenu} boxSize={5} />
 
 type DrawerMenuProps = Required<Pick<UseDisclosureProps, 'onClose' | 'isOpen'>> & {
   isAuthenticated: boolean

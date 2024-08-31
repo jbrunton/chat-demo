@@ -9,7 +9,14 @@ import App from './App'
 import { AuthProvider } from './features/auth/provider'
 import { configureDefaults } from './data/config'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      throwOnError: true,
+      retry: 0,
+    },
+  },
+})
 
 configureDefaults()
 
