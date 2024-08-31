@@ -7,10 +7,12 @@ import { NewRoomPage } from './features/room/pages/New'
 import { Layout } from './Layout'
 import { RequireAuth } from './features/auth/organisms/require-auth'
 import { Callback } from './features/auth/pages/callback'
+import { ErrorPage } from './ErrorPage'
 
 export const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: '/',
