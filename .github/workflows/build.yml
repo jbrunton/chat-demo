@@ -32,18 +32,6 @@ jobs:
       - run: pnpm install
       - run: pnpm run test
 
-  pulumi:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: pulumi
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v4
-      - run: pnpm install --ignore-workspace
-      - run: pnpm run lint
-      - run: pnpm run test
-
   test-int:
     runs-on: ubuntu-latest
     steps:
@@ -56,7 +44,7 @@ jobs:
       - run: pnpm run test:int
 
   test-e2e:
-    needs: [lint, build, test, test-int, pulumi]
+    needs: [lint, build, test, test-int]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
