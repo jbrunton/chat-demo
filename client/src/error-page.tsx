@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, Alert, AlertIcon, AlertTitle, AlertDescription, Box, Center } from '@chakra-ui/react'
 import { AxiosError } from 'axios'
-import { useRouteError } from 'react-router-dom'
+import { isRouteErrorResponse, useRouteError } from 'react-router-dom'
 import { HeaderTemplate } from './shared/navigation/molecules/HeaderTemplate'
 
 export const ErrorPage = () => {
@@ -40,6 +40,13 @@ const getErrorDetails = (error: unknown): ErrorDetails => {
       }
     }
   }
+
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return {
+      message: 'Looks like this page is missing',
+    }
+  }
+
   return {
     message: 'There was an unknown error. Please try again later',
   }
