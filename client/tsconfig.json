@@ -15,7 +15,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "@testing-library/jest-dom", "@emotion/react/types/css-prop"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
