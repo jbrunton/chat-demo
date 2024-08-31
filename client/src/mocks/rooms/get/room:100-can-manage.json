@@ -1,6 +1,6 @@
 {
   "room": {
-    "id": "room:123",
+    "id": "room:100",
     "name": "Test Room",
     "ownerId": "user:test-user",
     "contentPolicy": "private",
