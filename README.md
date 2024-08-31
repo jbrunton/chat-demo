@@ -19,8 +19,12 @@ This project is an exercise in developing good clean architecture and CI/CD prac
 
 The project implements a very basic realtime chat app at [chat-demo.jbrunton-aws.com](https://chat-demo.jbrunton-aws.com).
 
-- From the home screen you can create "rooms". Each room has a unique URL. Anyone connecting to the room can chat using server-sent events.
+- From the home screen or navigation menu you can create "rooms". Each room has a unique URL. Anyone who joins a room can chat using server-sent events.
 - The app responds to commands prefixed with `/`. Type `/help` into the chat window to get assistance.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a5700d6f-f1d1-4720-a784-42d6098a4af4" alt="Screenshot of Chat Demo app" />
+</p>
 
 ## Local dev
 
@@ -40,3 +44,4 @@ To configure environment variables for the Playwright e2e tests:
 ```console
 pnpm test:e2e:setup
 ```
+
