@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { FormattedMessage } from './FormattedMessage'
+import { FormattedMessage } from './formatted-message'
 import '@testing-library/jest-dom'
 
 describe('FormattedMessage', () => {

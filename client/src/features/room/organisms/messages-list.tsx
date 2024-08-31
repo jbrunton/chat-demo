@@ -2,7 +2,7 @@ import { Button, Center, List, ListItem, Text, Icon } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineArrowDown } from 'react-icons/ai'
 import { Message } from '../../../data/messages'
-import { MessagesGroup, MessagesGroupProps } from './MessageGroup'
+import { MessagesGroup, MessagesGroupProps } from './messages-group'
 
 export type MessagesListProps = {
   messages: Message[]
