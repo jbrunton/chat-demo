@@ -50,7 +50,7 @@ export const useJoinRoom = (roomId: string) => {
   return useMutation({
     mutationFn: () => joinRoom(roomId),
     onSuccess: () => {
-      client.invalidateQueries(['me'])
+      client.invalidateQueries({ queryKey: ['me'] })
     },
   })
 }
