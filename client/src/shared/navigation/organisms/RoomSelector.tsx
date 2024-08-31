@@ -15,7 +15,7 @@ export const RoomSelector = () => {
   return (
     <>
       <Heading size='sm' m='4'>
-        Rooms
+        Your Rooms
       </Heading>
       <Link to='/room/new'>
         <Button variant='drawer' leftIcon={<NewRoomIcon />}>

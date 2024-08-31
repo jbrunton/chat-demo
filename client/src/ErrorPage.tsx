@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Alert, AlertIcon, AlertTitle, AlertDescription, Box } from '@chakra-ui/react'
+import { Container, Alert, AlertIcon, AlertTitle, AlertDescription, Box, Center } from '@chakra-ui/react'
 import { AxiosError } from 'axios'
 import { useRouteError } from 'react-router-dom'
 import { HeaderTemplate } from './shared/navigation/molecules/HeaderTemplate'
@@ -10,17 +10,19 @@ export const ErrorPage = () => {
   return (
     <>
       <HeaderTemplate title='Chat Demo' />
-      <Container maxWidth='container.lg'>
-        <Alert status='error' variant='top-accent' height='200px'>
-          <AlertIcon boxSize='40px' ml='20px' mr='40px' />
-          <Box>
-            <AlertTitle mt={4} mb={1} fontSize='lg'>
-              Uh oh!
-            </AlertTitle>
-            <AlertDescription>{message}</AlertDescription>
-          </Box>
-        </Alert>
-      </Container>
+      <Center height='100%'>
+        <Container maxWidth='container.lg'>
+          <Alert status='error' variant='top-accent' p='10'>
+            <AlertIcon boxSize='40px' ml='20px' mr='40px' />
+            <Box>
+              <AlertTitle mt={4} mb={1} fontSize='lg'>
+                Uh oh!
+              </AlertTitle>
+              <AlertDescription>{message}</AlertDescription>
+            </Box>
+          </Alert>
+        </Container>
+      </Center>
     </>
   )
 }
