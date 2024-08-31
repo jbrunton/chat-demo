@@ -8,5 +8,6 @@
       "extends": ["config:base", "group:allNonMajor"]
     }
   ],
+  "branchPrefix": "renovate-",
   "prConcurrentLimit": 3
 }
