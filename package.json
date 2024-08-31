@@ -11,6 +11,7 @@
     "test:int": "turbo test:int",
     "test:e2e": "pnpm run --filter e2e test:e2e",
     "test:e2e:ui": "pnpm run --filter e2e test:e2e:ui",
+    "test:e2e:setup": "pnpm run --filter e2e test:e2e:setup",
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:setup": "turbo dev:setup",

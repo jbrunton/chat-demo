@@ -19,6 +19,10 @@
       "persistent": true
     },
     "dev:setup": {
+      "cache": false,
+      "env": ["AUTH0_TEST_USER1_PASSWORD", "AUTH0_TEST_USER2_PASSWORD"]
+    },
+    "dev:teardown": {
       "cache": false
     }
   }

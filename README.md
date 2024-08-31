@@ -33,3 +33,9 @@ pnpm dev
 ```
 
 The web client will then be running locally at http://localhost:5173/.
+
+To configure environment variables for the Playwright e2e tests:
+
+```console
+pnpm test:e2e:setup
+```
