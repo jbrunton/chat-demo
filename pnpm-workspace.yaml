@@ -2,3 +2,4 @@ packages:
   - "client"
   - "services/*"
   - "e2e"
+  - "pulumi"

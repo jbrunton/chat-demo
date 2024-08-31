@@ -1,8 +1,8 @@
 {
-  "name": "chat-demo-services",
+  "name": "infrastructure",
   "main": "index.ts",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "packageManager": "pnpm@9.8.0",
   "scripts": {
