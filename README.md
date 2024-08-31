@@ -8,6 +8,7 @@ This project is an exercise in developing good clean architecture and CI/CD prac
 
 - Infrastructure as Code with [Pulumi](https://www.pulumi.com/), including staging and ephemeral dev environments (with automatic dev environment cleanup).
 - CI including linting, unit, integration and mutation tests, and automated end to end tests with [Playwright](https://playwright.dev/).
+- Docker image built using [Cloud Native Buildpacks](https://buildpacks.io/) (providing OCI spec image annotations).
 - A clean architecture, including dependency inversion enforced through linting rules with [eslint-plugin-boundaries](https://github.com/javierbrea/eslint-plugin-boundaries).
 - Separate domain, data and application boundaries in the application. Domain logic is completely separated from data access layers using [verified fake implementations](https://github.com/jbrunton/chat-demo/tree/main/services/api/src/data/repositories).
 - Continuous deployment pipelines to staging and production environments.
