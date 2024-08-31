@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { clearBearerToken, setBearerToken } from '../../data/config'
 import { AuthContext, getAuthState } from './context'
-import { useAccessToken } from './hooks/useAccessToken'
+import { useAccessToken } from './hooks/use-access-token'
 import debug from 'debug'
 
 const log = debug('auth')

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
+import { LoadingIndicator } from '../../../shared/molecules/loading-indicator'
 import { useCreateRoom } from '../../../data/rooms'
 
 export const NewRoomPage = () => {

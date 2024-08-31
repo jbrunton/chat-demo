@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Alert, AlertIcon, AlertTitle, AlertDescription, Box, Center } from '@chakra-ui/react'
 import { AxiosError } from 'axios'
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom'
-import { HeaderTemplate } from './shared/navigation/molecules/HeaderTemplate'
+import { HeaderTemplate } from './shared/navigation/molecules/header-template'
 
 export const ErrorPage = () => {
   const error = useRouteError()

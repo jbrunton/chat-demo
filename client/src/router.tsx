@@ -2,7 +2,6 @@ import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { HomePage } from './features/home'
 import { RoomPage } from './features/room/pages/room'
-import { NotFoundPage } from './shared/pages/NotFound'
 import { NewRoomPage } from './features/room/pages/new'
 import { Layout } from './layout'
 import { RequireAuth } from './features/auth/organisms/require-auth'
@@ -17,7 +16,6 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: <HomePage />,
-        errorElement: <NotFoundPage />,
       },
       {
         path: '/callback',

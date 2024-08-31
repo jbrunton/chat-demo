@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import { LoadingIndicator } from '../../../shared/molecules/LoadingIndicator'
+import { LoadingIndicator } from '../../../shared/molecules/loading-indicator'
 import { ChatBox } from '../organisms/chat-box'
 import { Message, useMessages, useMessagesSubscription } from '../../../data/messages'
 import { MessagesList } from '../organisms/messages-list'
