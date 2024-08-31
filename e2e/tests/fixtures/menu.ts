@@ -7,8 +7,8 @@ export class Menu {
 
   constructor(private readonly page: Page) {
     this.openMenuButton = page.getByLabel("Open Menu");
-    this.createRoomButton = page.getByText("New Room");
-    this.signInButton = page.getByText("Sign In");
+    this.createRoomButton = page.getByRole("dialog").getByText("New Room");
+    this.signInButton = page.getByRole("dialog").getByText("Sign In");
   }
 
   async open() {
