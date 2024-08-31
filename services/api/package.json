@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "packageManager": "pnpm@9.8.0",
   "scripts": {
@@ -100,6 +100,6 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.1.0",
     "typedoc": "0.26.5",
-    "typescript": "^5.0.0"
+    "typescript": "5.5.4"
   }
 }
