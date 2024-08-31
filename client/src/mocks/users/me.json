@@ -1,0 +1,17 @@
+{
+  "user": {
+    "id": "user:google-oauth2|123",
+    "name": "Test User",
+    "picture": "https://ui-avatars.com/api/?name=Joe+Bloggs",
+    "email": "test.user@example.com"
+  },
+  "rooms": [
+    {
+      "id": "room:100",
+      "name": "Test Room",
+      "ownerId": "user:google-oauth2|123",
+      "contentPolicy": "private",
+      "joinPolicy": "invite"
+    }
+  ]
+}

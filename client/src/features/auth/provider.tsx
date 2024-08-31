@@ -8,7 +8,7 @@ import debug from 'debug'
 const log = debug('auth')
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isLoading: isAuth0Loading, loginWithRedirect, logout } = useAuth0()
+  const { isLoading: isAuth0Loading, loginWithRedirect, logout, user } = useAuth0()
   const { accessToken, isLoading: isTokenLoading } = useAccessToken()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     log('signOut called')
     setIsLoading(true)
     clearBearerToken()
-    logout()
+    logout({ returnTo: window.location.origin })
   }
 
   const signIn = () => {
@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const state = getAuthState({
     isLoading,
     token: accessToken,
+    userName: user?.name,
     signIn,
     signOut,
   })
