@@ -1,8 +1,8 @@
 import React from 'react'
 import { User } from '../../../data/users'
-import { DefaultUserIcon } from '../atoms/DefaultUserIcon'
-import { SystemIcon } from '../atoms/SystemIcon'
-import { UserAvatar } from '../atoms/UserAvatar'
+import { DefaultUserIcon } from '../atoms/default-user-icon'
+import { SystemIcon } from '../atoms/system-icon'
+import { UserAvatar } from '../atoms/user-avatar'
 
 export type AuthorAvatarProps = {
   author: User | undefined

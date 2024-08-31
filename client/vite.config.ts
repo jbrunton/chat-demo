@@ -12,6 +12,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     mockReset: true,
-    setupFiles: ['./src/test/setup-mocks.ts'],
+    setupFiles: ['./src/test/setup-vitest.ts', './src/test/setup-mocks.ts'],
   },
 })

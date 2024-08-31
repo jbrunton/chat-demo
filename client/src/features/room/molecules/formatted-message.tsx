@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect } from 'react'
 import hljs from 'highlight.js'
-import './FormattedMessage.css'
+import './formatted-message.css'
 
 export type FormattedMessageProps = {
   content: string

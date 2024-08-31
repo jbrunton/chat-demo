@@ -2,9 +2,9 @@ import React from 'react'
 import { HStack, ListItem, VStack } from '@chakra-ui/react'
 import { Message } from '../../../data/messages'
 import { useUser } from '../../../data/users'
-import { AuthorAvatar } from '../molecules/AuthorAvatar'
-import { AuthorDetails } from '../molecules/AuthorDetails'
-import { FormattedMessage } from '../molecules/FormattedMessage'
+import { AuthorAvatar } from '../molecules/author-avatar'
+import { AuthorDetails } from '../molecules/author-details'
+import { FormattedMessage } from '../molecules/formatted-message'
 
 export type MessagesGroupProps = {
   authorId: string
