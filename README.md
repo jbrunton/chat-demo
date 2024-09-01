@@ -13,7 +13,7 @@ This project is an exercise in developing good clean architecture and CI/CD prac
 - Separate domain, data and application boundaries in the application. Domain logic is completely separated from data access layers using [verified fake implementations](https://github.com/jbrunton/chat-demo/tree/main/services/api/src/data/repositories).
 - Continuous deployment pipelines to staging and production environments.
 - Automatic documentation of code with [TypeDoc](https://typedoc.org/) deployed using GitHub Pages to [jbrunton.github.io/chat-demo](https://jbrunton.github.io/chat-demo/), and Open API docs deployed along with the api ([chat-demo-api.jbrunton-aws.com/docs](https://chat-demo-api.jbrunton-aws.com/docs)).
-- [ ] TODO: Automatic dependency updates (including automerging for minor version changes) with Renovate.
+- Automatic dependency updates (including automerging) with Renovate.
 
 ## The demo application
 
