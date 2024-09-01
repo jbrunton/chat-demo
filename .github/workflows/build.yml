@@ -142,8 +142,8 @@ jobs:
       - run: pnpm --filter api run test:mutate:data
 
   build-api:
-    # needs: [test-e2e]
-    # if: github.ref == 'refs/heads/main'
+    needs: [test-e2e]
+    if: github.ref == 'refs/heads/main'
     uses: jbrunton/workflows/.github/workflows/build-image.yml@prepare-cmd
     with:
       repo-name: jbrunton/chat-demo-api
