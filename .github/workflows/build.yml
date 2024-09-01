@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
       - uses: pnpm/action-setup@v4
       - run: pnpm install
       - run: pnpm run lint
@@ -131,7 +132,7 @@ jobs:
         pnpm install
         pnpm --filter api build
         pnpm --filter api isolate
-      buildpack: paketo-buildpacks/nodejs
+      buildpack: heroku/nodejs
       publish: true
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
