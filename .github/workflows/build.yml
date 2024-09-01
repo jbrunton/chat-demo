@@ -142,9 +142,9 @@ jobs:
       - run: pnpm --filter api run test:mutate:data
 
   build-api:
-    needs: [test-e2e]
-    if: github.ref == 'refs/heads/main'
-    uses: jbrunton/workflows/.github/workflows/build-image.yml@prepare-cmd
+    # needs: [test-e2e]
+    # if: github.ref == 'refs/heads/main'
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
     with:
       repo-name: jbrunton/chat-demo-api
       build-directory: services/api/isolate
