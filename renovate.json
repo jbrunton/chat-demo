@@ -4,8 +4,11 @@
   "packageRules": [
     {
       "matchFileNames": ["pulumi/**"],
-      "groupName": "pulumi"
+      "groupName": "pulumi",
+      "extends": ["config:base", "group:allNonMajor"],
+      "additionalBranchPrefix": "pulumi-"
     }
   ],
-  "prConcurrentLimit": 3,
+  "branchPrefix": "renovate-",
+  "prConcurrentLimit": 3
 }
