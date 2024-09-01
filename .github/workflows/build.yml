@@ -123,10 +123,13 @@ jobs:
   build-api:
     needs: [test-e2e]
     if: github.ref == 'refs/heads/main'
-    uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@prepare-cmd
     with:
       repo-name: jbrunton/chat-demo-api
-      working-directory: services/api
+      build-directory: services/api/isolate
+      prepare-cmd: |
+        pnpm install
+        pnpm --filter api isolate
       buildpack: paketo-buildpacks/nodejs
       publish: true
       docker-username: jbrunton
