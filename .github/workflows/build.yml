@@ -198,6 +198,43 @@ jobs:
           API_TAG: ${{ needs.build-api.outputs.tag }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  test-e2e-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+      - uses: pnpm/action-setup@v4
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+        working-directory: e2e
+      - name: Configure environment
+        run: |
+          touch .env
+          echo "USER1_EMAIL=$USER1_EMAIL" >> .env
+          echo "USER1_PASSWORD=$USER1_PASSWORD" >> .env
+          echo "USER2_EMAIL=$USER2_EMAIL" >> .env
+          echo "USER2_PASSWORD=$USER2_PASSWORD" >> .env
+        env:
+          USER1_EMAIL: ${{ secrets.TEST_USER1_EMAIL }}
+          USER1_PASSWORD: ${{ secrets.TEST_USER1_PASSWORD }}
+          USER2_EMAIL: ${{ secrets.TEST_USER2_EMAIL }}
+          USER2_PASSWORD: ${{ secrets.TEST_USER2_PASSWORD }}
+        working-directory: e2e
+      - name: Run Playwright tests
+        run: pnpm run test:e2e
+        env:
+          E2E_BASE_URL: https://chat-demo.staging.jbrunton-aws.com/
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 1
+
   deploy-production:
     environment:
       name: Production
