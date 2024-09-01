@@ -7,14 +7,18 @@ concurrency: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   build-api:
-    uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@gcr-builder
     with:
       repo-name: jbrunton/chat-demo-api
-      working-directory: services/api
-      buildpack: paketo-buildpacks/nodejs
+      build-directory: services/api/isolate
+      prepare-cmd: |
+        pnpm install
+        pnpm --filter api build
+        pnpm --filter api isolate
+      node-version-file: "package.json"
       publish: true
       docker-username: jbrunton
-      cache-image: jbrunton/chat-demo-api-cache-image:latest
+      cache-image: jbrunton/chat-demo-api-cache-image:gcr-builder
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 

@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "pulumi"
+		},
+		{
+			"path": ".github"
 		}
 	],
 	"settings": {}
