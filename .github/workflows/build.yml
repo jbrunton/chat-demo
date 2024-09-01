@@ -129,6 +129,7 @@ jobs:
       build-directory: services/api/isolate
       prepare-cmd: |
         pnpm install
+        pnpm --filter api build
         pnpm --filter api isolate
       buildpack: paketo-buildpacks/nodejs
       publish: true
