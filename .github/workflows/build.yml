@@ -153,6 +153,7 @@ jobs:
         pnpm --filter api build
         pnpm --filter api isolate
       buildpack: heroku/nodejs
+      node-version-file: "package.json"
       publish: true
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
