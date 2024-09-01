@@ -10,5 +10,6 @@
     }
   ],
   "branchPrefix": "renovate-",
-  "prConcurrentLimit": 3
+  "prConcurrentLimit": 3,
+  "automerge": true
 }
