@@ -6,7 +6,8 @@
       "matchFileNames": ["pulumi/**"],
       "groupName": "pulumi",
       "extends": ["config:base", "group:allNonMajor"],
-      "additionalBranchPrefix": "pulumi-"
+      "additionalBranchPrefix": "pulumi-",
+      "automerge": false
     }
   ],
   "branchPrefix": "renovate-",
