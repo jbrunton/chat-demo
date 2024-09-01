@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - run: pnpm install
       - run: pnpm run lint
@@ -20,6 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - run: pnpm install
       - run: pnpm run build
@@ -28,6 +34,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - run: pnpm install
       - run: pnpm run test
@@ -36,6 +45,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - uses: rrainn/dynamodb-action@v2.0.1
         with:
@@ -48,6 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - name: Install dependencies
         run: pnpm install
@@ -100,6 +115,9 @@ jobs:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - run: pnpm --filter api install
       - run: pnpm --filter api run test:mutate
@@ -112,6 +130,9 @@ jobs:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - uses: rrainn/dynamodb-action@v2.0.1
         with:
@@ -126,8 +147,13 @@ jobs:
     uses: jbrunton/workflows/.github/workflows/build-image.yml@develop
     with:
       repo-name: jbrunton/chat-demo-api
-      working-directory: services/api
-      buildpack: paketo-buildpacks/nodejs
+      build-directory: services/api/isolate
+      prepare-cmd: |
+        pnpm install
+        pnpm --filter api build
+        pnpm --filter api isolate
+      buildpack: heroku/nodejs
+      node-version-file: "package.json"
       publish: true
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
@@ -144,6 +170,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - name: Build Client
         env:
@@ -179,6 +208,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
       - name: build
         env:
