@@ -97,7 +97,7 @@ jobs:
         with:
           task-definition: ${{ steps.current-task-def.outputs.taskDefinitionFile }}
           container-name: chat-demo-api
-          image: ${{ needs.build-api.outputs.tag }}
+          image: main-50b8a7a
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
