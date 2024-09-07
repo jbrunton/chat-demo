@@ -79,7 +79,7 @@ jobs:
         run: |
           export TASK_DEFINITION_FILE=${{ runner.temp }}/taskDefinition.json
           aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN \
-            --query taskDefinifion --output json \
+            --query taskDefinition --output json \
             | jq 'del(.revision, .compatibilities, .taskDefinitionArn, .requiresAttributes, .status, .registeredAt, .registeredBy)' \
             > $TASK_DEFINITION_FILE
           echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
