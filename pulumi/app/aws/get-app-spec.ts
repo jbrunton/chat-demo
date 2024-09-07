@@ -37,6 +37,13 @@ export const getTaskDefinitionSpec = ({
             protocol: "tcp",
           },
         ],
+        healthCheck: {
+          retries: 3,
+          command: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"],
+          timeout: 5,
+          interval: 30,
+          startPeriod: 5,
+        },
         environment: [
           {
             name: "PORT",
