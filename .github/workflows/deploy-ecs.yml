@@ -1,0 +1,58 @@
+name: deploy-ecs
+
+on:
+  workflow_call:
+    inputs:
+      task-defn-arn:
+        description: The ARN of the task definition to update
+        required: true
+        type: string
+      container-name:
+        description: The name of the container
+        required: true
+        type: string
+      image:
+        description: The image to deploy
+        required: true
+        type: string
+      service:
+        description: The service to deploy to
+        required: true
+        type: string
+      cluster:
+        description: The cluster to deploy to
+        required: true
+        type: string
+
+jobs:
+  deploy_ecs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current task definition
+        id: current-task-def
+        run: |
+          export TASK_DEFINITION_FILE=${{ runner.temp }}/taskDefinition.json
+          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN \
+            --query taskDefinition --output json \
+            | jq 'del(.revision, .compatibilities, .taskDefinitionArn, .requiresAttributes, .status, .registeredAt, .registeredBy)' \
+            > $TASK_DEFINITION_FILE
+          echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
+        env:
+          TASK_DEFINITION_ARN: ${{ inputs.task-defn-arn }}
+        working-directory: pulumi
+
+      - name: Render new task definition
+        id: new-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.current-task-def.outputs.taskDefinitionFile }}
+          container-name: chat-demo-api
+          image: ${{ inputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.new-task-def.outputs.task-definition }}
+          service: ${{ inputs.service }}
+          cluster: ${{ inputs.cluster }}
+          wait-for-service-stability: true

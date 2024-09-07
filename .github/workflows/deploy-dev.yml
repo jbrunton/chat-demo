@@ -47,7 +47,6 @@ jobs:
         run: |
           pnpm --filter client install
           pnpm --filter client run build
-
       - run: pnpm install --ignore-workspace
         working-directory: pulumi
 
@@ -78,31 +77,16 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
-      - name: Get current task definition
-        id: current-task-def
-        run: |
-          export TASK_DEFINITION_FILE=${{ runner.temp }}/taskDefinition.json
-          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN \
-            --query taskDefinition --output json \
-            | jq 'del(.revision, .compatibilities, .taskDefinitionArn, .requiresAttributes, .status, .registeredAt, .registeredBy)' \
-            > $TASK_DEFINITION_FILE
-          echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
-        env:
-          TASK_DEFINITION_ARN: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
-        working-directory: pulumi
-
-      - name: Render new task definition
-        id: new-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          task-definition: ${{ steps.current-task-def.outputs.taskDefinitionFile }}
-          container-name: chat-demo-api
-          image: ${{ needs.build-api.outputs.tag }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      - uses: ./.github/workflows/deploy-ecs.yml
         with:
-          task-definition: ${{ steps.new-task-def.outputs.task-definition }}
+          task-defn-arn: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
+          image: "${{ needs.build-api.outputs.image_name }}:${{ needs.build-api.outputs.tag }}"
           service: ${{ steps.pulumi-outputs.outputs.service }}
           cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
-          wait-for-service-stability: true
