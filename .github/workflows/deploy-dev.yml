@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "CURRENT_TASK_DEFINITION=${{ runner.temp }}/current_task_definition.json" >> $GITHUB_ENV
+          echo "CURRENT_TASK_DEFINITION=${{ runner.temp }}/currentTaskDefinition.json" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
 
@@ -100,7 +100,7 @@ jobs:
           image: ${{ needs.build-api.outputs.tag }}
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.new-task-def.outputs.task-definition }}
           service: ${{ steps.pulumi-outputs.outputs.service }}
