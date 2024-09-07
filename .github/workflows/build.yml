@@ -159,7 +159,7 @@ jobs:
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-  deploy-staging:
+  provision-staging:
     environment:
       name: Staging
       url: https://chat-demo.staging.jbrunton-aws.com
@@ -167,6 +167,10 @@ jobs:
     needs: [build-api]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      service: ${{ steps.pulumi-outputs.outputs.service }}
+      cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
+      taskDefinitionArn: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
@@ -194,17 +198,44 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get pulumi outputs
+        id: pulumi-outputs
+        run: |
+          pulumi stack select ${{ github.head_ref || github.ref_name }}
+          echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
+          echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
+          echo "taskDefinitionArn=$(pulumi stack output apiTaskDefinitionArn)" > $GITHUB_OUTPUT
+        working-directory: pulumi
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
-  deploy-production:
+  deploy-api-staging:
+    needs: [build-api, provision-staging]
+    uses: ./.github/workflows/deploy-ecs.yml
+    with:
+      task-defn-arn: ${{ needs.provision-staging.outputs.taskDefinitionArn }}
+      image: "${{ needs.build-api.outputs.image_name }}:${{ needs.build-api.outputs.tag }}"
+      service: ${{ needs.provision-staging.outputs.service }}
+      cluster: ${{ needs.provision-staging.outputs.cluster }}
+      aws-region: us-east-1
+      container-name: chat-demo-api
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  provision-production:
     environment:
       name: Production
       url: https://chat-demo.jbrunton-aws.com
     concurrency: production
-    needs: [build-api, deploy-staging]
+    needs: [build-api, deploy-api-staging]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      service: ${{ steps.pulumi-outputs.outputs.service }}
+      cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
+      taskDefinitionArn: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
@@ -234,3 +265,27 @@ jobs:
           AWS_REGION: us-east-1
           API_TAG: ${{ needs.build-api.outputs.tag }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get pulumi outputs
+        id: pulumi-outputs
+        run: |
+          pulumi stack select ${{ github.head_ref || github.ref_name }}
+          echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
+          echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
+          echo "taskDefinitionArn=$(pulumi stack output apiTaskDefinitionArn)" > $GITHUB_OUTPUT
+        working-directory: pulumi
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  deploy-api-production:
+    needs: [build-api, provision-production]
+    uses: ./.github/workflows/deploy-ecs.yml
+    with:
+      task-defn-arn: ${{ needs.provision-production.outputs.taskDefinitionArn }}
+      image: "${{ needs.build-api.outputs.image_name }}:${{ needs.build-api.outputs.tag }}"
+      service: ${{ needs.provision-production.outputs.service }}
+      cluster: ${{ needs.provision-production.outputs.cluster }}
+      aws-region: us-east-1
+      container-name: chat-demo-api
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
