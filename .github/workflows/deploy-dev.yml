@@ -67,7 +67,7 @@ jobs:
       - name: Get pulumi outputs
         id: pulumi-outputs
         run: |
-          pulumi stack select ${{ github.head_ref }}
+          pulumi stack select ${{ github.head_ref || github.ref_name }}
           echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
           echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
           echo "taskDefinitionArn=$(pulumi stack output apiTaskDefinitionArn)" > $GITHUB_OUTPUT
