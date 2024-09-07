@@ -31,11 +31,11 @@ jobs:
     steps:
       - run: |
           echo "CURRENT_TASK_DEFINITION=${{ runner.temp }}/current_task_definition.json" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -47,8 +47,10 @@ jobs:
         run: |
           pnpm --filter client install
           pnpm --filter client run build
+
       - run: pnpm install --ignore-workspace
         working-directory: pulumi
+
       - uses: pulumi/actions@v3
         with:
           command: up
@@ -64,6 +66,7 @@ jobs:
           AWS_REGION: us-east-1
           API_TAG: ${{ needs.build-api.outputs.tag }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Get pulumi outputs
         id: pulumi-outputs
         run: |
@@ -74,6 +77,7 @@ jobs:
         working-directory: pulumi
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
       - name: Get current task definition
         id: current-task-def
         run: |
@@ -83,12 +87,10 @@ jobs:
             | jq 'del(.revision, .compatibilities, .taskDefinitionArn, .requiresAttributes, .status, .registeredAt, .registeredBy)' \
             > $TASK_DEFINITION_FILE
           echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
-
-          echo "TASK_DEFINITION_FILE: $TASK_DEFINITION_FILE"
-          cat $TASK_DEFINITION_FILE
         env:
           TASK_DEFINITION_ARN: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
         working-directory: pulumi
+
       - name: Render new task definition
         id: new-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
@@ -104,20 +106,3 @@ jobs:
           service: ${{ steps.pulumi-outputs.outputs.service }}
           cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
           wait-for-service-stability: true
-      # - name: Render new task definition
-
-      # - uses: pulumi/actions@v3
-      #   with:
-      #     command: up
-      #     stack-name: ${{ github.head_ref }}
-      #     upsert: true
-      #     work-dir: pulumi
-      #     comment-on-pr: true
-      #     github-token: ${{ secrets.CI_MINION_PAT }}
-      #   env:
-      #     PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_REGION: us-east-1
-      #     API_TAG: ${{ needs.build-api.outputs.tag }}
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
