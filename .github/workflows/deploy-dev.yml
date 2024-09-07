@@ -29,8 +29,18 @@ jobs:
     needs: [build-api]
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo "CURRENT_TASK_DEFINITION: ${{ runner.temp }}/current_task_definition.json" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Build Client
         env:
           VITE_API_URL: https://chat-demo-api-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
@@ -42,7 +52,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: up
-          stack-name: ${{ github.head_ref || github.ref_name }}
+          stack-name: ${{ github.head_ref }}
           upsert: true
           work-dir: pulumi
           comment-on-pr: true
@@ -54,3 +64,60 @@ jobs:
           AWS_REGION: us-east-1
           API_TAG: ${{ needs.build-api.outputs.tag }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get pulumi outputs
+        id: pulumi-outputs
+        run: |
+          pulumi stack select ${{ github.head_ref }}
+          echo "cluster=$(pulumi stack output cluster)" > $GITHUB_OUTPUT
+          echo "service=$(pulumi stack output apiService)" > $GITHUB_OUTPUT
+          echo "taskDefinitionArn=$(pulumi stack output apiTaskDefinitionArn)" > $GITHUB_OUTPUT
+        working-directory: pulumi
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      - name: Get current task definition
+        id: current-task-def
+        run: |
+          export TASK_DEFINITION_FILE=${{ runner.temp }}/taskDefinition.json
+          aws ecs describe-task-definition --task-definition $TASK_DEFINITION_ARN \
+            --query taskDefinifion --output json \
+            | jq 'del(.revision, .compatibilities, .taskDefinitionArn, .requiresAttributes, .status, .registeredAt, .registeredBy)' \
+            > $TASK_DEFINITION_FILE
+          echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
+
+          echo "TASK_DEFINITION_FILE: $TASK_DEFINITION_FILE"
+          cat $TASK_DEFINITION_FILE
+        env:
+          TASK_DEFINITION_ARN: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
+        working-directory: pulumi
+      - name: Render new task definition
+        id: new-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.current-task-def.outputs.taskDefinitionFile }}
+          container-name: auth0-test-api
+          image: ${{ needs.build-api.outputs.tag }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.new-task-def.outputs.task-definition }}
+          service: ${{ steps.pulumi-outputs.outputs.service }}
+          cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
+          wait-for-service-stability: true
+      # - name: Render new task definition
+
+      # - uses: pulumi/actions@v3
+      #   with:
+      #     command: up
+      #     stack-name: ${{ github.head_ref }}
+      #     upsert: true
+      #     work-dir: pulumi
+      #     comment-on-pr: true
+      #     github-token: ${{ secrets.CI_MINION_PAT }}
+      #   env:
+      #     PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: us-east-1
+      #     API_TAG: ${{ needs.build-api.outputs.tag }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
