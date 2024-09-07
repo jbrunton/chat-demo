@@ -94,7 +94,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ steps.current-task-def.outputs.taskDefinitionFile }}
-          container-name: auth0-test-api
+          container-name: chat-demo-api
           image: ${{ needs.build-api.outputs.tag }}
 
       - name: Deploy Amazon ECS task definition
