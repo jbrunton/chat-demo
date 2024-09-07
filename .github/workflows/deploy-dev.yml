@@ -52,7 +52,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: up
-          stack-name: ${{ github.head_ref }}
+          stack-name: ${{ github.head_ref || github.ref_name }}
           upsert: true
           work-dir: pulumi
           comment-on-pr: true
