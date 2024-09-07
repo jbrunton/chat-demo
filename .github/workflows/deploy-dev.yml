@@ -22,12 +22,16 @@ jobs:
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-  deploy-app:
+  provision:
     environment:
       name: Development
       url: https://chat-demo-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
     needs: [build-api]
     runs-on: ubuntu-latest
+    outputs:
+      service: ${{ steps.pulumi-outputs.outputs.service }}
+      cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
+      taskDefinitionArn: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
     steps:
       - run: |
           echo "CURRENT_TASK_DEFINITION=${{ runner.temp }}/currentTaskDefinition.json" >> $GITHUB_ENV
@@ -77,16 +81,16 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - uses: ./.github/workflows/deploy-ecs.yml
-        with:
-          task-defn-arn: ${{ steps.pulumi-outputs.outputs.taskDefinitionArn }}
-          image: "${{ needs.build-api.outputs.image_name }}:${{ needs.build-api.outputs.tag }}"
-          service: ${{ steps.pulumi-outputs.outputs.service }}
-          cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
+  deploy-app:
+    needs: [build-api, provision]
+    uses: ./.github/workflows/deploy-ecs.yml
+    with:
+      task-defn-arn: ${{ needs.provision.outputs.taskDefinitionArn }}
+      image: "${{ needs.build-api.outputs.image_name }}:${{ needs.build-api.outputs.tag }}"
+      service: ${{ needs.provision.outputs.service }}
+      cluster: ${{ needs.provision.outputs.cluster }}
+      aws-region: us-east-1
+      container-name: chat-demo-api
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
