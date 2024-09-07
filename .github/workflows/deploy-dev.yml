@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "CURRENT_TASK_DEFINITION: ${{ runner.temp }}/current_task_definition.json" >> $GITHUB_ENV
+          echo "CURRENT_TASK_DEFINITION=${{ runner.temp }}/current_task_definition.json" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v4
 
