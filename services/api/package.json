@@ -9,6 +9,9 @@
     "node": "20.x"
   },
   "packageManager": "pnpm@9.9.0",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
