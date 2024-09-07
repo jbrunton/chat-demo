@@ -144,7 +144,7 @@ jobs:
   build-api:
     needs: [test-e2e]
     if: github.ref == 'refs/heads/main'
-    uses: jbrunton/workflows/.github/workflows/build-image.yml@gcr-builder
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@v1
     with:
       repo-name: jbrunton/chat-demo-api
       build-directory: services/api/isolate
@@ -155,7 +155,7 @@ jobs:
       node-version-file: "package.json"
       publish: true
       docker-username: jbrunton
-      cache-image: jbrunton/chat-demo-api-cache-image:gcr-builder
+      cache-image: jbrunton/chat-demo-api-cache-image:latest
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
