@@ -54,7 +54,6 @@ jobs:
           echo "taskDefinitionFile=$TASK_DEFINITION_FILE" > $GITHUB_OUTPUT
         env:
           TASK_DEFINITION_ARN: ${{ inputs.task-defn-arn }}
-        working-directory: pulumi
 
       - name: Render new task definition
         id: new-task-def
