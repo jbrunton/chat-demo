@@ -10,7 +10,8 @@
   },
   "packageManager": "pnpm@9.9.0",
   "files": [
-    "dist"
+    "dist",
+    "run.Dockerfile"
   ],
   "scripts": {
     "prebuild": "rimraf dist",
