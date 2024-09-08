@@ -7,7 +7,7 @@ concurrency: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   build-api:
-    uses: jbrunton/workflows/.github/workflows/build-image.yml@v1
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@custom-run
     with:
       repo-name: jbrunton/chat-demo-api
       build-directory: services/api/isolate
@@ -19,6 +19,7 @@ jobs:
       publish: true
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
+      run-dockerfile: run.Dockerfile
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
