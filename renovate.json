@@ -5,7 +5,6 @@
     {
       "matchFileNames": ["pulumi/**"],
       "groupName": "pulumi",
-      "extends": ["config:base", "group:allNonMajor"],
       "additionalBranchPrefix": "pulumi-",
       "automerge": false
     }
