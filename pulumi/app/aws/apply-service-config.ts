@@ -175,6 +175,11 @@ export const applyServiceConfig = (
         desiredCount: 1,
         launchType: "FARGATE",
         taskDefinition: taskDefinition.arn,
+        deploymentCircuitBreaker: {
+          enable: true,
+          rollback: false,
+        },
+        waitForSteadyState: true,
         networkConfiguration: {
           assignPublicIp: true,
           subnets: subnets.ids,
