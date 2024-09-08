@@ -107,3 +107,4 @@ jobs:
           service: ${{ steps.pulumi-outputs.outputs.service }}
           cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
           wait-for-service-stability: true
+          wait-for-task-stopped: true
