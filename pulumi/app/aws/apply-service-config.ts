@@ -179,7 +179,7 @@ export const applyServiceConfig = (
           enable: true,
           rollback: false,
         },
-        waitForSteadyState: false,
+        waitForSteadyState: true,
         networkConfiguration: {
           assignPublicIp: true,
           subnets: subnets.ids,
