@@ -121,16 +121,16 @@ export const applyClientConfig = (
   //   ],
   // });
 
-  new aws.route53.Record(stackConfig.client.domain, {
-    name: stackConfig.client.domain,
-    zoneId: zone.zoneId,
-    type: "A",
-    aliases: [
-      {
-        name: stackConfig.client.domain,
-        zoneId: zone.id,
-        evaluateTargetHealth: true,
-      },
-    ],
-  });
+  // new aws.route53.Record(stackConfig.client.domain, {
+  //   name: stackConfig.client.domain,
+  //   zoneId: zone.zoneId,
+  //   type: "A",
+  //   aliases: [
+  //     {
+  //       name: stackConfig.client.domain,
+  //       zoneId: zone.id,
+  //       evaluateTargetHealth: true,
+  //     },
+  //   ],
+  // });
 };
