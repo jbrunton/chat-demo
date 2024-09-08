@@ -177,7 +177,7 @@ export const applyServiceConfig = (
         taskDefinition: taskDefinition.arn,
         deploymentCircuitBreaker: {
           enable: true,
-          rollback: true,
+          rollback: false,
         },
         waitForSteadyState: true,
         networkConfiguration: {
