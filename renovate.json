@@ -12,6 +12,5 @@
   ],
   "branchPrefix": "renovate-",
   "prConcurrentLimit": 3,
-  "automerge": true,
-  "automergeSchedule": "before 9:00am every weekend"
+  "automerge": true
 }
