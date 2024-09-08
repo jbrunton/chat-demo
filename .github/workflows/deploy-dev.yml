@@ -19,6 +19,7 @@ jobs:
       publish: true
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
+      run-image: jbrunton/run-google-22
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
@@ -106,3 +107,4 @@ jobs:
           service: ${{ steps.pulumi-outputs.outputs.service }}
           cluster: ${{ steps.pulumi-outputs.outputs.cluster }}
           wait-for-service-stability: true
+          wait-for-task-stopped: true

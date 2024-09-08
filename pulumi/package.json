@@ -1,5 +1,5 @@
 {
-  "name": "infrastructure",
+  "name": "pulumi",
   "main": "index.ts",
   "engines": {
     "node": "20.x"
