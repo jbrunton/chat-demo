@@ -12,5 +12,6 @@
   ],
   "branchPrefix": "renovate-",
   "prConcurrentLimit": 3,
-  "automerge": true
+  "automerge": true,
+  "automergeType": "branch"
 }
