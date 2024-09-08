@@ -12,6 +12,9 @@ const nodeEnv = process.env.NODE_ENV || 'production';
 const productionConfig = (): DatabaseConfig => {
   const tableName = process.env.DB_TABLE_NAME;
   assert(tableName);
+  if (!process.env.PROD_ONLY_ERROR) {
+    throw new Error('Prod only error');
+  }
 
   return {
     tableName,
