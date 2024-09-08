@@ -7,7 +7,7 @@ concurrency: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   build-api:
-    uses: jbrunton/workflows/.github/workflows/build-image.yml@custom-run
+    uses: jbrunton/workflows/.github/workflows/build-image.yml@v1
     with:
       repo-name: jbrunton/chat-demo-api
       build-directory: services/api/isolate
