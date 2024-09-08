@@ -156,6 +156,7 @@ jobs:
       publish: true
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
+      run-image: jbrunton/run-google-22
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
