@@ -160,110 +160,42 @@ jobs:
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-  pulumi-staging:
-    environment:
-      name: Staging
-      url: https://chat-demo.staging.jbrunton-aws.com
+  pulumi-preview-staging:
+    if: github.ref != 'refs/heads/main'
     concurrency: staging
     needs: [build-api]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: "package.json"
-      - uses: pnpm/action-setup@v4
-      - name: Build Client
-        env:
-          VITE_API_URL: https://chat-demo-api.staging.jbrunton-aws.com
-        run: |
-          pnpm --filter client install
-          pnpm --filter client run build
-      - run: pnpm install --ignore-workspace
-        working-directory: pulumi
-      - uses: pulumi/actions@v3
-        if: github.ref != 'refs/heads/main'
-        name: preview
-        with:
-          command: preview
-          stack-name: staging
-          upsert: true
-          work-dir: pulumi
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: pulumi/actions@v3
-        if: github.ref == 'refs/heads/main'
-        name: up
-        with:
-          command: up
-          stack-name: staging
-          upsert: true
-          work-dir: pulumi
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: ./.github/workflows/pulumi.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      command: preview
+    secrets: inherit
 
-  pulumi-production:
-    environment:
-      name: Production
-      url: https://chat-demo.jbrunton-aws.com
-    concurrency: production
-    needs: [build-api, pulumi-staging]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: "package.json"
-      - uses: pnpm/action-setup@v4
-      - name: build
-        env:
-          VITE_API_URL: https://chat-demo-api.jbrunton-aws.com
-        run: |
-          pnpm --filter client install
-          pnpm --filter client run build
-      - run: pnpm install --ignore-workspace
-        working-directory: pulumi
-      - uses: pulumi/actions@v3
-        if: github.ref != 'refs/heads/main'
-        name: preview
-        with:
-          command: preview
-          stack-name: production
-          upsert: true
-          work-dir: pulumi
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: pulumi/actions@v3
-        if: github.ref == 'refs/heads/main'
-        name: up
-        with:
-          command: up
-          stack-name: production
-          upsert: true
-          work-dir: pulumi
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  pulumi-deploy-staging:
+    if: github.ref == 'refs/heads/main'
+    concurrency: staging
+    needs: [build-api]
+    uses: ./.github/workflows/pulumi.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      command: up
+    secrets: inherit
+
+  pulumi-preview-production:
+    if: github.ref != 'refs/heads/main'
+    concurrency: staging
+    needs: [build-api, pulumi-preview-staging]
+    uses: ./.github/workflows/pulumi.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      command: preview
+    secrets: inherit
+
+  pulumi-deploy-production:
+    if: github.ref == 'refs/heads/main'
+    concurrency: staging
+    needs: [build-api, pulumi-deploy-staging]
+    uses: ./.github/workflows/pulumi.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      command: up
+    secrets: inherit

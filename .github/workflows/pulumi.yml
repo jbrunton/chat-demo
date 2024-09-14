@@ -1,0 +1,46 @@
+name: Pulumi
+on:
+  workflow_call:
+    inputs:
+      command:
+        description: The Pulumi command to run
+        required: true
+        type: string
+      api-tag:
+        description: The API tag to deploy
+        type: string
+        required: false
+
+jobs:
+  pulumi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "package.json"
+      - uses: pnpm/action-setup@v4
+      - name: build
+        env:
+          VITE_API_URL: https://chat-demo-api.jbrunton-aws.com
+        run: |
+          pnpm --filter client install
+          pnpm --filter client run build
+      - run: pnpm install --ignore-workspace
+        working-directory: pulumi
+      - uses: pulumi/actions@v3
+        if: github.ref == 'refs/heads/main'
+        name: Pulumi
+        with:
+          command: ${{ inputs.command }}
+          stack-name: production
+          upsert: true
+          work-dir: pulumi
+          github-token: ${{ secrets.CI_MINION_PAT }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+          API_TAG: ${{ inputs.api-tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
