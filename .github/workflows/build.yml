@@ -168,6 +168,7 @@ jobs:
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
       command: preview
+      environment: '{ "name": "Development" }'
     secrets: inherit
 
   pulumi-deploy-staging:
@@ -189,6 +190,7 @@ jobs:
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
       command: preview
+      environment: '{ "name": "Development" }'
     secrets: inherit
 
   pulumi-deploy-production:
