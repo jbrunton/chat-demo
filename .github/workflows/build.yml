@@ -143,7 +143,6 @@ jobs:
 
   build-api:
     needs: [test-e2e]
-    if: github.ref == 'refs/heads/main'
     uses: jbrunton/workflows/.github/workflows/build-image.yml@v1
     with:
       repo-name: jbrunton/chat-demo-api
@@ -157,16 +156,16 @@ jobs:
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
       run-image: jbrunton/run-google-22
+      skip-build: ${{ github.ref != 'refs/heads/main' }}
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-  deploy-staging:
+  pulumi-staging:
     environment:
       name: Staging
       url: https://chat-demo.staging.jbrunton-aws.com
     concurrency: staging
     needs: [build-api]
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -183,12 +182,29 @@ jobs:
       - run: pnpm install --ignore-workspace
         working-directory: pulumi
       - uses: pulumi/actions@v3
+        if: github.ref != 'refs/heads/main'
+        name: preview
+        with:
+          command: preview
+          stack-name: staging
+          upsert: true
+          work-dir: pulumi
+          github-token: ${{ secrets.CI_MINION_PAT }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+          API_TAG: ${{ needs.build-api.outputs.tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pulumi/actions@v3
+        if: github.ref == 'refs/heads/main'
+        name: up
         with:
           command: up
           stack-name: staging
           upsert: true
           work-dir: pulumi
-          comment-on-pr: true
           github-token: ${{ secrets.CI_MINION_PAT }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
@@ -198,13 +214,12 @@ jobs:
           API_TAG: ${{ needs.build-api.outputs.tag }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-production:
+  pulumi-production:
     environment:
       name: Production
       url: https://chat-demo.jbrunton-aws.com
     concurrency: production
-    needs: [build-api, deploy-staging]
-    if: github.ref == 'refs/heads/main'
+    needs: [build-api, pulumi-staging]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -221,12 +236,29 @@ jobs:
       - run: pnpm install --ignore-workspace
         working-directory: pulumi
       - uses: pulumi/actions@v3
+        if: github.ref != 'refs/heads/main'
+        name: preview
+        with:
+          command: preview
+          stack-name: production
+          upsert: true
+          work-dir: pulumi
+          github-token: ${{ secrets.CI_MINION_PAT }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+          API_TAG: ${{ needs.build-api.outputs.tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pulumi/actions@v3
+        if: github.ref == 'refs/heads/main'
+        name: up
         with:
           command: up
           stack-name: production
           upsert: true
           work-dir: pulumi
-          comment-on-pr: true
           github-token: ${{ secrets.CI_MINION_PAT }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
