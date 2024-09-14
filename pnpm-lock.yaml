@@ -355,8 +355,8 @@ importers:
         specifier: 4.0.1
         version: 4.0.1
       '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.16
+        specifier: ^6.0.0
+        version: 6.0.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.0.0
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)(typescript@5.6.2)
@@ -2769,8 +2769,8 @@ packages:
   '@types/superagent@8.1.8':
     resolution: {integrity: sha512-nTqHJ2OTa7PFEpLahzSEEeFeqbMpmcN7OeayiOc7v+xk+/vyTKljRe+o4MPqSnPeRCMvtxuLG+5QqluUVQJOnA==}
 
-  '@types/supertest@2.0.16':
-    resolution: {integrity: sha512-6c2ogktZ06tr2ENoZivgm7YnprnhYE4ZoXGMY+oA7IuAf17M8FWvujXZGmxLv8y0PTyts4x5A+erSwVUFA8XSg==}
+  '@types/supertest@6.0.2':
+    resolution: {integrity: sha512-137ypx2lk/wTQbW6An6safu9hXmajAifU/s7szAHLN/FeIm5w7yR0Wkl9fdJMRSHwOn4HLAI0DaB2TOORuhPDg==}
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -11182,8 +11182,9 @@ snapshots:
       '@types/node': 20.16.5
       form-data: 4.0.0
 
-  '@types/supertest@2.0.16':
+  '@types/supertest@6.0.2':
     dependencies:
+      '@types/methods': 1.1.4
       '@types/superagent': 8.1.8
 
   '@types/trusted-types@2.0.7': {}
