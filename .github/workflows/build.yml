@@ -178,6 +178,7 @@ jobs:
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
       command: up
+      environment: '{ "name": "Staging", "url": "https://chat-demo.staging.jbrunton-aws.com" }'
     secrets: inherit
 
   pulumi-preview-production:
@@ -198,4 +199,5 @@ jobs:
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
       command: up
+      environment: '{ "name": "Production", "url": "https://chat-demo.jbrunton-aws.com" }'
     secrets: inherit

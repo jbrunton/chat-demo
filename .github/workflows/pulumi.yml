@@ -10,10 +10,15 @@ on:
         description: The API tag to deploy
         type: string
         required: false
+      environment:
+        description: The environment to run against
+        type: string
+        required: false
 
 jobs:
   pulumi:
     runs-on: ubuntu-latest
+    environment: ${{ fromJSON(inputs.environment) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
