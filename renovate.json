@@ -3,7 +3,7 @@
   "extends": ["config:recommended", "group:allNonMajor"],
   "packageRules": [
     {
-      "matchFileNames": ["pulumi/**"],
+      "matchPackageNames": ["@pulumi/*"],
       "groupName": "pulumi",
       "additionalBranchPrefix": "pulumi-",
       "automerge": false
