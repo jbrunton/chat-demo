@@ -94,8 +94,8 @@ importers:
         specifier: 1.0.5
         version: 1.0.5
       '@types/marked':
-        specifier: 4.3.2
-        version: 4.3.2
+        specifier: 6.0.0
+        version: 6.0.0
       '@types/node':
         specifier: ^20.0.0
         version: 20.16.5
@@ -2694,8 +2694,9 @@ packages:
   '@types/lodash@4.17.7':
     resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
 
-  '@types/marked@4.3.2':
-    resolution: {integrity: sha512-a79Yc3TOk6dGdituy8hmTTJXjOkZ7zsFYV10L337ttq/rec8lRMDBpV7fL3uLx6TgbFCa5DU/h8FmIBQPSbU0w==}
+  '@types/marked@6.0.0':
+    resolution: {integrity: sha512-jmjpa4BwUsmhxcfsgUit/7A9KbrC48Q0q8KvnY107ogcjGgTFDlIL3RpihNpx2Mu1hM4mdFQjoVc4O6JoGKHsA==}
+    deprecated: This is a stub types definition. marked provides its own type definitions, so you do not need this installed.
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -11094,7 +11095,9 @@ snapshots:
 
   '@types/lodash@4.17.7': {}
 
-  '@types/marked@4.3.2': {}
+  '@types/marked@6.0.0':
+    dependencies:
+      marked: 4.3.0
 
   '@types/mdast@4.0.4':
     dependencies:
