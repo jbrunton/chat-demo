@@ -22,5 +22,5 @@ marked.setOptions({
 })
 
 const formatContent = (content: string) => {
-  return DOMPurify.sanitize(marked.parse(content))
+  return DOMPurify.sanitize(marked.parse(content, { async: false }))
 }

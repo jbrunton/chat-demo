@@ -60,8 +60,8 @@ importers:
         specifier: 11.10.0
         version: 11.10.0
       marked:
-        specifier: 4.3.0
-        version: 4.3.0
+        specifier: 14.1.2
+        version: 14.1.2
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -93,9 +93,6 @@ importers:
       '@types/event-source-polyfill':
         specifier: 1.0.5
         version: 1.0.5
-      '@types/marked':
-        specifier: 6.0.0
-        version: 6.0.0
       '@types/node':
         specifier: ^20.0.0
         version: 20.16.5
@@ -2693,10 +2690,6 @@ packages:
 
   '@types/lodash@4.17.7':
     resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
-
-  '@types/marked@6.0.0':
-    resolution: {integrity: sha512-jmjpa4BwUsmhxcfsgUit/7A9KbrC48Q0q8KvnY107ogcjGgTFDlIL3RpihNpx2Mu1hM4mdFQjoVc4O6JoGKHsA==}
-    deprecated: This is a stub types definition. marked provides its own type definitions, so you do not need this installed.
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -5482,9 +5475,9 @@ packages:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
     hasBin: true
 
-  marked@4.3.0:
-    resolution: {integrity: sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==}
-    engines: {node: '>= 12'}
+  marked@14.1.2:
+    resolution: {integrity: sha512-f3r0yqpz31VXiDB/wj9GaOB0a2PRLQl6vJmXiFrniNwjkKdvakqJRULhjFKJpxOchlCRiG5fcacoUZY5Xa6PEQ==}
+    engines: {node: '>= 18'}
     hasBin: true
 
   mdast-util-to-hast@13.2.0:
@@ -11095,10 +11088,6 @@ snapshots:
 
   '@types/lodash@4.17.7': {}
 
-  '@types/marked@6.0.0':
-    dependencies:
-      marked: 4.3.0
-
   '@types/mdast@4.0.4':
     dependencies:
       '@types/unist': 3.0.3
@@ -14706,7 +14695,7 @@ snapshots:
       punycode.js: 2.3.1
       uc.micro: 2.1.0
 
-  marked@4.3.0: {}
+  marked@14.1.2: {}
 
   mdast-util-to-hast@13.2.0:
     dependencies:
