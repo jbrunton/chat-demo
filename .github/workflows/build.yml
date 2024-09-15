@@ -162,7 +162,6 @@ jobs:
 
   preview-staging:
     if: github.ref != 'refs/heads/main'
-    concurrency: staging
     needs: [build-api]
     uses: ./.github/workflows/pulumi-preview.yml
     with:
@@ -187,7 +186,6 @@ jobs:
 
   preview-production:
     if: github.ref != 'refs/heads/main'
-    concurrency: staging
     needs: [build-api, preview-staging]
     uses: ./.github/workflows/pulumi-preview.yml
     with:
@@ -199,7 +197,7 @@ jobs:
 
   deploy-production:
     if: github.ref == 'refs/heads/main'
-    concurrency: staging
+    concurrency: production
     needs: [build-api, deploy-staging]
     uses: ./.github/workflows/pulumi-deploy.yml
     with:
