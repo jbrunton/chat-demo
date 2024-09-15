@@ -23,13 +23,9 @@
   },
   "include": [
     "index.ts",
-    "cleanup-stacks.ts",
     "load-paths.ts",
     "domain/**/*.ts",
     "app/**/*.ts",
     "common/**/*.ts"
-  ],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+  ]
 }
