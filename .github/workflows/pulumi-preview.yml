@@ -1,25 +1,23 @@
-name: Pulumi
+name: Pulumi Preview
 on:
   workflow_call:
     inputs:
-      command:
-        description: The Pulumi command to run
-        required: true
-        type: string
       api-tag:
         description: The API tag to deploy
         type: string
         required: false
-      environment:
-        description: The environment to run against
+      api-url:
+        description: The API URL
         type: string
-        required: false
-        default: null
+        required: true
+      client-url:
+        description: The web client URL
+        type: string
+        required: true
 
 jobs:
   pulumi:
     runs-on: ubuntu-latest
-    environment: ${{ fromJSON(inputs.environment) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,7 +26,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - name: build
         env:
-          VITE_API_URL: https://chat-demo-api.jbrunton-aws.com
+          VITE_API_URL: ${{ inputs.api-url }}
         run: |
           pnpm --filter client install
           pnpm --filter client run build
@@ -37,11 +35,10 @@ jobs:
       - uses: pulumi/actions@v3
         name: Pulumi
         with:
-          command: ${{ inputs.command }}
+          command: preview
           stack-name: production
           upsert: true
           work-dir: pulumi
-          github-token: ${{ secrets.CI_MINION_PAT }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

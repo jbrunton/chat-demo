@@ -164,42 +164,44 @@ jobs:
     if: github.ref != 'refs/heads/main'
     concurrency: staging
     needs: [build-api]
-    uses: ./.github/workflows/pulumi.yml
+    uses: ./.github/workflows/pulumi-preview.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
-      command: preview
-      environment: '{ "name": "Development" }'
+      api-url: https://chat-demo-api.staging.jbrunton-aws.com
+      client-url: https://chat-demo.staging.jbrunton-aws.com
     secrets: inherit
 
   pulumi-deploy-staging:
     if: github.ref == 'refs/heads/main'
     concurrency: staging
     needs: [build-api]
-    uses: ./.github/workflows/pulumi.yml
+    uses: ./.github/workflows/pulumi-deploy.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
-      command: up
-      environment: '{ "name": "Staging", "url": "https://chat-demo.staging.jbrunton-aws.com" }'
+      environment: Staging
+      api-url: https://chat-demo-api.staging.jbrunton-aws.com
+      client-url: https://chat-demo.staging.jbrunton-aws.com
     secrets: inherit
 
   pulumi-preview-production:
     if: github.ref != 'refs/heads/main'
     concurrency: staging
     needs: [build-api, pulumi-preview-staging]
-    uses: ./.github/workflows/pulumi.yml
+    uses: ./.github/workflows/pulumi-preview.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
-      command: preview
-      environment: '{ "name": "Development" }'
+      api-url: https://chat-demo-api.jbrunton-aws.com
+      client-url: https://chat-demo.jbrunton-aws.com
     secrets: inherit
 
   pulumi-deploy-production:
     if: github.ref == 'refs/heads/main'
     concurrency: staging
     needs: [build-api, pulumi-deploy-staging]
-    uses: ./.github/workflows/pulumi.yml
+    uses: ./.github/workflows/pulumi-deploy.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
-      command: up
-      environment: '{ "name": "Production", "url": "https://chat-demo.jbrunton-aws.com" }'
+      environment: Production
+      api-url: https://chat-demo-api.jbrunton-aws.com
+      client-url: https://chat-demo.jbrunton-aws.com
     secrets: inherit
