@@ -160,7 +160,7 @@ jobs:
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-  pulumi-preview-staging:
+  preview-staging:
     if: github.ref != 'refs/heads/main'
     concurrency: staging
     needs: [build-api]
@@ -172,7 +172,7 @@ jobs:
       client-url: https://chat-demo.staging.jbrunton-aws.com
     secrets: inherit
 
-  pulumi-deploy-staging:
+  deploy-staging:
     if: github.ref == 'refs/heads/main'
     concurrency: staging
     needs: [build-api]
@@ -185,10 +185,10 @@ jobs:
       client-url: https://chat-demo.staging.jbrunton-aws.com
     secrets: inherit
 
-  pulumi-preview-production:
+  preview-production:
     if: github.ref != 'refs/heads/main'
     concurrency: staging
-    needs: [build-api, pulumi-preview-staging]
+    needs: [build-api, preview-staging]
     uses: ./.github/workflows/pulumi-preview.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
@@ -197,10 +197,10 @@ jobs:
       client-url: https://chat-demo.jbrunton-aws.com
     secrets: inherit
 
-  pulumi-deploy-production:
+  deploy-production:
     if: github.ref == 'refs/heads/main'
     concurrency: staging
-    needs: [build-api, pulumi-deploy-staging]
+    needs: [build-api, deploy-staging]
     uses: ./.github/workflows/pulumi-deploy.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
