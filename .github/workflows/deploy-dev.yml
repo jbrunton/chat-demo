@@ -23,45 +23,13 @@ jobs:
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-  deploy-app:
-    environment:
-      name: Development
-      url: https://chat-demo-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
+  deploy-dev:
     needs: [build-api]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Build Client
-        env:
-          VITE_API_URL: https://chat-demo-api-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
-        run: |
-          pnpm --filter client install
-          pnpm --filter client run build
-
-      - run: pnpm install --ignore-workspace
-        working-directory: pulumi
-
-      - uses: pulumi/actions@v3
-        with:
-          command: up
-          stack-name: ${{ github.head_ref || github.ref_name }}
-          upsert: true
-          work-dir: pulumi
-          comment-on-pr: true
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: ./.github/workflows/pulumi-deploy.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      environment: Development
+      stack-name: ${{ github.head_ref || github.ref_name }}
+      api-url: https://chat-demo-api-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
+      client-url: https://chat-demo-${{ github.head_ref || github.ref_name }}.dev.jbrunton-aws.com
+    secrets: inherit

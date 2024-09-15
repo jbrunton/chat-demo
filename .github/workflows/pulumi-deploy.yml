@@ -10,6 +10,10 @@ on:
         description: The environment to deploy to
         type: string
         required: true
+      stack-name:
+        description: The Pulumi stack
+        type: string
+        required: true
       api-url:
         description: The API URL
         type: string
@@ -20,7 +24,7 @@ on:
         required: true
 
 jobs:
-  pulumi:
+  deploy:
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
@@ -43,7 +47,7 @@ jobs:
         name: Pulumi
         with:
           command: up
-          stack-name: production
+          stack-name: ${{ inputs.stack-name }}
           upsert: true
           work-dir: pulumi
         env:

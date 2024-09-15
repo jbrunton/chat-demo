@@ -6,6 +6,10 @@ on:
         description: The API tag to deploy
         type: string
         required: false
+      stack-name:
+        description: The Pulumi stack
+        type: string
+        required: true
       api-url:
         description: The API URL
         type: string
@@ -36,7 +40,7 @@ jobs:
         name: Pulumi
         with:
           command: preview
-          stack-name: production
+          stack-name: ${{ inputs.stack-name }}
           upsert: true
           work-dir: pulumi
         env:

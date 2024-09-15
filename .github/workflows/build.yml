@@ -167,6 +167,7 @@ jobs:
     uses: ./.github/workflows/pulumi-preview.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
+      stack-name: staging
       api-url: https://chat-demo-api.staging.jbrunton-aws.com
       client-url: https://chat-demo.staging.jbrunton-aws.com
     secrets: inherit
@@ -179,6 +180,7 @@ jobs:
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
       environment: Staging
+      stack-name: staging
       api-url: https://chat-demo-api.staging.jbrunton-aws.com
       client-url: https://chat-demo.staging.jbrunton-aws.com
     secrets: inherit
@@ -190,6 +192,7 @@ jobs:
     uses: ./.github/workflows/pulumi-preview.yml
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
+      stack-name: production
       api-url: https://chat-demo-api.jbrunton-aws.com
       client-url: https://chat-demo.jbrunton-aws.com
     secrets: inherit
@@ -202,6 +205,7 @@ jobs:
     with:
       api-tag: ${{ needs.build-api.outputs.tag }}
       environment: Production
+      stack-name: production
       api-url: https://chat-demo-api.jbrunton-aws.com
       client-url: https://chat-demo.jbrunton-aws.com
     secrets: inherit
