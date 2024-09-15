@@ -28,7 +28,7 @@ jobs:
         with:
           node-version-file: "package.json"
       - uses: pnpm/action-setup@v4
-      - name: build
+      - name: Build Client
         env:
           VITE_API_URL: ${{ inputs.api-url }}
         run: |
@@ -37,7 +37,7 @@ jobs:
       - run: pnpm install --ignore-workspace
         working-directory: pulumi
       - uses: pulumi/actions@v3
-        name: Pulumi
+        name: Preview
         with:
           command: preview
           stack-name: ${{ inputs.stack-name }}
