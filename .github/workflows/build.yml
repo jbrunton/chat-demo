@@ -142,7 +142,7 @@ jobs:
       - run: pnpm --filter api run test:mutate:data
 
   build-api:
-    # needs: [test-e2e]
+    needs: [test-e2e]
     uses: jbrunton/workflows/.github/workflows/build-image.yml@v1
     with:
       repo-name: jbrunton/chat-demo-api
