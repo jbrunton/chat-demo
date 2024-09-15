@@ -143,7 +143,6 @@ jobs:
 
   build-api:
     needs: [test-e2e]
-    if: github.ref == 'refs/heads/main'
     uses: jbrunton/workflows/.github/workflows/build-image.yml@v1
     with:
       repo-name: jbrunton/chat-demo-api
@@ -157,81 +156,56 @@ jobs:
       docker-username: jbrunton
       cache-image: jbrunton/chat-demo-api-cache-image:latest
       run-image: jbrunton/run-google-22
+      skip-build: ${{ github.ref != 'refs/heads/main' }}
     secrets:
       docker-access-token: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-  deploy-staging:
-    environment:
-      name: Staging
-      url: https://chat-demo.staging.jbrunton-aws.com
+  preview-staging:
+    if: github.ref != 'refs/heads/main'
     concurrency: staging
     needs: [build-api]
+    uses: ./.github/workflows/pulumi-preview.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      stack-name: staging
+      api-url: https://chat-demo-api.staging.jbrunton-aws.com
+      client-url: https://chat-demo.staging.jbrunton-aws.com
+    secrets: inherit
+
+  deploy-staging:
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: "package.json"
-      - uses: pnpm/action-setup@v4
-      - name: Build Client
-        env:
-          VITE_API_URL: https://chat-demo-api.staging.jbrunton-aws.com
-        run: |
-          pnpm --filter client install
-          pnpm --filter client run build
-      - run: pnpm install --ignore-workspace
-        working-directory: pulumi
-      - uses: pulumi/actions@v3
-        with:
-          command: up
-          stack-name: staging
-          upsert: true
-          work-dir: pulumi
-          comment-on-pr: true
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    concurrency: staging
+    needs: [build-api]
+    uses: ./.github/workflows/pulumi-deploy.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      environment: Staging
+      stack-name: staging
+      api-url: https://chat-demo-api.staging.jbrunton-aws.com
+      client-url: https://chat-demo.staging.jbrunton-aws.com
+    secrets: inherit
+
+  preview-production:
+    if: github.ref != 'refs/heads/main'
+    concurrency: staging
+    needs: [build-api, preview-staging]
+    uses: ./.github/workflows/pulumi-preview.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      stack-name: production
+      api-url: https://chat-demo-api.jbrunton-aws.com
+      client-url: https://chat-demo.jbrunton-aws.com
+    secrets: inherit
 
   deploy-production:
-    environment:
-      name: Production
-      url: https://chat-demo.jbrunton-aws.com
-    concurrency: production
-    needs: [build-api, deploy-staging]
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: "package.json"
-      - uses: pnpm/action-setup@v4
-      - name: build
-        env:
-          VITE_API_URL: https://chat-demo-api.jbrunton-aws.com
-        run: |
-          pnpm --filter client install
-          pnpm --filter client run build
-      - run: pnpm install --ignore-workspace
-        working-directory: pulumi
-      - uses: pulumi/actions@v3
-        with:
-          command: up
-          stack-name: production
-          upsert: true
-          work-dir: pulumi
-          comment-on-pr: true
-          github-token: ${{ secrets.CI_MINION_PAT }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: us-east-1
-          API_TAG: ${{ needs.build-api.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    concurrency: staging
+    needs: [build-api, deploy-staging]
+    uses: ./.github/workflows/pulumi-deploy.yml
+    with:
+      api-tag: ${{ needs.build-api.outputs.tag }}
+      environment: Production
+      stack-name: production
+      api-url: https://chat-demo-api.jbrunton-aws.com
+      client-url: https://chat-demo.jbrunton-aws.com
+    secrets: inherit
