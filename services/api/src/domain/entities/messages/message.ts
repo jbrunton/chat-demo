@@ -7,19 +7,9 @@ export enum UpdatedEntity {
 }
 
 /**
- * A message that has been sent by a user and is stored in the system.
+ * A message received by the system but not yet stored or dispatched to clients.
  */
-export type SentMessage = {
-  /**
-   * Unique identifier for the message.
-   */
-  id: string;
-
-  /**
-   * The time the message was sent (in ms since the epoch).
-   */
-  time: number;
-
+export type IncomingMessage = {
   /**
    * The text content of the message.
    */
@@ -34,7 +24,12 @@ export type SentMessage = {
    * The room the message was sent to.
    */
   roomId: string;
+};
 
+/**
+ * Type for draft messages which have not yet been sent by the system.
+ */
+export type DraftMessage = IncomingMessage & {
   /**
    * The recipient of the message.
    * If undefined, this is a public message sent to the room.
@@ -48,6 +43,21 @@ export type SentMessage = {
    * refresh its representation of these entities.
    */
   updatedEntities?: UpdatedEntity[];
+};
+
+/**
+ * A message that has been sent by a user and is stored in the system.
+ */
+export type SentMessage = DraftMessage & {
+  /**
+   * Unique identifier for the message.
+   */
+  id: string;
+
+  /**
+   * The time the message was sent (in ms since the epoch).
+   */
+  time: number;
 };
 
 /**
@@ -65,11 +75,6 @@ export type PrivateMessage = SentMessage & {
 export const isPrivate = (message: SentMessage): message is PrivateMessage => {
   return (message as PrivateMessage).recipientId !== undefined;
 };
-
-/**
- * Type for draft messages which have not yet been sent by the system.
- */
-export type DraftMessage = Omit<SentMessage, 'id' | 'time'>;
 
 /**
  * Abstract class for dispatching and subscribing to messages. All messages will be sent and

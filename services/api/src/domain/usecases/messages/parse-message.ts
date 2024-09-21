@@ -1,16 +1,10 @@
 import { Command } from '@entities/command';
-import { DraftMessage } from '@entities/messages/message';
+import { DraftMessage, IncomingMessage } from '@entities/messages/message';
 
 export type ParsedMessage = DraftMessage | Command;
 
 export const isCommand = (message: ParsedMessage): message is Command => {
   return (message as Command).tokens !== undefined;
-};
-
-export type ParseMessageParams = {
-  content: string;
-  roomId: string;
-  authorId: string;
 };
 
 /**
@@ -22,7 +16,7 @@ export const parseMessage = ({
   content,
   roomId,
   authorId,
-}: ParseMessageParams): ParsedMessage => {
+}: IncomingMessage): ParsedMessage => {
   if (content.startsWith('/')) {
     const tokens = content
       .slice(1)
