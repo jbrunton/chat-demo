@@ -1,6 +1,6 @@
 import { createZodDto } from '@anatine/zod-nestjs';
 import { extendApi } from '@anatine/zod-openapi';
-import { SentMessage, UpdatedEntity } from '@entities/messages';
+import { SentMessage, UpdatedEntity } from '@entities/messages/message';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { z } from 'zod';
 

@@ -1,6 +1,6 @@
 import { HelpCommandUseCase } from './help';
 import { MockProxy, mock } from 'jest-mock-extended';
-import { Dispatcher } from '@entities/messages';
+import { Dispatcher } from '@entities/messages/message';
 import { User } from '@entities/users/user.entity';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { RoomFactory } from '@fixtures/messages/room.factory';

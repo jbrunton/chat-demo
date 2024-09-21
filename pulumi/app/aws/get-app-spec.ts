@@ -1,4 +1,4 @@
-import { ApplicationConfig, ServiceConfig } from "@entities";
+import { ApplicationConfig, ServiceConfig } from "@entities/application";
 import * as aws from "@pulumi/aws";
 
 export type GetTaskDefinitionSpecParams = {

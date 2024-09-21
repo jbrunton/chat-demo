@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { SentMessage } from '@entities/messages';
+import { SentMessage } from '@entities/messages/message';
 import { RoomFactory } from './room.factory';
 import { UserFactory } from './user.factory';
 import { mergeAll } from 'rambda';

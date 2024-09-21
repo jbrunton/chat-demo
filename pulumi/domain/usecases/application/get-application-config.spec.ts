@@ -1,4 +1,4 @@
-import { ApplicationInputs } from "@entities";
+import { ApplicationInputs } from "@entities/application";
 import { getApplicationConfig } from "./get-application-config";
 
 jest.mock("@common/random");

@@ -8,7 +8,7 @@ import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from './command.service';
 import { Command } from '@entities/command.entity';
 import { UnauthorizedException } from '@nestjs/common';
-import { systemUser } from '@entities/users';
+import { systemUser } from '@entities/users/system';
 
 describe('MessagesService', () => {
   let service: MessagesService;
