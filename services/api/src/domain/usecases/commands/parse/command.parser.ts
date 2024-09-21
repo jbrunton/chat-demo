@@ -30,40 +30,67 @@ export type ParseResult =
 
 export type CommandSchema = ZodType<ParsedCommand, any, any>;
 
-export type CommandParserParams = {
+export type CommandParser = (command: TokenizedCommand) => ParseResult;
+
+export type Command = {
+  signature: string;
+  summary: string;
+  parse: CommandParser;
+};
+
+type CommandParserParams = {
   matchTokens: string[];
   schema: CommandSchema;
   signature: string;
+};
+
+export type CommandParams = CommandParserParams & {
   summary: string;
 };
 
-export class CommandParser {
-  private readonly matchTokens: string[];
-  private readonly schema: CommandSchema;
-  readonly signature: string;
-  readonly summary: string;
+export const buildCommand = ({
+  summary,
+  signature,
+  matchTokens,
+  schema,
+}: CommandParams): Command => ({
+  signature,
+  summary,
+  parse: commandParser({ signature, matchTokens, schema }),
+});
 
-  constructor({
-    matchTokens,
-    schema,
-    signature,
-    summary,
-  }: CommandParserParams) {
-    this.matchTokens = matchTokens;
-    this.schema = schema;
-    this.signature = signature;
-    this.summary = summary;
-  }
+export const commandParser = ({
+  matchTokens,
+  schema,
+  signature,
+}: CommandParserParams) => {
+  const isMatch = (command: TokenizedCommand): boolean => {
+    const actualTokens = command.tokens.slice(0, matchTokens.length);
+    return equals(matchTokens, actualTokens);
+  };
 
-  parse(command: TokenizedCommand): ParseResult {
-    if (!this.isMatch(command)) {
+  const errorMap: z.ZodErrorMap = (issue, ctx) => {
+    if (issue.code === z.ZodIssueCode.too_small) {
+      return {
+        message: `Received too few arguments. Expected: \`${signature}\``,
+      };
+    } else if (issue.code === z.ZodIssueCode.too_big) {
+      return {
+        message: `Received too many arguments. Expected: \`${signature}\``,
+      };
+    }
+    return { message: ctx.defaultError };
+  };
+
+  return (command: TokenizedCommand): ParseResult => {
+    if (!isMatch(command)) {
       return {
         match: false,
       };
     }
 
-    const result = this.schema.safeParse(command.tokens, {
-      errorMap: this.errorMap,
+    const result = schema.safeParse(command.tokens, {
+      errorMap,
     });
 
     if (result.success) {
@@ -75,27 +102,8 @@ export class CommandParser {
 
     const error = formatError(result.error.errors, command);
     throw new BadRequestException(error);
-  }
-
-  private isMatch(command: TokenizedCommand): boolean {
-    const expectedTokens = this.matchTokens;
-    const actualTokens = command.tokens.slice(0, this.matchTokens.length);
-    return equals(expectedTokens, actualTokens);
-  }
-
-  private errorMap: z.ZodErrorMap = (issue, ctx) => {
-    if (issue.code === z.ZodIssueCode.too_small) {
-      return {
-        message: `Received too few arguments. Expected: \`${this.signature}\``,
-      };
-    } else if (issue.code === z.ZodIssueCode.too_big) {
-      return {
-        message: `Received too many arguments. Expected: \`${this.signature}\``,
-      };
-    }
-    return { message: ctx.defaultError };
   };
-}
+};
 
 const formatError = (errors: ZodIssue[], command: TokenizedCommand): string => {
   const title = `Error in command \`${command.canonicalInput}\`:`;

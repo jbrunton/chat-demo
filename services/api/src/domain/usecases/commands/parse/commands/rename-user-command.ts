@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CommandParser, ParsedCommand } from '../command.parser';
+import { buildCommand, CommandParser, ParsedCommand } from '../command.parser';
 
 const schema = z
   .tuple([z.literal('rename'), z.literal('user'), z.string()])
@@ -9,7 +9,7 @@ const schema = z
     params: { newName: [name, ...rest].join(' ') },
   }));
 
-export const renameUserParser = new CommandParser({
+export const renameUserCommand = buildCommand({
   matchTokens: ['rename', 'user'],
   schema,
   signature: '/rename user {name}',

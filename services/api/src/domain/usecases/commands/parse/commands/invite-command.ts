@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CommandParser, ParsedCommand } from '../command.parser';
+import { buildCommand, CommandParser, ParsedCommand } from '../command.parser';
 
 const schema = z
   .tuple([z.literal('invite'), z.string().email()])
@@ -8,7 +8,7 @@ const schema = z
     params: { email },
   }));
 
-export const inviteParser = new CommandParser({
+export const inviteCommand = buildCommand({
   matchTokens: ['invite'],
   schema,
   signature: `/invite {email}`,

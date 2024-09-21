@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CommandParser, ParsedCommand } from '../command.parser';
+import { buildCommand, CommandParser, ParsedCommand } from '../command.parser';
 
 const schema = z
   .tuple([
@@ -12,7 +12,7 @@ const schema = z
     params: { count, typeToken },
   }));
 
-export const loremParser = new CommandParser({
+export const loremCommand = buildCommand({
   matchTokens: ['lorem'],
   schema,
   signature: `/lorem {count} {'words' | 'paragraphs'}`,

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CommandParser, ParsedCommand } from '../command.parser';
+import { buildCommand, CommandParser, ParsedCommand } from '../command.parser';
 import { ContentPolicy } from '@entities/rooms/room';
 
 const schema = z
@@ -16,7 +16,7 @@ const schema = z
     params: { newContentPolicy: contentPolicy },
   }));
 
-export const setRoomContentPolicyParser = new CommandParser({
+export const setRoomContentPolicyCommand = buildCommand({
   matchTokens: ['set', 'room', 'content', 'policy'],
   schema,
   signature: `/set room content policy {'public', 'private'}`,

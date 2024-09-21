@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CommandParser, ParsedCommand } from '../command.parser';
+import { buildCommand, CommandParser, ParsedCommand } from '../command.parser';
 
 const schema = z
   .tuple([z.literal('about'), z.literal('room')])
@@ -8,7 +8,7 @@ const schema = z
     params: null,
   }));
 
-export const aboutRoomParser = new CommandParser({
+export const aboutRoomCommand = buildCommand({
   matchTokens: ['about', 'room'],
   schema,
   signature: '/about room',

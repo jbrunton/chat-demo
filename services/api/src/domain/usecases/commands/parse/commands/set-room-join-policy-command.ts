@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CommandParser, ParsedCommand } from '../command.parser';
+import { buildCommand, CommandParser, ParsedCommand } from '../command.parser';
 import { JoinPolicy } from '@entities/rooms/room';
 
 const schema = z
@@ -16,7 +16,7 @@ const schema = z
     params: { newJoinPolicy: joinPolicy },
   }));
 
-export const setRoomJoinPolicyParser = new CommandParser({
+export const setRoomJoinPolicyCommand = buildCommand({
   matchTokens: ['set', 'room', 'join', 'policy'],
   schema,
   signature: `/set room join policy {'anyone', 'request', 'invite'}`,
