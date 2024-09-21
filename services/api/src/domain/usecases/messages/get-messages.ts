@@ -4,7 +4,7 @@ import { User } from '@entities/users/user.entity';
 import { Injectable } from '@nestjs/common';
 import { pipe, reject } from 'rambda';
 import { SentMessage, isPrivate } from '@entities/messages/message';
-import { MessagesRepository } from '@entities/messages/messages.repository';
+import { MessagesRepository } from '@entities/messages/messages-repository';
 
 @Injectable()
 export class GetMessagesUseCase {

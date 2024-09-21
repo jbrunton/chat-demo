@@ -3,7 +3,7 @@ import {
   DraftMessage,
   isPrivate,
 } from '@entities/messages/message';
-import { MessagesRepository } from '@entities/messages/messages.repository';
+import { MessagesRepository } from '@entities/messages/messages-repository';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { User } from '@entities/users/user.entity';
 import { ConsoleLogger, Injectable } from '@nestjs/common';
