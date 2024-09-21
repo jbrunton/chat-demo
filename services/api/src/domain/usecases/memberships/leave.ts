@@ -6,7 +6,7 @@ import {
   UpdatedEntity,
 } from '@entities/messages/message';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 
 export type LeaveRoomParams = {

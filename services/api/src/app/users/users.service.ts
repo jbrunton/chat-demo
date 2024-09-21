@@ -3,7 +3,7 @@ import { MembershipsRepository } from '@entities/memberships.repository';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
 import { systemUser } from '@entities/users/system';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { UsersRepository } from '@entities/users/users.repository';
 import { Injectable } from '@nestjs/common';
 

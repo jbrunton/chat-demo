@@ -2,7 +2,7 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/messages';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { RoomFactory } from '@fixtures/messages/room.factory';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from './command.service';

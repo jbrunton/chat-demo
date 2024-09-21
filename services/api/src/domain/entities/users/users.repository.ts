@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { User } from './user.entity';
+import { User } from './user';
 import { AuthInfo } from '@entities/auth';
 
 export type SaveUserParams = AuthInfo & {

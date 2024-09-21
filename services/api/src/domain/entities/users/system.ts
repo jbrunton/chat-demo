@@ -1,5 +1,5 @@
 import { SentMessage, DraftMessage } from '../messages/message';
-import { User } from './user.entity';
+import { User } from './user';
 
 export const systemUser: User = Object.freeze({
   id: 'system',

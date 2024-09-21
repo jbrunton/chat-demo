@@ -3,7 +3,7 @@ import {
   DraftMessage,
   UpdatedEntity,
 } from '@entities/messages/message';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { UsersRepository } from '@entities/users/users.repository';
 import { Injectable } from '@nestjs/common';
 

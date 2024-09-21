@@ -5,7 +5,7 @@ import {
   UsersRepository,
   UpdateUserParams,
 } from '@entities/users/users.repository';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 
 export class TestUsersRepository extends UsersRepository {
   private users: User[] = [];

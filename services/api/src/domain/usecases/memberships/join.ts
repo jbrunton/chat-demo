@@ -2,7 +2,7 @@ import { AuthService, Role } from '@usecases/auth.service';
 import { MembershipStatus } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 import { Dispatcher, DraftMessage } from '@entities/messages/message';
 import { JoinPolicy } from '@entities/room.entity';

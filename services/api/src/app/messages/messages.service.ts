@@ -4,7 +4,7 @@ import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from '@app/messages/command.service';
 import { isCommand, parseMessage } from '@usecases/messages/parse-message';
 import { systemUser } from '@entities/users/system';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 
 @Injectable()
 export class MessagesService {

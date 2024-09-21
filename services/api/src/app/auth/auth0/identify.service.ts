@@ -1,4 +1,4 @@
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import {
   ConsoleLogger,
   Injectable,
