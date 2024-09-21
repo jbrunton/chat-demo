@@ -8,7 +8,7 @@ import { Dispatcher } from '@entities/messages/message';
 import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';
 import { ConfigureRoomUseCase } from './configure-room';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 
 describe('ChangeRoomJoinPolicyUseCase', () => {
   let changeRoomJoinPolicy: ConfigureRoomUseCase;

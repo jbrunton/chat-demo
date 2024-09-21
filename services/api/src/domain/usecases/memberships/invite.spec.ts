@@ -1,4 +1,4 @@
-import { JoinPolicy } from '@entities/room.entity';
+import { JoinPolicy } from '@entities/rooms/room';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
 import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
@@ -11,7 +11,7 @@ import mock, { MockProxy } from 'jest-mock-extended/lib/Mock';
 import { Dispatcher } from '@entities/messages/message';
 import { InviteUseCase } from './invite';
 import { TestUsersRepository } from '@data/repositories/test/test.users.repository';
-import { MembershipStatus } from '@entities/membership.entity';
+import { MembershipStatus } from '@entities/memberships/membership';
 
 describe('InviteUseCase', () => {
   let invite: InviteUseCase;

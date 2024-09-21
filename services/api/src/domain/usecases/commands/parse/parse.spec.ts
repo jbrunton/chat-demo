@@ -1,8 +1,8 @@
-import { Command } from '@entities/command.entity';
+import { Command } from '@entities/command';
 import { BadRequestException } from '@nestjs/common';
 import { ParseCommandUseCase } from '.';
 import { ParsedCommand } from './command.parser';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 
 describe('ParseCommandUseCase', () => {
   let parse: ParseCommandUseCase;

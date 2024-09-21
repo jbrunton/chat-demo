@@ -3,7 +3,7 @@ import { pick } from 'rambda';
 import { DynamoDBAdapter } from '../../adapters/dynamodb/dynamodb.adapter';
 import { DbMessage } from '../../adapters/dynamodb/schema';
 import { DraftMessage, SentMessage } from '@entities/messages/message';
-import { MessagesRepository } from '@entities/messages/messages.repository';
+import { MessagesRepository } from '@entities/messages/messages-repository';
 
 @Injectable()
 export class DynamoDBMessagesRepository extends MessagesRepository {

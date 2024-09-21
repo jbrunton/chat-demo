@@ -1,6 +1,6 @@
 import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/auth0/identify.decorator';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { Controller, Get, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 

@@ -1,6 +1,6 @@
 import { DynamoDBRoomsRepository } from '@data/repositories/dynamodb/dynamodb.rooms.repository';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
-import { CreateRoomParams } from '@entities/rooms.repository';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
+import { CreateRoomParams } from '@entities/rooms/rooms-repository';
 import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { Test } from '@nestjs/testing';
 import { DataModule } from '../data.module';

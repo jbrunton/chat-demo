@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { User } from '../users/user.entity';
+import { User } from '../users/user';
 
 export enum UpdatedEntity {
   Room = 'room',

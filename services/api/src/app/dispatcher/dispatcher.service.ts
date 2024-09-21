@@ -3,9 +3,9 @@ import {
   DraftMessage,
   isPrivate,
 } from '@entities/messages/message';
-import { MessagesRepository } from '@entities/messages/messages.repository';
-import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users/user.entity';
+import { MessagesRepository } from '@entities/messages/messages-repository';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
+import { User } from '@entities/users/user';
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { AuthService, Role } from '@usecases/auth.service';
 import { fromEvent, merge, Observable } from 'rxjs';

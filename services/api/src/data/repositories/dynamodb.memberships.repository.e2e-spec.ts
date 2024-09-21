@@ -1,5 +1,5 @@
-import { MembershipStatus } from '@entities/membership.entity';
-import { CreateMembershipParams } from '@entities/memberships.repository';
+import { MembershipStatus } from '@entities/memberships/membership';
+import { CreateMembershipParams } from '@entities/memberships/memberships-repository';
 import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';

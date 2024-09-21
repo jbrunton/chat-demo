@@ -1,10 +1,10 @@
 import { subject } from '@casl/ability';
-import { Room } from '@entities/room.entity';
+import { Room } from '@entities/rooms/room';
 import {
   CreateRoomParams,
   RoomsRepository,
   UpdateRoomParams,
-} from '@entities/rooms.repository';
+} from '@entities/rooms/rooms-repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { pick } from 'rambda';
 import { DynamoDBAdapter } from '../../adapters/dynamodb/dynamodb.adapter';

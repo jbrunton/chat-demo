@@ -6,8 +6,8 @@ import {
   UsersRepository,
   SaveUserParams,
   UpdateUserParams,
-} from '@entities/users/users.repository';
-import { User } from '@entities/users/user.entity';
+} from '@entities/users/users-repository';
+import { User } from '@entities/users/user';
 
 @Injectable()
 export class DynamoDBUsersRepository extends UsersRepository {

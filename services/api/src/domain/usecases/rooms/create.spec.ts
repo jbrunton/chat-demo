@@ -2,7 +2,7 @@ import { TestMembershipsRepository } from '@data/repositories/test/test.membersh
 import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { CreateRoomUseCase } from './create';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 
 describe('CreateRoomUseCase', () => {
   let create: CreateRoomUseCase;

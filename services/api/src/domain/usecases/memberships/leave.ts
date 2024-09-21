@@ -1,12 +1,12 @@
-import { MembershipStatus } from '@entities/membership.entity';
-import { MembershipsRepository } from '@entities/memberships.repository';
+import { MembershipStatus } from '@entities/memberships/membership';
+import { MembershipsRepository } from '@entities/memberships/memberships-repository';
 import {
   Dispatcher,
   DraftMessage,
   UpdatedEntity,
 } from '@entities/messages/message';
-import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users/user.entity';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
+import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 
 export type LeaveRoomParams = {
