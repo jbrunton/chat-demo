@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { CommandParser, ParsedCommand } from '../command.parser';
-import { ContentPolicy } from '@entities/room.entity';
+import { ContentPolicy } from '@entities/rooms/room';
 
 const schema = z
   .tuple([

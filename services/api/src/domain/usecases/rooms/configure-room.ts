@@ -3,8 +3,8 @@ import {
   DraftMessage,
   UpdatedEntity,
 } from '@entities/messages/message';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
-import { RoomsRepository } from '@entities/rooms.repository';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 import { AuthService, Role } from '@usecases/auth.service';

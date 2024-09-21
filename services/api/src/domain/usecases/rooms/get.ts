@@ -1,13 +1,13 @@
 import { AuthService, Role } from '@usecases/auth.service';
-import { Room } from '@entities/room.entity';
-import { RoomsRepository } from '@entities/rooms.repository';
+import { Room } from '@entities/rooms/room';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
-import { MembershipsRepository } from '@entities/memberships.repository';
+import { MembershipsRepository } from '@entities/memberships/memberships-repository';
 import {
   MembershipStatus,
   getMembershipStatus,
-} from '@entities/membership.entity';
+} from '@entities/memberships/membership';
 
 export type RoomDetails = {
   room: Room;

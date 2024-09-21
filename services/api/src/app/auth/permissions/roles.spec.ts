@@ -1,5 +1,5 @@
-import { Membership, MembershipStatus } from '@entities/membership.entity';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
+import { Membership, MembershipStatus } from '@entities/memberships/membership';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { defineRolesForUser } from './roles';

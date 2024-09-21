@@ -6,7 +6,7 @@ import { GetRoomUseCase } from './get';
 import { AppLogger } from '@app/app.logger';
 import { Role } from '@usecases/auth.service';
 import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
-import { MembershipStatus } from '@entities/membership.entity';
+import { MembershipStatus } from '@entities/memberships/membership';
 
 describe('GetRoomUseCase', () => {
   let get: GetRoomUseCase;

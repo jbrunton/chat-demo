@@ -1,5 +1,5 @@
 import { subject } from '@casl/ability';
-import { ContentPolicy, JoinPolicy, Room } from '@entities/room.entity';
+import { ContentPolicy, JoinPolicy, Room } from '@entities/rooms/room';
 import { faker } from '@faker-js/faker';
 import { UserFactory } from './user.factory';
 

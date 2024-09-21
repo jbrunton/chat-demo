@@ -2,9 +2,9 @@ import { AuthService, Role } from '@usecases/auth.service';
 import {
   MembershipStatus,
   getMembershipStatus,
-} from '@entities/membership.entity';
-import { MembershipsRepository } from '@entities/memberships.repository';
-import { RoomsRepository } from '@entities/rooms.repository';
+} from '@entities/memberships/membership';
+import { MembershipsRepository } from '@entities/memberships/memberships-repository';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { Injectable } from '@nestjs/common';
 import { Dispatcher, DraftMessage } from '@entities/messages/message';
 import { User } from '@entities/users/user';

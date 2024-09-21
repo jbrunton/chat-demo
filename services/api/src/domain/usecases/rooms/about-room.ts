@@ -1,5 +1,5 @@
 import { Dispatcher, DraftMessage } from '@entities/messages/message';
-import { RoomsRepository } from '@entities/rooms.repository';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { User } from '@entities/users/user';
 import { UsersRepository } from '@entities/users/users-repository';
 import { Injectable } from '@nestjs/common';

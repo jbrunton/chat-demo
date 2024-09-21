@@ -1,4 +1,4 @@
-import { Membership, MembershipStatus } from './membership.entity';
+import { Membership, MembershipStatus } from './membership';
 
 export type CreateMembershipParams = Pick<
   Membership,

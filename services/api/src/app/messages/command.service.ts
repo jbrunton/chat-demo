@@ -1,4 +1,4 @@
-import { Command } from '@entities/command.entity';
+import { Command } from '@entities/command';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 import { HelpCommandUseCase } from '@usecases/commands/help';

@@ -1,7 +1,7 @@
-import { getActiveRooms } from '@entities/membership.entity';
-import { MembershipsRepository } from '@entities/memberships.repository';
-import { Room } from '@entities/room.entity';
-import { RoomsRepository } from '@entities/rooms.repository';
+import { getActiveRooms } from '@entities/memberships/membership';
+import { MembershipsRepository } from '@entities/memberships/memberships-repository';
+import { Room } from '@entities/rooms/room';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { systemUser } from '@entities/users/system-user';
 import { User } from '@entities/users/user';
 import { UsersRepository } from '@entities/users/users-repository';

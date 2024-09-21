@@ -1,8 +1,8 @@
 import {
   CreateMembershipParams,
   MembershipsRepository,
-} from '@entities/memberships.repository';
-import { Membership } from '@entities/membership.entity';
+} from '@entities/memberships/memberships-repository';
+import { Membership } from '@entities/memberships/membership';
 
 export class TestMembershipsRepository extends MembershipsRepository {
   private memberships: Membership[] = [];

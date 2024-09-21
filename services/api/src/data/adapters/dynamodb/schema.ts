@@ -1,5 +1,5 @@
-import { MembershipStatus } from '@entities/membership.entity';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
+import { MembershipStatus } from '@entities/memberships/membership';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { Entity } from 'dynamodb-onetable';
 
 export const DbSchema = {

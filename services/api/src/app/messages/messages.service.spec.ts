@@ -6,7 +6,7 @@ import { User } from '@entities/users/user';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from './command.service';
-import { Command } from '@entities/command.entity';
+import { Command } from '@entities/command';
 import { UnauthorizedException } from '@nestjs/common';
 import { systemUser } from '@entities/users/system-user';
 

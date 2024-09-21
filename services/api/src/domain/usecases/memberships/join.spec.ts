@@ -1,4 +1,4 @@
-import { JoinPolicy } from '@entities/room.entity';
+import { JoinPolicy } from '@entities/rooms/room';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
 import { TestRoomsRepository } from '@data/repositories/test/test.rooms.repository';
