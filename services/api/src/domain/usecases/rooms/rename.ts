@@ -1,8 +1,12 @@
 import { AuthService, Role } from '@usecases/auth.service';
-import { Dispatcher, DraftMessage, UpdatedEntity } from '@entities/messages';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import { Injectable } from '@nestjs/common';
+import {
+  Dispatcher,
+  DraftMessage,
+  UpdatedEntity,
+} from '@entities/messages/message';
 
 export type RenameRoomParams = {
   roomId: string;

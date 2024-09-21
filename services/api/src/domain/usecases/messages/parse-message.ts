@@ -1,5 +1,5 @@
 import { Command } from '@entities/command.entity';
-import { DraftMessage } from '@entities/messages';
+import { DraftMessage } from '@entities/messages/message';
 
 export type ParsedMessage = DraftMessage | Command;
 

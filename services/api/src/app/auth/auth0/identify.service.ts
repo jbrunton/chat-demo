@@ -1,4 +1,4 @@
-import { User } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import { userParamsFromAuth, UsersRepository } from '@entities/users';
 import {
   ConsoleLogger,

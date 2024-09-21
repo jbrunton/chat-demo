@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
-import { User } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import { userParamsFromAuth } from '@entities/users';
 import { ExecutionContext } from '@nestjs/common';
 import { IdentifyService } from '@app/auth/auth0/identify.service';

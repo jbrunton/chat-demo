@@ -1,8 +1,5 @@
-import {
-  DraftMessage,
-  MessagesRepository,
-  SentMessage,
-} from '@entities/messages';
+import { SentMessage, DraftMessage } from '@entities/messages/message';
+import { MessagesRepository } from '@entities/messages/messages.repository';
 import * as R from 'rambda';
 
 export class TestMessagesRepository extends MessagesRepository {

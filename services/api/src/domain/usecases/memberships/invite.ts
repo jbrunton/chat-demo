@@ -5,9 +5,10 @@ import {
 } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User, UsersRepository } from '@entities/users';
 import { Injectable } from '@nestjs/common';
-import { Dispatcher, DraftMessage } from '@entities/messages';
+import { Dispatcher, DraftMessage } from '@entities/messages/message';
+import { User } from '@entities/users/user.entity';
+import { UsersRepository } from '@entities/users/users.repository';
 
 export type InviteParams = {
   roomId: string;

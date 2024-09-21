@@ -1,7 +1,7 @@
 import { Dispatcher, DraftMessage, isPrivate } from '@entities/messages';
 import { MessagesRepository } from '@entities/messages';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { AuthService, Role } from '@usecases/auth.service';
 import { fromEvent, merge, Observable } from 'rxjs';
