@@ -1,7 +1,7 @@
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { MessagesRepository } from '@entities/messages/messages-repository';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { UsersRepository } from '@entities/users/users.repository';
+import { UsersRepository } from '@entities/users/users-repository';
 import { Global, Module } from '@nestjs/common';
 import { TestMembershipsRepository } from '../../data/repositories/test/test.memberships.repository';
 import { TestMessagesRepository } from '../../data/repositories/test/test.messages.repository';

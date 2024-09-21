@@ -6,7 +6,7 @@ import {
   UsersRepository,
   SaveUserParams,
   UpdateUserParams,
-} from '@entities/users/users.repository';
+} from '@entities/users/users-repository';
 import { User } from '@entities/users/user';
 
 @Injectable()

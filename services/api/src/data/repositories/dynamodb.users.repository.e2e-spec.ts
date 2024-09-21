@@ -5,7 +5,7 @@ import { DataModule } from '../data.module';
 import { MockLoggerModule } from '@fixtures/MockLoggerModule';
 import { AuthInfoFactory } from '@fixtures/auth/auth-info.factory';
 import { omit } from 'remeda';
-import { userParamsFromAuth } from '@entities/users/users.repository';
+import { userParamsFromAuth } from '@entities/users/users-repository';
 
 type TestCase = {
   name: 'DynamoDBUsersRepository' | 'TestUsersRepository';

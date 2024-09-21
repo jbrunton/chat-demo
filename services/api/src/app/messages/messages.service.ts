@@ -3,7 +3,7 @@ import { CreateMessageDto } from './dto/messages';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from '@app/messages/command.service';
 import { isCommand, parseMessage } from '@usecases/messages/parse-message';
-import { systemUser } from '@entities/users/system';
+import { systemUser } from '@entities/users/system-user';
 import { User } from '@entities/users/user';
 
 @Injectable()

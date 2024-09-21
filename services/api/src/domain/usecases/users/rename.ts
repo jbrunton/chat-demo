@@ -4,7 +4,7 @@ import {
   UpdatedEntity,
 } from '@entities/messages/message';
 import { User } from '@entities/users/user';
-import { UsersRepository } from '@entities/users/users.repository';
+import { UsersRepository } from '@entities/users/users-repository';
 import { Injectable } from '@nestjs/common';
 
 export type RenameUserParams = {

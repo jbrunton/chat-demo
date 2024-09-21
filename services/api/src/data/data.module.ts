@@ -9,7 +9,7 @@ import { DynamoDBRoomsRepository } from './repositories/dynamodb/dynamodb.rooms.
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { DynamoDBMembershipsRepository } from './repositories/dynamodb/dynamodb.memberships.repository';
 import { MessagesRepository } from '@entities/messages/messages-repository';
-import { UsersRepository } from '@entities/users/users.repository';
+import { UsersRepository } from '@entities/users/users-repository';
 
 export const DatabaseConfigModule = ConfigModule.forFeature(databaseConfig);
 

@@ -11,7 +11,7 @@ import { Auth0Client } from '../auth0/auth0.client';
 import {
   UsersRepository,
   userParamsFromAuth,
-} from '@entities/users/users.repository';
+} from '@entities/users/users-repository';
 
 const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
 
