@@ -4,7 +4,7 @@ import * as pulumiservice from "@pulumi/pulumiservice";
 import { applyStackConfig } from "@app/aws/apply-stack-config";
 import { getApplicationInputs } from "@app/get-application-inputs";
 import { registerAutoTags } from "@app/aws/auto-tags";
-import { getApplicationConfig } from "@usecases";
+import { getApplicationConfig } from "@usecases/application/get-application-config";
 import { getStackConfig } from "@app/aws/usecases/stack/get-stack-config";
 
 const appInputs = getApplicationInputs();

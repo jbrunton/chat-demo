@@ -2,13 +2,13 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/messages';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { RoomFactory } from '@fixtures/messages/room.factory';
-import { User } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from './command.service';
 import { Command } from '@entities/command.entity';
 import { UnauthorizedException } from '@nestjs/common';
-import { systemUser } from '@entities/users';
+import { systemUser } from '@entities/users/system';
 
 describe('MessagesService', () => {
   let service: MessagesService;

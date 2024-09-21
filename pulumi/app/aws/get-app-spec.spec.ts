@@ -1,4 +1,4 @@
-import { ApplicationConfig, ServiceConfig } from "@entities";
+import { ServiceConfig, ApplicationConfig } from "@entities/application";
 import { getTaskDefinitionSpec } from "./get-app-spec";
 
 describe("getTaskDefinitionSpec", () => {

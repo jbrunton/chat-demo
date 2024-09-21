@@ -1,7 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as synced_folder from "@pulumi/synced-folder";
 import { SharedResources } from "./usecases/stack/get-shared-resources";
-import { StackConfig } from "@entities";
+import { StackConfig } from "@entities/stack";
 import { PolicyDocument } from "@pulumi/aws/iam";
 
 export const applyClientConfig = (

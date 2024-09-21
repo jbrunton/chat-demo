@@ -2,8 +2,9 @@ import { getActiveRooms } from '@entities/membership.entity';
 import { MembershipsRepository } from '@entities/memberships.repository';
 import { Room } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User, systemUser } from '@entities/users';
-import { UsersRepository } from '@entities/users';
+import { systemUser } from '@entities/users/system';
+import { User } from '@entities/users/user.entity';
+import { UsersRepository } from '@entities/users/users.repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

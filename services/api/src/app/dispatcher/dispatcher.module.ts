@@ -1,4 +1,4 @@
-import { Dispatcher } from '@entities/messages';
+import { Dispatcher } from '@entities/messages/message';
 import { Module } from '@nestjs/common';
 import { EventEmitter } from 'stream';
 import { DispatcherService } from './dispatcher.service';

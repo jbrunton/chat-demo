@@ -1,10 +1,10 @@
 import { Command } from '@entities/command.entity';
-import { User } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import { Injectable } from '@nestjs/common';
 import { HelpCommandUseCase } from '@usecases/commands/help';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
-import { Dispatcher } from '@entities/messages';
+import { Dispatcher } from '@entities/messages/message';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
 import { ParseCommandUseCase } from '@usecases/commands/parse';
 import { ConfigureRoomUseCase } from '@usecases/rooms/configure-room';

@@ -3,8 +3,8 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto, SentMessageDto } from './dto/messages';
 import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/auth0/identify.decorator';
-import { User } from '@entities/users';
-import { Dispatcher } from '@entities/messages';
+import { User } from '@entities/users/user.entity';
+import { Dispatcher } from '@entities/messages/message';
 import { GetMessagesUseCase } from '@usecases/messages/get-messages';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 

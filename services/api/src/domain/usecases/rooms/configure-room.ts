@@ -1,7 +1,11 @@
-import { Dispatcher, DraftMessage, UpdatedEntity } from '@entities/messages';
+import {
+  Dispatcher,
+  DraftMessage,
+  UpdatedEntity,
+} from '@entities/messages/message';
 import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
 import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import { Injectable } from '@nestjs/common';
 import { AuthService, Role } from '@usecases/auth.service';
 

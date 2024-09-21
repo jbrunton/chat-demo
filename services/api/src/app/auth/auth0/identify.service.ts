@@ -1,5 +1,4 @@
-import { User } from '@entities/users';
-import { userParamsFromAuth, UsersRepository } from '@entities/users';
+import { User } from '@entities/users/user.entity';
 import {
   ConsoleLogger,
   Injectable,
@@ -9,6 +8,10 @@ import {
 import { Request } from 'express';
 import { ExtractJwt } from 'passport-jwt';
 import { Auth0Client } from '../auth0/auth0.client';
+import {
+  UsersRepository,
+  userParamsFromAuth,
+} from '@entities/users/users.repository';
 
 const extractAccessToken = ExtractJwt.fromAuthHeaderAsBearerToken();
 

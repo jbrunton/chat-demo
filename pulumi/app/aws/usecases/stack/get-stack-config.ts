@@ -1,14 +1,14 @@
-import * as entities from "@entities";
-import { StackConfig } from "@entities";
-import * as usecases from "@usecases";
-import { getDomainConfig } from "@usecases";
+import { ApplicationInputs } from "@entities/application";
+import { GetStackConfig, StackConfig } from "@entities/stack";
+import { getApplicationConfig } from "@usecases/application/get-application-config";
+import { getDomainConfig } from "@usecases/domain/get-domain-config";
 
 const rootDomain = "jbrunton-aws.com";
 
-export const getStackConfig: entities.GetStackConfig = (
-  inputs: entities.ApplicationInputs
+export const getStackConfig: GetStackConfig = (
+  inputs: ApplicationInputs
 ): StackConfig => {
-  const appConfig = usecases.getApplicationConfig(inputs);
+  const appConfig = getApplicationConfig(inputs);
   const client = {
     ...appConfig.client,
     ...getDomainConfig({
