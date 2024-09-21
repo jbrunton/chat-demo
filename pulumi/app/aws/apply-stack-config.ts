@@ -1,4 +1,3 @@
-import { ApplyStackConfig, ApplyStackResult, StackConfig } from "@entities";
 import * as aws from "@pulumi/aws";
 import {
   getSharedResources,
@@ -7,6 +6,11 @@ import {
 import { applyClientConfig } from "./apply-client-config";
 import { applyServiceConfig } from "./apply-service-config";
 import { Output } from "@pulumi/pulumi";
+import {
+  ApplyStackResult,
+  ApplyStackConfig,
+  StackConfig,
+} from "@entities/stack";
 
 const provider = new aws.Provider("aws", { region: "us-east-1" });
 

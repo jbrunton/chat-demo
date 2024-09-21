@@ -1,4 +1,4 @@
-import { StackConfig } from "@entities";
+import { StackConfig } from "@entities/stack";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import { getTaskDefinitionSpec } from "./get-app-spec";
