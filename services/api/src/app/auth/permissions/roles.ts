@@ -3,9 +3,9 @@ import {
   Membership,
   MembershipStatus,
   getRoomsWithStatus,
-} from '@entities/membership.entity';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
-import { User } from '@entities/users/user.entity';
+} from '@entities/memberships/membership';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
+import { User } from '@entities/users/user';
 import { Role } from '@usecases/auth.service';
 
 export const defineRolesForUser = (user: User, memberships: Membership[]) => {

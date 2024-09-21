@@ -1,5 +1,5 @@
-import { Command } from '@entities/command.entity';
-import { ContentPolicy, JoinPolicy } from '@entities/room.entity';
+import { Command } from '@entities/command';
+import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { BadRequestException } from '@nestjs/common';
 import { equals } from 'rambda';
 import { z, ZodIssue, ZodType } from 'zod';

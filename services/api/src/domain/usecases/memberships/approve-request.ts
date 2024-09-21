@@ -1,12 +1,12 @@
 import {
   MembershipStatus,
   getMembershipStatus,
-} from '@entities/membership.entity';
-import { MembershipsRepository } from '@entities/memberships.repository';
+} from '@entities/memberships/membership';
+import { MembershipsRepository } from '@entities/memberships/memberships-repository';
 import { Dispatcher, DraftMessage } from '@entities/messages/message';
-import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users/user.entity';
-import { UsersRepository } from '@entities/users/users.repository';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
+import { User } from '@entities/users/user';
+import { UsersRepository } from '@entities/users/users-repository';
 import { Injectable } from '@nestjs/common';
 import { AuthService, Role } from '@usecases/auth.service';
 

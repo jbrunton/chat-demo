@@ -1,4 +1,4 @@
-import { Command } from '@entities/command.entity';
+import { Command } from '@entities/command';
 import { DraftMessage } from '@entities/messages/message';
 
 export type ParsedMessage = DraftMessage | Command;

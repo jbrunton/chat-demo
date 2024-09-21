@@ -1,8 +1,8 @@
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { Logger } from './logger';
 import { UnauthorizedException } from '@nestjs/common';
 import { isNil, reject } from 'rambda';
-import { Room } from '@entities/room.entity';
+import { Room } from '@entities/rooms/room';
 
 export enum Role {
   Read = 'read',

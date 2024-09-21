@@ -4,8 +4,8 @@ import {
   CreateRoomParams,
   RoomsRepository,
   UpdateRoomParams,
-} from '@entities/rooms.repository';
-import { Room } from '@entities/room.entity';
+} from '@entities/rooms/rooms-repository';
+import { Room } from '@entities/rooms/room';
 import { faker } from '@faker-js/faker';
 import { subject } from '@casl/ability';
 

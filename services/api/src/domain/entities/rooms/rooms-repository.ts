@@ -1,4 +1,4 @@
-import { Room } from './room.entity';
+import { Room } from './room';
 
 export type CreateRoomParams = Omit<Room, 'id'>;
 export type UpdateRoomParams = Partial<

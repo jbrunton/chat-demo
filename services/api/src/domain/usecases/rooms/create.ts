@@ -1,8 +1,8 @@
-import { MembershipStatus } from '@entities/membership.entity';
-import { MembershipsRepository } from '@entities/memberships.repository';
-import { ContentPolicy, JoinPolicy, Room } from '@entities/room.entity';
-import { RoomsRepository } from '@entities/rooms.repository';
-import { User } from '@entities/users/user.entity';
+import { MembershipStatus } from '@entities/memberships/membership';
+import { MembershipsRepository } from '@entities/memberships/memberships-repository';
+import { ContentPolicy, JoinPolicy, Room } from '@entities/rooms/room';
+import { RoomsRepository } from '@entities/rooms/rooms-repository';
+import { User } from '@entities/users/user';
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 

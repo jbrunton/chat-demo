@@ -1,8 +1,8 @@
-import { Membership } from '@entities/membership.entity';
+import { Membership } from '@entities/memberships/membership';
 import {
   CreateMembershipParams,
   MembershipsRepository,
-} from '@entities/memberships.repository';
+} from '@entities/memberships/memberships-repository';
 import { Injectable } from '@nestjs/common';
 import { pick } from 'rambda';
 import { DynamoDBAdapter } from '../../adapters/dynamodb/dynamodb.adapter';

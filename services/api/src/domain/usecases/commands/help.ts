@@ -1,5 +1,5 @@
 import { Dispatcher } from '@entities/messages/message';
-import { User } from '@entities/users/user.entity';
+import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 import { parsers } from './parse/parsers';
 
