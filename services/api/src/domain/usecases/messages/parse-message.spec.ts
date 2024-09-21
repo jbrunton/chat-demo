@@ -1,4 +1,4 @@
-import { parseMessage } from './parse-message';
+import { tokenizeMessage } from '@usecases/commands/tokenize';
 
 describe('parseMessage', () => {
   const roomId = 'room-id';
@@ -6,7 +6,7 @@ describe('parseMessage', () => {
 
   it('parses commands', () => {
     expect(
-      parseMessage({ content: '/lorem 3 words', roomId, authorId }),
+      tokenizeMessage({ content: '/lorem 3 words', roomId, authorId }),
     ).toEqual({
       canonicalInput: '/lorem 3 words',
       roomId,
@@ -16,7 +16,7 @@ describe('parseMessage', () => {
 
   it('ignores excess whitespace in commands', () => {
     expect(
-      parseMessage({ content: '/lorem    3  words', roomId, authorId }),
+      tokenizeMessage({ content: '/lorem    3  words', roomId, authorId }),
     ).toEqual({
       canonicalInput: '/lorem 3 words',
       roomId,
@@ -26,7 +26,7 @@ describe('parseMessage', () => {
 
   it('parses normal messages', () => {
     expect(
-      parseMessage({ content: 'Hello, World!', roomId, authorId }),
+      tokenizeMessage({ content: 'Hello, World!', roomId, authorId }),
     ).toEqual({
       content: 'Hello, World!',
       roomId,

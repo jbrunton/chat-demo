@@ -2,9 +2,9 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/messages';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from '@app/messages/command.service';
-import { isCommand, parseMessage } from '@usecases/messages/parse-message';
 import { systemUser } from '@entities/users/system-user';
 import { User } from '@entities/users/user';
+import { isCommand, tokenizeMessage } from '@usecases/commands/tokenize';
 
 @Injectable()
 export class MessagesService {
@@ -17,7 +17,7 @@ export class MessagesService {
     incoming: CreateMessageDto,
     authenticatedUser: User,
   ): Promise<void> {
-    const message = parseMessage({
+    const message = tokenizeMessage({
       ...incoming,
       authorId: authenticatedUser.id,
     });

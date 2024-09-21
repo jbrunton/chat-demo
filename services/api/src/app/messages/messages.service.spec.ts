@@ -6,9 +6,9 @@ import { User } from '@entities/users/user';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from './command.service';
-import { Command } from '@entities/command';
 import { UnauthorizedException } from '@nestjs/common';
 import { systemUser } from '@entities/users/system-user';
+import { TokenizedCommand } from '@usecases/commands/tokenize';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -60,7 +60,7 @@ describe('MessagesService', () => {
 
       await service.handleMessage(message, authenticatedUser);
 
-      const expectedCommand: Command = {
+      const expectedCommand: TokenizedCommand = {
         tokens: ['help'],
         canonicalInput: '/help',
         roomId,

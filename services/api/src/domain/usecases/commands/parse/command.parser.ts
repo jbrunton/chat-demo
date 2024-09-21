@@ -1,8 +1,8 @@
-import { Command } from '@entities/command';
 import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { BadRequestException } from '@nestjs/common';
 import { equals } from 'rambda';
 import { z, ZodIssue, ZodType } from 'zod';
+import { TokenizedCommand } from '@usecases/commands/tokenize';
 
 export type ParsedCommand =
   | { tag: 'help'; params: null }
@@ -55,7 +55,7 @@ export class CommandParser {
     this.summary = summary;
   }
 
-  parse(command: Command): ParseResult {
+  parse(command: TokenizedCommand): ParseResult {
     if (!this.isMatch(command)) {
       return {
         match: false,
@@ -77,7 +77,7 @@ export class CommandParser {
     throw new BadRequestException(error);
   }
 
-  private isMatch(command: Command): boolean {
+  private isMatch(command: TokenizedCommand): boolean {
     const expectedTokens = this.matchTokens;
     const actualTokens = command.tokens.slice(0, this.matchTokens.length);
     return equals(expectedTokens, actualTokens);
@@ -97,7 +97,7 @@ export class CommandParser {
   };
 }
 
-const formatError = (errors: ZodIssue[], command: Command): string => {
+const formatError = (errors: ZodIssue[], command: TokenizedCommand): string => {
   const title = `Error in command \`${command.canonicalInput}\`:`;
   const errorMessages = errors.map((error) => {
     if (error.path.length) {

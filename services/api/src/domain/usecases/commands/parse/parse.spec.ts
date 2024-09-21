@@ -1,8 +1,8 @@
-import { Command } from '@entities/command';
 import { BadRequestException } from '@nestjs/common';
 import { ParseCommandUseCase } from '.';
 import { ParsedCommand } from './command.parser';
 import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
+import { TokenizedCommand } from '@usecases/commands/tokenize';
 
 describe('ParseCommandUseCase', () => {
   let parse: ParseCommandUseCase;
@@ -13,7 +13,7 @@ describe('ParseCommandUseCase', () => {
 
   const withMessage = (command: string) => {
     const tokens = command.slice(1).split(' ');
-    const parsedCommand: Command = {
+    const parsedCommand: TokenizedCommand = {
       roomId: 'my-room',
       tokens,
       canonicalInput: `/${tokens.join(' ')}`,
@@ -233,7 +233,7 @@ describe('ParseCommandUseCase', () => {
   });
 
   it('responds if the command is unrecognised', () => {
-    const command: Command = {
+    const command: TokenizedCommand = {
       roomId: 'my-room',
       tokens: ['not', 'a', 'command'],
       canonicalInput: '/not a command',

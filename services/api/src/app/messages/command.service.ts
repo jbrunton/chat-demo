@@ -1,4 +1,3 @@
-import { Command } from '@entities/command';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 import { HelpCommandUseCase } from '@usecases/commands/help';
@@ -13,6 +12,7 @@ import { InviteUseCase } from '@usecases/memberships/invite';
 import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
+import { TokenizedCommand } from '@usecases/commands/tokenize';
 
 @Injectable()
 export class CommandService {
@@ -30,9 +30,12 @@ export class CommandService {
     readonly dispatcher: Dispatcher,
   ) {}
 
-  async exec(command: Command, authenticatedUser: User): Promise<void> {
+  async exec(
+    command: TokenizedCommand,
+    authenticatedUser: User,
+  ): Promise<void> {
     const { roomId } = command;
-    const parsedCommand = await this.parse.exec(command);
+    const parsedCommand = this.parse.exec(command);
     return match(parsedCommand)
       .with({ tag: 'help' }, () =>
         this.help.exec({ roomId, authenticatedUser }),
