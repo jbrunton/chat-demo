@@ -2,7 +2,7 @@ import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { BadRequestException } from '@nestjs/common';
 import { equals } from 'rambda';
 import { z, ZodIssue, ZodType } from 'zod';
-import { TokenizedCommand } from '@usecases/commands/parse/tokenize';
+import { TokenizedCommand } from '@usecases/commands/parse/tokenize-command';
 
 /**
  * A parsed command represents a valid command with type-safe parameters, and thus can be safely

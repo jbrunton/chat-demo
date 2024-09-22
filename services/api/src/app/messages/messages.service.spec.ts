@@ -8,7 +8,6 @@ import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from './command.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { systemUser } from '@entities/users/system-user';
-import { TokenizedCommand } from '@usecases/commands/parse/tokenize';
 import { IncomingCommand } from '@entities/commands';
 
 describe('MessagesService', () => {

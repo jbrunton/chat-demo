@@ -1,4 +1,3 @@
-import { IncomingMessage } from '@entities/messages/message';
 import { IncomingCommand } from '@entities/commands';
 
 /**
@@ -29,7 +28,7 @@ export type TokenizedCommand = {
  * @param command The command to tokenize
  * @returns The tokenized command
  */
-export const tokenizeMessage = ({
+export const tokenizeCommand = ({
   content,
   roomId,
 }: IncomingCommand): TokenizedCommand => {

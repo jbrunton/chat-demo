@@ -1,12 +1,12 @@
-import { tokenizeMessage } from '@usecases/commands/parse/tokenize';
+import { tokenizeCommand } from '@usecases/commands/parse/tokenize-command';
 
-describe('tokenizeMessage', () => {
+describe('tokenizeCommand', () => {
   const roomId = 'room-id';
   const authorId = 'user-id';
 
   it('tokenizes commands', () => {
     expect(
-      tokenizeMessage({ content: '/lorem 3 words', roomId, authorId }),
+      tokenizeCommand({ content: '/lorem 3 words', roomId, authorId }),
     ).toEqual({
       canonicalInput: '/lorem 3 words',
       roomId,
@@ -16,7 +16,7 @@ describe('tokenizeMessage', () => {
 
   it('derives a canonical form by ignoring excess whitespace', () => {
     expect(
-      tokenizeMessage({ content: '/lorem    3  words', roomId, authorId }),
+      tokenizeCommand({ content: '/lorem    3  words', roomId, authorId }),
     ).toEqual({
       canonicalInput: '/lorem 3 words',
       roomId,
