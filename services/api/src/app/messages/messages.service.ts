@@ -5,6 +5,7 @@ import { CommandService } from '@app/messages/command.service';
 import { systemUser } from '@entities/users/system-user';
 import { User } from '@entities/users/user';
 import { isCommand, tokenizeMessage } from '@usecases/commands/tokenize';
+import { IncomingMessage } from '@entities/messages/message';
 
 @Injectable()
 export class MessagesService {
@@ -17,10 +18,12 @@ export class MessagesService {
     incoming: CreateMessageDto,
     authenticatedUser: User,
   ): Promise<void> {
-    const message = tokenizeMessage({
+    const incomingMessage: IncomingMessage = {
       ...incoming,
       authorId: authenticatedUser.id,
-    });
+    };
+
+    const message = tokenizeMessage(incomingMessage);
 
     try {
       if (isCommand(message)) {
@@ -30,18 +33,22 @@ export class MessagesService {
       }
     } catch (e) {
       if (e instanceof HttpException) {
-        await this.send.exec(
-          {
-            content: e.message,
-            roomId: incoming.roomId,
-            recipientId: authenticatedUser.id,
-            authorId: 'system',
-          },
+        return await this.send.exec(
+          this.getErrorMessage(e, incomingMessage),
           systemUser,
         );
-      } else {
-        throw e;
       }
+
+      throw e;
     }
+  }
+
+  private getErrorMessage(e: HttpException, incomingMessage: IncomingMessage) {
+    return {
+      content: e.message,
+      roomId: incomingMessage.roomId,
+      recipientId: incomingMessage.authorId,
+      authorId: 'system',
+    };
   }
 }
