@@ -1,7 +1,8 @@
 import { Dispatcher } from '@entities/messages/message';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
-import { commands } from './parse/commands/command-parsers';
+
+import { commands } from '@usecases/commands/parse/commands';
 
 export type HelpParams = {
   authenticatedUser: User;

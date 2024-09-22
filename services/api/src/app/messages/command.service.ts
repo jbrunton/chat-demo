@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { HelpCommandUseCase } from '@usecases/commands/help';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
-import { Dispatcher, IncomingMessage } from '@entities/messages/message';
+import { Dispatcher } from '@entities/messages/message';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
 import { ParseCommandUseCase } from '@usecases/commands/parse/parse-command';
 import { ConfigureRoomUseCase } from '@usecases/rooms/configure-room';
@@ -12,7 +12,7 @@ import { InviteUseCase } from '@usecases/memberships/invite';
 import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
-import { TokenizedCommand, tokenizeMessage } from '@usecases/commands/tokenize';
+import { tokenizeMessage } from '@usecases/commands/tokenize';
 import { IncomingCommand } from '@entities/commands';
 
 @Injectable()
