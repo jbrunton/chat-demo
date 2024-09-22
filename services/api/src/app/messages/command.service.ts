@@ -13,6 +13,7 @@ import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
 import { TokenizedCommand, tokenizeMessage } from '@usecases/commands/tokenize';
+import { IncomingCommand } from '@entities/commands';
 
 @Injectable()
 export class CommandService {
@@ -30,9 +31,9 @@ export class CommandService {
     readonly dispatcher: Dispatcher,
   ) {}
 
-  async exec(message: IncomingMessage, authenticatedUser: User): Promise<void> {
-    const tokenizedCommand = tokenizeMessage(message);
-    const { roomId } = message;
+  async exec(command: IncomingCommand, authenticatedUser: User): Promise<void> {
+    const tokenizedCommand = tokenizeMessage(command);
+    const { roomId } = command;
     const parsedCommand = this.parse.exec(tokenizedCommand);
 
     return match(parsedCommand)

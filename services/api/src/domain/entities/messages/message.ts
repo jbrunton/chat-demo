@@ -7,7 +7,7 @@ export enum UpdatedEntity {
 }
 
 /**
- * A message received by the system but not yet stored or dispatched to clients.
+ * A message received by the system but not yet stored, executed or dispatched to clients.
  */
 export type IncomingMessage = {
   /**

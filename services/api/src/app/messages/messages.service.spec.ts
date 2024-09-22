@@ -9,6 +9,7 @@ import { CommandService } from './command.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { systemUser } from '@entities/users/system-user';
 import { TokenizedCommand } from '@usecases/commands/tokenize';
+import { IncomingCommand } from '@entities/commands';
 
 describe('MessagesService', () => {
   let service: MessagesService;
@@ -60,10 +61,10 @@ describe('MessagesService', () => {
 
       await service.handleMessage(message, authenticatedUser);
 
-      const expectedCommand: TokenizedCommand = {
-        tokens: ['help'],
-        canonicalInput: '/help',
+      const expectedCommand: IncomingCommand = {
+        content: '/help',
         roomId,
+        authorId: authenticatedUser.id,
       };
       expect(command.exec).toHaveBeenCalledWith(
         expectedCommand,

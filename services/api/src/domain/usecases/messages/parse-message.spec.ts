@@ -23,14 +23,4 @@ describe('parseMessage', () => {
       tokens: ['lorem', '3', 'words'],
     });
   });
-
-  it('parses normal messages', () => {
-    expect(
-      tokenizeMessage({ content: 'Hello, World!', roomId, authorId }),
-    ).toEqual({
-      content: 'Hello, World!',
-      roomId,
-      authorId,
-    });
-  });
 });

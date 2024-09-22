@@ -4,8 +4,8 @@ import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from '@app/messages/command.service';
 import { systemUser } from '@entities/users/system-user';
 import { User } from '@entities/users/user';
-import { isCommand, tokenizeMessage } from '@usecases/commands/tokenize';
 import { IncomingMessage } from '@entities/messages/message';
+import { isCommand } from '@entities/commands';
 
 @Injectable()
 export class MessagesService {

@@ -1,4 +1,5 @@
 import { IncomingMessage } from '@entities/messages/message';
+import { IncomingCommand } from '@entities/commands';
 
 /**
  * A type representing sent commands.
@@ -24,23 +25,15 @@ export type TokenizedCommand = {
 };
 
 /**
- * Returns true if the incoming message is a command.
- * @param message
- */
-export const isCommand = (message: IncomingMessage): boolean =>
-  message.content.startsWith('/');
-
-/**
- * Tokenizes a command message.
- * @param message The message to tokenize
+ * Tokenizes an incoming command.
+ * @param command The command to tokenize
  * @returns The tokenized command
  */
-export const tokenizeMessage = (message: IncomingMessage): TokenizedCommand => {
-  if (!isCommand(message)) {
-    throw new Error('message must be a command');
-  }
-
-  const tokens = message.content
+export const tokenizeMessage = ({
+  content,
+  roomId,
+}: IncomingCommand): TokenizedCommand => {
+  const tokens = content
     .slice(1)
     .split(' ')
     .filter((token) => token.length > 0);
@@ -48,7 +41,7 @@ export const tokenizeMessage = (message: IncomingMessage): TokenizedCommand => {
   const canonicalInput = `/${tokens.join(' ')}`;
 
   return {
-    roomId: message.roomId,
+    roomId,
     tokens,
     canonicalInput,
   };
