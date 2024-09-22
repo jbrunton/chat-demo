@@ -5,6 +5,9 @@ import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { IncomingCommand } from '@entities/commands';
 
 describe('ParseCommandUseCase', () => {
+  const roomId = 'my-room';
+  const authorId = '1';
+
   let parse: ParseCommandUseCase;
 
   beforeEach(() => {
@@ -12,11 +15,10 @@ describe('ParseCommandUseCase', () => {
   });
 
   const withMessage = (content: IncomingCommand['content']) => {
-    // const tokens = command.slice(1).split(' ');
     const command: IncomingCommand = {
-      roomId: 'my-room',
+      roomId,
       content,
-      authorId: '1',
+      authorId,
     };
     const parse = new ParseCommandUseCase();
     return {
@@ -235,8 +237,8 @@ describe('ParseCommandUseCase', () => {
   it('responds if the command is unrecognised', () => {
     const command: IncomingCommand = {
       content: '/not a command',
-      roomId: 'my-room',
-      authorId: '1',
+      roomId,
+      authorId,
     };
     expect(() => parse.exec(command)).toThrow(
       new BadRequestException(
