@@ -4,6 +4,10 @@ import { equals } from 'rambda';
 import { z, ZodIssue, ZodType } from 'zod';
 import { TokenizedCommand } from '@usecases/commands/tokenize';
 
+/**
+ * A parsed command represents a valid command with type-safe parameters, and thus can be safely
+ * executed.
+ */
 export type ParsedCommand =
   | { tag: 'help'; params: null }
   | { tag: 'renameRoom'; params: { newName: string } }

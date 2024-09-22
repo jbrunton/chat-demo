@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { commands } from './commands';
+import { commands } from './commands/parsed-command';
 import { ParsedCommand } from './command.parser';
 import { TokenizedCommand } from '@usecases/commands/tokenize';
 
