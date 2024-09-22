@@ -12,7 +12,6 @@ import { InviteUseCase } from '@usecases/memberships/invite';
 import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
-import { tokenizeMessage } from '@usecases/commands/tokenize';
 import { IncomingCommand } from '@entities/commands';
 
 @Injectable()
