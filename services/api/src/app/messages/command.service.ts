@@ -1,4 +1,3 @@
-import { Command } from '@entities/command';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
 import { HelpCommandUseCase } from '@usecases/commands/help';
@@ -6,13 +5,14 @@ import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
 import { Dispatcher } from '@entities/messages/message';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
-import { ParseCommandUseCase } from '@usecases/commands/parse';
+import { ParseCommandUseCase } from '@usecases/commands/parse/parse-command';
 import { ConfigureRoomUseCase } from '@usecases/rooms/configure-room';
 import { P, match } from 'ts-pattern';
 import { InviteUseCase } from '@usecases/memberships/invite';
 import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
+import { IncomingCommand } from '@entities/commands';
 
 @Injectable()
 export class CommandService {
@@ -30,9 +30,10 @@ export class CommandService {
     readonly dispatcher: Dispatcher,
   ) {}
 
-  async exec(command: Command, authenticatedUser: User): Promise<void> {
+  async exec(command: IncomingCommand, authenticatedUser: User): Promise<void> {
     const { roomId } = command;
-    const parsedCommand = await this.parse.exec(command);
+    const parsedCommand = this.parse.exec(command);
+
     return match(parsedCommand)
       .with({ tag: 'help' }, () =>
         this.help.exec({ roomId, authenticatedUser }),

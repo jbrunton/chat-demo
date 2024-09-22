@@ -1,7 +1,8 @@
 import { Dispatcher } from '@entities/messages/message';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
-import { parsers } from './parse/parsers';
+
+import { commands } from '@usecases/commands/parse/commands';
 
 export type HelpParams = {
   authenticatedUser: User;
@@ -24,9 +25,9 @@ export class HelpCommandUseCase {
 
   private generateContent() {
     const title = 'Type to chat, or enter one of the following commands:';
-    const commands = parsers.map(
-      (parser) => `* \`${parser.signature}\`: ${parser.summary}`,
+    const commandSummaries = commands.map(
+      (command) => `* \`${command.signature}\`: ${command.summary}`,
     );
-    return [title, ...commands].join('\n');
+    return [title, ...commandSummaries].join('\n');
   }
 }

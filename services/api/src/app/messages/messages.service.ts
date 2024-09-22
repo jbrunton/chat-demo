@@ -2,9 +2,10 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/messages';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { CommandService } from '@app/messages/command.service';
-import { isCommand, parseMessage } from '@usecases/messages/parse-message';
 import { systemUser } from '@entities/users/system-user';
 import { User } from '@entities/users/user';
+import { IncomingMessage } from '@entities/messages/message';
+import { isCommand } from '@entities/commands';
 
 @Injectable()
 export class MessagesService {
@@ -17,10 +18,10 @@ export class MessagesService {
     incoming: CreateMessageDto,
     authenticatedUser: User,
   ): Promise<void> {
-    const message = parseMessage({
+    const message: IncomingMessage = {
       ...incoming,
       authorId: authenticatedUser.id,
-    });
+    };
 
     try {
       if (isCommand(message)) {
@@ -30,18 +31,22 @@ export class MessagesService {
       }
     } catch (e) {
       if (e instanceof HttpException) {
-        await this.send.exec(
-          {
-            content: e.message,
-            roomId: incoming.roomId,
-            recipientId: authenticatedUser.id,
-            authorId: 'system',
-          },
+        return await this.send.exec(
+          this.getErrorMessage(e, message),
           systemUser,
         );
-      } else {
-        throw e;
       }
+
+      throw e;
     }
+  }
+
+  private getErrorMessage(e: HttpException, message: IncomingMessage) {
+    return {
+      content: e.message,
+      roomId: message.roomId,
+      recipientId: message.authorId,
+      authorId: 'system',
+    };
   }
 }

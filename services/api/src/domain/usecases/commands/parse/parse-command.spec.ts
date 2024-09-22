@@ -1,32 +1,34 @@
-import { Command } from '@entities/command';
 import { BadRequestException } from '@nestjs/common';
-import { ParseCommandUseCase } from '.';
-import { ParsedCommand } from './command.parser';
+import { ParseCommandUseCase } from './parse-command';
+import { ParsedCommand } from './parsed-command';
 import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
+import { IncomingCommand } from '@entities/commands';
 
 describe('ParseCommandUseCase', () => {
+  const roomId = 'my-room';
+  const authorId = '1';
+
   let parse: ParseCommandUseCase;
 
   beforeEach(() => {
     parse = new ParseCommandUseCase();
   });
 
-  const withMessage = (command: string) => {
-    const tokens = command.slice(1).split(' ');
-    const parsedCommand: Command = {
-      roomId: 'my-room',
-      tokens,
-      canonicalInput: `/${tokens.join(' ')}`,
+  const withMessage = (content: IncomingCommand['content']) => {
+    const command: IncomingCommand = {
+      roomId,
+      content,
+      authorId,
     };
     const parse = new ParseCommandUseCase();
     return {
       expectCommand: (expected: ParsedCommand) => {
-        const result = parse.exec(parsedCommand);
+        const result = parse.exec(command);
         expect(result).toEqual(expected);
       },
 
       expectError: (...expectedMessage: string[]) => {
-        expect(() => parse.exec(parsedCommand)).toThrow(
+        expect(() => parse.exec(command)).toThrow(
           new BadRequestException(expectedMessage.join('\n')),
         );
       },
@@ -233,10 +235,10 @@ describe('ParseCommandUseCase', () => {
   });
 
   it('responds if the command is unrecognised', () => {
-    const command: Command = {
-      roomId: 'my-room',
-      tokens: ['not', 'a', 'command'],
-      canonicalInput: '/not a command',
+    const command: IncomingCommand = {
+      content: '/not a command',
+      roomId,
+      authorId,
     };
     expect(() => parse.exec(command)).toThrow(
       new BadRequestException(
