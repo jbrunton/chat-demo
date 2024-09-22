@@ -42,7 +42,7 @@ export type Command = {
   parse: CommandParser;
 };
 
-type CommandParserParams = {
+export type CommandParserParams = {
   matchTokens: string[];
   schema: CommandSchema;
   signature: string;

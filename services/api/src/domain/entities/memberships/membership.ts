@@ -36,10 +36,6 @@ export enum MembershipStatus {
  * Record representing the membership status of a user in a room for a specific period.
  *
  * A user will have a history of zero or more non-overlapping `Membership` records for each room.
- *
- * There are a number of predicates available to assist with filtering: {@link isCurrent}, {@link isActive}, {@link forRoom}, etc.
- *
- * There are also convenience functions to determine the membership
  */
 export type Membership = {
   /**
