@@ -32,9 +32,8 @@ export class CommandService {
   ) {}
 
   async exec(command: IncomingCommand, authenticatedUser: User): Promise<void> {
-    const tokenizedCommand = tokenizeMessage(command);
     const { roomId } = command;
-    const parsedCommand = this.parse.exec(tokenizedCommand);
+    const parsedCommand = this.parse.exec(command);
 
     return match(parsedCommand)
       .with({ tag: 'help' }, () =>

@@ -1,11 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ParsedCommand } from './parsed-command';
-import { TokenizedCommand } from '@usecases/commands/tokenize';
+import { TokenizedCommand, tokenizeMessage } from '@usecases/commands/tokenize';
 import { commands } from '@usecases/commands/parse/commands';
+import { IncomingCommand } from '@entities/commands';
 
 @Injectable()
 export class ParseCommandUseCase {
-  exec(tokenizedCommand: TokenizedCommand): ParsedCommand {
+  exec(command: IncomingCommand): ParsedCommand {
+    const tokenizedCommand = tokenizeMessage(command);
+
     for (const command of commands) {
       const result = command.parse(tokenizedCommand);
       if (result.match) {
