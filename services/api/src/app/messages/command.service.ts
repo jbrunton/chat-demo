@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { HelpCommandUseCase } from '@usecases/commands/help';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
-import { Dispatcher } from '@entities/messages/message';
+import { Dispatcher, IncomingMessage } from '@entities/messages/message';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
 import { ParseCommandUseCase } from '@usecases/commands/parse/parse-command';
 import { ConfigureRoomUseCase } from '@usecases/rooms/configure-room';
@@ -12,7 +12,7 @@ import { InviteUseCase } from '@usecases/memberships/invite';
 import { LeaveRoomUseCase } from '@usecases/memberships/leave';
 import { AboutRoomUseCase } from '@usecases/rooms/about-room';
 import { ApproveRequestUseCase } from '@usecases/memberships/approve-request';
-import { TokenizedCommand } from '@usecases/commands/tokenize';
+import { TokenizedCommand, tokenizeMessage } from '@usecases/commands/tokenize';
 
 @Injectable()
 export class CommandService {
@@ -30,12 +30,11 @@ export class CommandService {
     readonly dispatcher: Dispatcher,
   ) {}
 
-  async exec(
-    command: TokenizedCommand,
-    authenticatedUser: User,
-  ): Promise<void> {
-    const { roomId } = command;
-    const parsedCommand = this.parse.exec(command);
+  async exec(message: IncomingMessage, authenticatedUser: User): Promise<void> {
+    const tokenizedCommand = tokenizeMessage(message);
+    const { roomId } = message;
+    const parsedCommand = this.parse.exec(tokenizedCommand);
+
     return match(parsedCommand)
       .with({ tag: 'help' }, () =>
         this.help.exec({ roomId, authenticatedUser }),

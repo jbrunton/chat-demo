@@ -23,41 +23,33 @@ export type TokenizedCommand = {
   canonicalInput: string;
 };
 
-type TokenizedMessage = IncomingMessage | TokenizedCommand;
-
-export const isCommand = (
-  message: TokenizedMessage,
-): message is TokenizedCommand => {
-  return (message as TokenizedCommand).tokens !== undefined;
-};
 /**
- *
- * @param params Details of the message to parse
- * @returns The parsed message
+ * Returns true if the incoming message is a command.
+ * @param message
  */
-export const tokenizeMessage = ({
-  content,
-  roomId,
-  authorId,
-}: IncomingMessage): TokenizedMessage => {
-  if (content.startsWith('/')) {
-    const tokens = content
-      .slice(1)
-      .split(' ')
-      .filter((token) => token.length > 0);
+export const isCommand = (message: IncomingMessage): boolean =>
+  message.content.startsWith('/');
 
-    const canonicalInput = `/${tokens.join(' ')}`;
-
-    return {
-      roomId,
-      tokens,
-      canonicalInput,
-    };
+/**
+ * Tokenizes a command message.
+ * @param message The message to tokenize
+ * @returns The tokenized command
+ */
+export const tokenizeMessage = (message: IncomingMessage): TokenizedCommand => {
+  if (!isCommand(message)) {
+    throw new Error('message must be a command');
   }
 
+  const tokens = message.content
+    .slice(1)
+    .split(' ')
+    .filter((token) => token.length > 0);
+
+  const canonicalInput = `/${tokens.join(' ')}`;
+
   return {
-    content,
-    roomId,
-    authorId,
+    roomId: message.roomId,
+    tokens,
+    canonicalInput,
   };
 };

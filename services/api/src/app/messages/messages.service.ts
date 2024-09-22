@@ -18,12 +18,10 @@ export class MessagesService {
     incoming: CreateMessageDto,
     authenticatedUser: User,
   ): Promise<void> {
-    const incomingMessage: IncomingMessage = {
+    const message: IncomingMessage = {
       ...incoming,
       authorId: authenticatedUser.id,
     };
-
-    const message = tokenizeMessage(incomingMessage);
 
     try {
       if (isCommand(message)) {
@@ -34,7 +32,7 @@ export class MessagesService {
     } catch (e) {
       if (e instanceof HttpException) {
         return await this.send.exec(
-          this.getErrorMessage(e, incomingMessage),
+          this.getErrorMessage(e, message),
           systemUser,
         );
       }
@@ -43,11 +41,11 @@ export class MessagesService {
     }
   }
 
-  private getErrorMessage(e: HttpException, incomingMessage: IncomingMessage) {
+  private getErrorMessage(e: HttpException, message: IncomingMessage) {
     return {
       content: e.message,
-      roomId: incomingMessage.roomId,
-      recipientId: incomingMessage.authorId,
+      roomId: message.roomId,
+      recipientId: message.authorId,
       authorId: 'system',
     };
   }
