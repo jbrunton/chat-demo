@@ -5,7 +5,7 @@ import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';
 import { Dispatcher } from '@entities/messages/message';
 import { LoremCommandUseCase } from '@usecases/commands/lorem';
-import { ParseCommandUseCase } from '@usecases/commands/parse';
+import { ParseCommandUseCase } from '@usecases/commands/parse/parse-command';
 import { ConfigureRoomUseCase } from '@usecases/rooms/configure-room';
 import { P, match } from 'ts-pattern';
 import { InviteUseCase } from '@usecases/memberships/invite';

@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { ParseCommandUseCase } from '.';
-import { ParsedCommand } from './command.parser';
+import { ParsedCommand } from './parsed-command';
 import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { TokenizedCommand } from '@usecases/commands/tokenize';
 

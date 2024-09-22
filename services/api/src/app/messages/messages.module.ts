@@ -4,7 +4,7 @@ import { MessagesController } from './messages.controller';
 import { AuthModule } from '@app/auth/auth.module';
 import { SendMessageUseCase } from '@usecases/messages/send';
 import { GetMessagesUseCase } from '@usecases/messages/get-messages';
-import { ParseCommandUseCase } from '@usecases/commands/parse';
+import { ParseCommandUseCase } from '@usecases/commands/parse/parse-command';
 import { CommandService } from '@app/messages/command.service';
 import { RenameRoomUseCase } from '@usecases/rooms/rename';
 import { RenameUserUseCase } from '@usecases/users/rename';

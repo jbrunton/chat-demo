@@ -1,4 +1,4 @@
-import { Command } from '../command.parser';
+import { Command } from '../parsed-command';
 import { aboutRoomCommand } from './about-room-command';
 import { approveRequestCommand } from './approve-request-command';
 import { setRoomJoinPolicyCommand } from './set-room-join-policy-command';
