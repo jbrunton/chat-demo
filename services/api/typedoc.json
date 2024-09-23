@@ -8,6 +8,7 @@
   ],
   "entryPointStrategy": "resolve",
   "projectDocuments": ["architecture.md"],
+  "plugin": ["typedoc-plugin-mermaid"],
   "treatValidationWarningsAsErrors": true,
   "out": "docs"
 }
