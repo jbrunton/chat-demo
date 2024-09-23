@@ -44,8 +44,17 @@ A message identified as an `IncomingCommand` will be parsed and (if it is a vali
 stateDiagram
   state CommandService {
     direction LR
-    [*] --> TokenizedCommand
-    TokenizedCommand --> ParsedCommand
-    ParsedCommand --> [*] : execute
+    [*] --> IncomingCommand
+    IncomingCommand --> TokenizedCommand : tokenize
+    TokenizedCommand --> ParsedCommand : parse
+    ParsedCommand --> Dispatcher : execute
+    Dispatcher
   }
 ```
+
+The `CommandService` makes use of the following:
+
+- The `tokenizeCommand` function.
+- The `ParseCommandUseCase` parses the `TokenizedCommand`.
+- The `CommandService` will then match the parsed command and execute the appropriate use case.
+- These use cases will update entities and send messages via the Dispatcher as appropriate.
