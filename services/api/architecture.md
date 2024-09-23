@@ -12,7 +12,7 @@ The domain is organised around these fundamental concepts:
 
 ## Messages
 
-The uniquely identifiable entity representing a message in the system is a {@link domain/entities/messages/message!SentMessage | SentMessage}. Before being sent, there are a few value objects which represent how messages are processed and dispatched:
+The uniquely identifiable _entity_ representing a message in the system is a {@link domain/entities/messages/message!SentMessage | SentMessage}. Before being sent, there are a few _value objects_ which represent how messages are processed and dispatched:
 
 1. An {@link domain/entities/messages/message!IncomingMessage | IncomingMessage} represents a new message received by the system. At this point it has not been processed or stored.
 2. A message prefixed with a forward slash (e.g. `/help`) is considered to be a command, represented by an {@link domain/entities/commands!IncomingCommand | IncomingCommand}.
@@ -26,6 +26,8 @@ A message identified as an `IncomingCommand` will be parsed and (if it is a vali
 ## Message pipeline
 
 ```mermaid
-graph TB
-   mermaid.js --> TypeDoc;
+stateDiagram
+    direction LR
+    [*] --> IncomingMessage
+    IncomingMessage --> MessagesService
 ```
