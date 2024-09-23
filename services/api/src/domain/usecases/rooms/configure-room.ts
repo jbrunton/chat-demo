@@ -7,7 +7,7 @@ import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
-import { AuthService, Role } from '@usecases/auth.service';
+import { AuthService, Role } from '@usecases/auth-service';
 
 export type ConfigureRoomParams = {
   roomId: string;

@@ -6,7 +6,7 @@ import {
 } from '@entities/memberships/membership';
 import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { User } from '@entities/users/user';
-import { Role } from '@usecases/auth.service';
+import { Role } from '@usecases/auth-service';
 
 export const defineRolesForUser = (user: User, memberships: Membership[]) => {
   const { can, build } = new AbilityBuilder(createMongoAbility);

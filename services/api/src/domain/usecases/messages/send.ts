@@ -2,7 +2,7 @@ import { Dispatcher, DraftMessage } from '@entities/messages/message';
 import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
-import { Role, AuthService } from '@usecases/auth.service';
+import { Role, AuthService } from '@usecases/auth-service';
 
 @Injectable()
 export class SendMessageUseCase {

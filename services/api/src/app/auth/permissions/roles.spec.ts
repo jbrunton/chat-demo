@@ -3,7 +3,7 @@ import { ContentPolicy, JoinPolicy } from '@entities/rooms/room';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { defineRolesForUser } from './roles';
-import { Role } from '@usecases/auth.service';
+import { Role } from '@usecases/auth-service';
 
 describe('defineRolesForUser', () => {
   const user = UserFactory.build();

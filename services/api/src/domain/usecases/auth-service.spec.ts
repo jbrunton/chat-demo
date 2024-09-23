@@ -1,6 +1,6 @@
 import { AppLogger } from '@app/app.logger';
 import { TestAuthService } from '@fixtures/auth/test-auth-service';
-import { Role } from './auth.service';
+import { Role } from './auth-service';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UnauthorizedException } from '@nestjs/common';

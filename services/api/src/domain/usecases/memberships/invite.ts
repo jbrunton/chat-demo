@@ -1,4 +1,4 @@
-import { AuthService, Role } from '@usecases/auth.service';
+import { AuthService, Role } from '@usecases/auth-service';
 import {
   MembershipStatus,
   getMembershipStatus,
