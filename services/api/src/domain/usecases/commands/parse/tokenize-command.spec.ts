@@ -16,7 +16,7 @@ describe('tokenizeCommand', () => {
 
   it('derives a canonical form by ignoring excess whitespace', () => {
     expect(
-      tokenizeCommand({ content: '/lorem    3  words', roomId, authorId }),
+      tokenizeCommand({ content: '/lorem    3  WORDS', roomId, authorId }),
     ).toEqual({
       canonicalInput: '/lorem 3 words',
       roomId,

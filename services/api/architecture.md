@@ -52,10 +52,9 @@ stateDiagram
   }
 ```
 
-The `CommandService` applies the following steps and types:
+The {@link app/messages/command-service.CommandService | CommandService} applies the following steps to match parsed commands and execute them with the appropriate use case:
 
-- The {@link domain/usecases/parse/tokenize-command.tokenizeCommand | tokenizeCommand} function perfoms a lexing role, tokenizing the incoming commmand based on whitespace and returning a {@link domain/usecases/parse/tokenize-command.TokenizedCommand | TokenizedCommand} which allows for easy parsing.
-  - For example, the command `/rename room My Room` will be tokenized into `['rename', 'room', 'My', 'Room']`.
-- The `ParseCommandUseCase` parses tokenized commands, returning a ParsedCommand, a type safe disjoint union of all possible commands. The list of supported commands (and their parsing schemas) is defined in [].
-- Once the command is parsed, the CommandService will match the parsed command and execute the corresponding use case.
-- These use cases will update entities and send messages via the Dispatcher as appropriate.
+- The {@link domain/usecases/commands/parse/tokenize-command.tokenizeCommand | tokenizeCommand} function perfoms a lexing role, tokenizing the incoming commmand based on whitespace and returning a {@link domain/usecases/commands/parse/tokenize-command.TokenizedCommand | TokenizedCommand} which allows for easy parsing.
+- The {@link domain/usecases/commands/parse/parse-command.ParseCommandUseCase | ParseCommandUseCase} class parses tokenized commands, returning a {@link domain/usecases/commands/parse/parsed-command.ParsedCommand | ParsedCommand}, a type safe discriminated union of all possible commands.
+- Once the command is parsed, the `CommandService` will match the parsed command and execute the corresponding use case.
+- These use cases will update entities and send messages via the `Dispatcher` as appropriate.
