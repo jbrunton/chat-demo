@@ -30,4 +30,11 @@ stateDiagram
     direction LR
     [*] --> IncomingMessage
     IncomingMessage --> MessagesService
+    state MessagesService {
+      direction LR
+      state if_state <<choice>>
+      [*] --> if_state
+      if_state --> False: if n < 0
+      if_state --> True : if n >= 0
+    }
 ```
