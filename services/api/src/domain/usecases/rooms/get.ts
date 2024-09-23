@@ -1,4 +1,4 @@
-import { AuthService, Role } from '@usecases/auth.service';
+import { AuthService, Role } from '@usecases/auth-service';
 import { Room } from '@entities/rooms/room';
 import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { User } from '@entities/users/user';

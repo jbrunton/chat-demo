@@ -7,7 +7,7 @@ import { SendMessageUseCase } from './send';
 import { Dispatcher, DraftMessage } from '@entities/messages/message';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { AppLogger } from '@app/app.logger';
-import { Role } from '@usecases/auth.service';
+import { Role } from '@usecases/auth-service';
 
 describe('SendMessageUseCase', () => {
   let sendMessage: SendMessageUseCase;

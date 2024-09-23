@@ -1,4 +1,4 @@
-import { AuthService, AuthorizeParams } from '@usecases/auth.service';
+import { AuthService, AuthorizeParams } from '@usecases/auth-service';
 import { equals } from 'rambda';
 
 type Permission = Omit<AuthorizeParams, 'message'>;

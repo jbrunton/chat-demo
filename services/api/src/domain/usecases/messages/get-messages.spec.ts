@@ -7,7 +7,7 @@ import { TestAuthService } from '@fixtures/auth/test-auth-service';
 import { MessageFactory } from '@fixtures/messages/message.factory';
 import { UnauthorizedException } from '@nestjs/common';
 import { AppLogger } from '@app/app.logger';
-import { Role } from '@usecases/auth.service';
+import { Role } from '@usecases/auth-service';
 import { mock } from 'jest-mock-extended';
 
 describe('GetMessagesUseCase', () => {

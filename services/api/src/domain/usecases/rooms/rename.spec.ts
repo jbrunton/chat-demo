@@ -7,7 +7,7 @@ import { UserFactory } from '@fixtures/messages/user.factory';
 import { UnauthorizedException } from '@nestjs/common';
 import { Dispatcher } from '@entities/messages/message';
 import { AppLogger } from '@app/app.logger';
-import { Role } from '@usecases/auth.service';
+import { Role } from '@usecases/auth-service';
 
 describe('RenameRoomUseCase', () => {
   let rename: RenameRoomUseCase;

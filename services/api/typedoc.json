@@ -1,7 +1,14 @@
 {
   // Comments are supported, like tsconfig.json
-  "entryPoints": ["src/**"],
-  "exclude": ["src/**/*.spec.ts"],
+  "entryPoints": ["src/**/*.ts"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/fixtures/**/*.ts",
+    "**/@types/passport-strategy/index.d.ts"
+  ],
   "entryPointStrategy": "resolve",
+  "projectDocuments": ["architecture.md"],
+  "plugin": ["typedoc-plugin-mermaid"],
+  "treatValidationWarningsAsErrors": true,
   "out": "docs"
 }

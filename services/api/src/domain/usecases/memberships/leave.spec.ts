@@ -5,7 +5,7 @@ import { TestRoomsRepository } from '@data/repositories/test/test.rooms.reposito
 import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { AppLogger } from '@app/app.logger';
-import { Role } from '@usecases/auth.service';
+import { Role } from '@usecases/auth-service';
 import mock, { MockProxy } from 'jest-mock-extended/lib/Mock';
 import { Dispatcher, UpdatedEntity } from '@entities/messages/message';
 import { LeaveRoomUseCase } from './leave';

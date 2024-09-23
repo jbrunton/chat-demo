@@ -5,7 +5,7 @@ import { RoomFactory } from '@fixtures/messages/room.factory';
 import { User } from '@entities/users/user';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { SendMessageUseCase } from '@usecases/messages/send';
-import { CommandService } from './command.service';
+import { CommandService } from './command-service';
 import { UnauthorizedException } from '@nestjs/common';
 import { systemUser } from '@entities/users/system-user';
 import { IncomingCommand } from '@entities/commands';

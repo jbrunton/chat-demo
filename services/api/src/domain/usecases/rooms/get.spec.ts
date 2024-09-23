@@ -4,7 +4,7 @@ import { RoomFactory } from '@fixtures/messages/room.factory';
 import { UserFactory } from '@fixtures/messages/user.factory';
 import { GetRoomUseCase } from './get';
 import { AppLogger } from '@app/app.logger';
-import { Role } from '@usecases/auth.service';
+import { Role } from '@usecases/auth-service';
 import { TestMembershipsRepository } from '@data/repositories/test/test.memberships.repository';
 import { MembershipStatus } from '@entities/memberships/membership';
 

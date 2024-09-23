@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/messages';
 import { SendMessageUseCase } from '@usecases/messages/send';
-import { CommandService } from '@app/messages/command.service';
+import { CommandService } from '@app/messages/command-service';
 import { systemUser } from '@entities/users/system-user';
 import { User } from '@entities/users/user';
 import { IncomingMessage } from '@entities/messages/message';

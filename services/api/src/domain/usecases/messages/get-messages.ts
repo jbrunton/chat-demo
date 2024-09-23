@@ -1,4 +1,4 @@
-import { Role, AuthService } from '@usecases/auth.service';
+import { Role, AuthService } from '@usecases/auth-service';
 import { RoomsRepository } from '@entities/rooms/rooms-repository';
 import { User } from '@entities/users/user';
 import { Injectable } from '@nestjs/common';
