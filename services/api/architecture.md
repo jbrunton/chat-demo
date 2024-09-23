@@ -25,16 +25,17 @@ A message identified as an `IncomingCommand` will be parsed and (if it is a vali
 
 ## Message pipeline
 
+The entrypoint to the messaging pipeline is the `MessagesService`. A simplified view of this service looks like this:
+
 ```mermaid
 stateDiagram
-    direction LR
-    [*] --> IncomingMessage
-    IncomingMessage --> MessagesService
-    state MessagesService {
-      direction LR
-      state if_state <<choice>>
-      [*] --> if_state
-      if_state --> False: if n < 0
-      if_state --> True : if n >= 0
-    }
+  direction LR
+  state if_state <<choice>>
+  [*] --> if_state
+  if_state --> IncomingCommand: isCommand
+  if_state --> IncomingMessage: otherwise
+  IncomingMessage --> Dispatcher
+  Dispatcher --> SentMessage
+  IncomingCommand --> CommandService
+  CommandService --> Dispatcher
 ```
