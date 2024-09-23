@@ -19,23 +19,33 @@ The uniquely identifiable _entity_ representing a message in the system is a {@l
 3. A newly generated message which has not yet been dispatched is a {@link domain/entities/messages/message!DraftMessage | DraftMessage}.
 4. A draft message is sent to the message {@link domain/entities/messages/message!Dispatcher | Dispatcher} which will sent the message to the appropriate room and store it in the room's history as a {@link domain/entities/messages/message!SentMessage | SentMessage}.
 
-## Commands
-
-A message identified as an `IncomingCommand` will be parsed and (if it is a valid command) executed.
-
-## Message pipeline
-
 The entrypoint to the messaging pipeline is the `MessagesService`. A simplified view of this service looks like this:
 
 ```mermaid
 stateDiagram
+  state MessagesService {
   direction LR
-  state if_state <<choice>>
-  [*] --> if_state
-  if_state --> IncomingCommand: isCommand
-  if_state --> IncomingMessage: otherwise
-  IncomingMessage --> Dispatcher
-  Dispatcher --> SentMessage
-  IncomingCommand --> CommandService
-  CommandService --> Dispatcher
+    state if_state <<choice>>
+    [*] --> if_state
+    if_state --> IncomingCommand: isCommand
+    if_state --> IncomingMessage: !isCommand
+    IncomingMessage --> Dispatcher
+    Dispatcher --> SentMessage
+    IncomingCommand --> CommandService
+    CommandService --> Dispatcher
+  }
+```
+
+## Commands
+
+A message identified as an `IncomingCommand` will be parsed and (if it is a valid command) executed.
+
+```mermaid
+stateDiagram
+  state CommandService {
+    direction LR
+    [*] --> TokenizedCommand
+    TokenizedCommand --> ParsedCommand
+    ParsedCommand --> [*] : execute
+  }
 ```
