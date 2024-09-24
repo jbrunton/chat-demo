@@ -6,6 +6,8 @@ The domain is organised around these fundamental concepts:
 
 - {@link domain/entities/messages/message | Messages} refer to the messages sent by users and by the system.
 
+- {@link domain/entities/commands | Commands} refer to a specific type of message, a command, which will (when authorized) trigger a change to entities in the system (e.g. `/rename room My Room`).
+
 - {@link domain/entities/rooms/room | Rooms} are the message rooms users may join, to which messages are sent.
 
 - {@link domain/entities/memberships/membership | Memberships} represent the membership status history (`PendingApproval`, `Joined`, `Revoked`, etc.) of a user for a given room. This history is used to authorize users using an {@link domain/usecases/auth-service | AuthService}.
