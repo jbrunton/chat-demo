@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MessagesService } from './messages.service';
+import { MessagesService } from './messages-service';
 import { MessagesController } from './messages.controller';
 import { AuthModule } from '@app/auth/auth.module';
 import { SendMessageUseCase } from '@usecases/messages/send';

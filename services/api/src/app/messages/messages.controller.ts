@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Sse } from '@nestjs/common';
-import { MessagesService } from './messages.service';
+import { MessagesService } from './messages-service';
 import { CreateMessageDto, SentMessageDto } from './dto/messages';
 import { Auth } from '@app/auth/auth.decorator';
 import { Identify } from '@app/auth/auth0/identify.decorator';
