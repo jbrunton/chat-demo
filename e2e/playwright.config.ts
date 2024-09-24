@@ -1,6 +1,6 @@
-import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
-import { user1AuthFile } from './tests/config';
+import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+import { user1AuthFile } from "./tests/config";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ dotenv.config();
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -24,35 +24,35 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:5173',
+    baseURL: process.env.E2E_BASE_URL ?? "http://localhost:5173",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
   },
 
   /* Configure projects for major browsers */
   projects: [
-    { name: "setup", testMatch: 'auth.setup.ts' },
+    { name: "setup", testMatch: "auth.setup.ts" },
     {
-      name: 'chromium',
+      name: "chromium",
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices["Desktop Chrome"],
         storageState: user1AuthFile,
       },
-      dependencies: ['setup'],
+      dependencies: ["setup"],
     },
 
     {
-      name: 'firefox',
+      name: "firefox",
       use: {
-        ...devices['Desktop Firefox'],
+        ...devices["Desktop Firefox"],
         storageState: user1AuthFile,
       },
-      dependencies: ['setup'],
+      dependencies: ["setup"],
     },
 
     // {
