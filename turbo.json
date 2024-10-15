@@ -20,7 +20,11 @@
     },
     "dev:setup": {
       "cache": false,
-      "env": ["AUTH0_TEST_USER1_PASSWORD", "AUTH0_TEST_USER2_PASSWORD"]
+      "env": [
+        "AUTH0_TEST_USER1_PASSWORD",
+        "AUTH0_TEST_USER2_PASSWORD",
+        "E2E_BASE_URL"
+      ]
     },
     "dev:teardown": {
       "cache": false
