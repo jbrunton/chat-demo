@@ -4,15 +4,15 @@
   "engines": {
     "node": "20.x"
   },
-  "packageManager": "pnpm@9.12.1",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "test": "jest",
     "lint": "eslint --max-warnings 0 .",
     "format": "prettier --write --ignore-unknown ."
   },
   "devDependencies": {
-    "@types/jest": "29.5.13",
-    "@types/node": "20.16.11",
+    "@types/jest": "29.5.14",
+    "@types/node": "20.17.46",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "eslint": "8.57.1",
@@ -21,7 +21,7 @@
     "jest": "29.7.0",
     "jest-mock-extended": "3.0.7",
     "prettier": "2.8.8",
-    "ts-jest": "29.2.5",
+    "ts-jest": "29.3.2",
     "tsconfig-paths": "4.2.0"
   },
   "dependencies": {
@@ -33,6 +33,6 @@
     "@pulumi/synced-folder": "^0.11.0",
     "date-fns": "2.30.0",
     "ts-node": "10.9.2",
-    "typescript": "5.6.3"
+    "typescript": "5.8.3"
   }
 }
