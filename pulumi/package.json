@@ -27,10 +27,10 @@
   "dependencies": {
     "@pulumi/aws": "5.43.0",
     "@pulumi/awsx": "0.40.1",
-    "@pulumi/pulumi": "3.132.0",
-    "@pulumi/pulumiservice": "0.26.0",
-    "@pulumi/random": "4.16.5",
-    "@pulumi/synced-folder": "^0.11.0",
+    "@pulumi/pulumi": "3.229.0",
+    "@pulumi/pulumiservice": "0.36.0",
+    "@pulumi/random": "4.19.2",
+    "@pulumi/synced-folder": "^0.12.0",
     "date-fns": "2.30.0",
     "ts-node": "10.9.2",
     "typescript": "5.6.3"
